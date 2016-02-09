@@ -1,0 +1,231 @@
+<!doctype html>
+<html>
+<head>
+	<title> Broadcaster API -  Ustream Developers</title>
+	<link rel="shortcut icon" href="/api-docs/favicon.ico" />
+	<meta charset="utf-8">
+	<meta name="description" content="Customize and control the viewing experience for your audience or create your own streaming applications with the Ustream open video platform and Application Programming Interfaces (APIs) and Software Development Kits (SDKs)."/>
+    <meta name="author" content="Ustream"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="robots" content="index, follow">
+	<script type="text/javascript" src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
+	<script src="/api-docs/js/highlight.pack.js"></script>
+	<script src="/api-docs/js/ustream-embedapi.min.js"></script>
+    <script src="/api-docs/js/apidocs.js"></script>
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600,700,300' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="http://static-cdn2.ustream.tv/v5/css/reset.css" type="text/css" media="screen">
+    <link rel="stylesheet" href="https://ustvstaticcdn2-a.akamaihd.net/packed/snorky_all.css" type="text/css" media="screen">
+    <link rel="stylesheet" href="/api-docs/css/apidocs.css" type="text/css" media="screen">
+</head>
+<body id="/broadcasting-api/broadcaster">
+	<nav id="Nav">
+	<div class="row">
+		<div class="nav-toggle">
+			<span class="bar"></span>
+			<span class="bar"></span>
+			<span class="bar"></span>
+		</div>
+		<a class="ustream-logo" href="/api-docs/"><span>Developers</span></a>
+		<ul class="nav">
+			
+			<li  class="selected" >
+				<a href="/api-docs/broadcasting-api/">Broadcasting API</i></a></li>	
+			
+			<li >
+				<a href="/api-docs/player-api/">Player API</i></a></li>	
+			
+			<li >
+				<a href="/api-docs/player-sdk/">Player SDK</i></a></li>	
+			
+			<li class="has-borderright sep"></li>
+			<li><a href="http://www.ustream.tv">Back to ustream.tv</a></li>
+		</ul>
+	</div>
+</nav>
+    <header class="hero small">
+	<div class="row">
+		<ul class="breadcrumb">
+			 
+			<li><a href="/api-docs/broadcasting-api/">Broadcasting API</a></li>
+		</ul>
+		<h1>Broadcaster API</h1>
+	</div>
+</header>
+<main>
+	<div class="row center gutter-20">
+		<div class="row">
+			<div class="column column-8">
+				<article data-sidenav="sidenav">
+				<section>
+					<h2>Overview</h2>
+                    <p>The Web Broadcaster Embed API can be used to provide broadcasting experience on an external page using Ustream's stock Web Broadcaster flash application.</p>
+                    <p>The typical customers of this solution are platform service providers such as <a href="http://www.concertwindow.com/" target="_blank">ConcertWindow</a>, <a href="http://www.eleutian.com/" target="_blank">Eleutian</a> and <a href="https://www.stageit.com/" target="_blank">StageIt</a>. Their users can broadcast on their page with the Ustream Web Broadcaster. Authentication, channel management, etc. is also handled on their site via Ustream APIs.</p>
+				    
+                    
+                    
+                    <h3>How To Use</h3>
+				    <p>Broadcasters who wants to use the Web Broadcaster Embed API are required implement at least the following functions:</p>
+				    <ul>
+				        <li>Implementing <a href="authentication.html">OAuth v2 authentication</a> to connect to the Ustream channel and request an authentication token</li>
+				        <li>Embedding the Web Broadcaster to their site</li>
+				    </ul>
+                    
+                    
+                    
+				    <h3>Example</h3>
+				    <p>A basic example is available on <a href="https://github.com/ustream/broadcaster-embed">GitHub</a>.</p>
+				</section>
+				<section>
+					<h2>SyncedMeta</h2>
+				    
+                    
+                    
+                    <h3>Overview</h3>
+				    <p>Live stream content usually reaches the viewers with about 20-30 seconds delay. This is caused by the technology of http-based streaming. The SyncedMeta feature allows custom broadcaster experience builders to send synchronized events and data to the viewers through the stream, which can be processed, handled and displayed in sync with the stream. SyncedMeta can help if you want to integrate independent systems on your site, e.g. messaging services or a slideshow presentation.</p>
+				    <p>SyncedMeta implementation requires the following steps:</p>
+                    <ul>
+                        <li>The feature can either be used with the <a href="#web_broadcaster_embed">Web Broadcaster Embed</a> or by creating a custom broadcaster based on the Ustream Broadcaster SDK.</li>
+                        <li>A specific event in the Web Broadcaster Embed or a method in the Broadcaster SDK can be called with a custom parameter when the interaction is done on the broadcaster side, for example in the slideshow app a page is turned. This parameter can be used to store the new position of the presentation.</li>
+                        <li>Afterwards the broadcaster injects the event and the parameter value into the stream and it is broadcasted to all clients.</li>
+                        <li>When the viewer reaches the exact point of the stream where the method was called, it fires an event which propagates to the <a href="https://github.com/ustream/embedapi">Ustream Player Javascript API (Player API)</a>. A JavaScript event is raised in sync with the stream which contains the value stored on the broadcaster side, so the presentation can be turned to the right page at the right time on the client side as well.</li>
+                    </ul>
+                    
+                    
+                    
+                    <h3>Limitations</h3>
+                    <div class="panel panel-warning">
+                        <p>Currently, SyncedMeta works only with the flash player on the viewer side and only with a live stream.</p>
+                        <p>A custom broadcaster app using our <a href="http://developer.ustream.tv/external/flash/index.html">Broadcaster Flash API</a>, and a custom viewer page using our <a href="https://github.com/ustream/embedapi">Player API</a> needs to be built to be able to use SyncedMeta.</p>
+                        <p>Both the Broadcaster API and the Player API must be updated to the latest version.</p>
+                    </div>
+                    
+                    
+                    
+                    <h3>Case Study</h3>
+                    <p>Eleutian has created a custom broadcaster and viewer experience on their site to support distance e-learning of English. Their broadcasters, the teachers, can share their presentations alongside the live stream. Their previous implementation of media sharing through Crocodocs and a messaging service called PubNub works well, but it did not sync up with the Ustream broadcast as they are completely unrelated systems. This often caused significant issues for their student viewers. For example, the broadcaster may be talking about a topic then switch to another, changing the slides in the process. Of course, from the perspective of the student, the presenter in the video stream is still on the first topic due to transmission delay when all of a sudden the slides move on to the next topic. The amount of lag varies from viewer to viewer of course based on their connection speed and several other factors.</p>
+                    <p>With the SyncedMeta feature, they are now able to turn the presentation in sync with the broadcast with perfect timing.</p>
+                    
+                    
+                    
+                    <h3>Using SyncedMeta</h3>
+                    <p>To start using SyncedMeta, two API calls need to be implemented, one on the broadcaster side and the other one on the player side.</p>
+                    
+                    
+                    <h4>Broadcaster Side</h4>
+                    <p>The following JavaScript code snippets can help in the implementation of synchronized message sending.</p>
+                    
+                    <h6>Embedding in HTML</h6>
+                    <p>In this example the Web Broadcaster Embed is used to send the message. The first step is to embed the Ustream's Web Broadcaster to the page.</p>
+                    <pre><code class="language-html">&lt;object width="100%" height="100%" type="application/x-shockwave-flash" id="BroadcasterFlash" name="BroadcasterFlash" data="http://www.ustream.tv/flash/broadcastair.token.swf?" style="visibility: visible;"&gt;
+    &lt;param name="flashvars" value="cid=13407137&amp;accessToken=80432582c9d7b3d376cf56e0484ecd50&amp;retina=false&objectPath=window.ustream.flash.broadcaster.BroadcasterFlash"&gt;
+    &lt;param name="allowfullscreen" value="true"&gt;
+    &lt;param name="allowscriptaccess" value="always"&gt;
+    &lt;param name="wmode" value="opaque"&gt;
+&lt;/object&gt;</code></pre>
+                    <p class="note">The <code class="javascript">cid</code> and the <code class="javascript">accessToken</code> arguments are only examples</p>
+                    
+                    <h6>Creating the Javascript Handler</h6>
+                    <p>Create the object on which the Broadcaster is able to call JS methods.</p>
+                    <pre><code class="javascript">var ustream = {};
+
+ustream.flash = {};
+ustream.flash.broadcaster = {};
+ustream.flash.broadcaster.BroadcasterFlash = {};</code></pre>
+                    <p class="note">The object's name is the same as the <code class="javascript">objectPath</code> argument in the <code class="javascript">flashvars</code> parameter</p>
+                    <p>For handshake the Flash Broadcaster calls the ready method on this object in which a a ready call has to be made in the Broadcaster.</p>
+                    <pre><code class="javascript">var broadcasterFlash = document.getElementById('BroadcasterFlash');
+
+ustream.flash.broadcaster.BroadcasterFlash.ready = function(){
+    broadcasterFlash.ready();
+}</code></pre>
+                    <p>After the ready callback syncMeta can be called in the Flash Broadcaster.</p>
+                    <pre><code class="language-javascript">var objectToSend = {
+    isExample: true
+};
+
+broadcasterFlash.syncMeta(objectToSend);</code></pre>
+                    <h4>Viewer Side</h4>
+                    <p>To receive the synchronized events subscribe to the SyncedMeta event using the <a href="https://github.com/ustream/embedapi">Player API</a>. This event is raised when synced metadata arrives with the stream.</p>
+                    <pre><code class="language-javascript">function callBackFunction(){
+    console.log(arguments);
+}
+
+viewer.addListener('syncedmeta', callBackFunction);</code></pre>
+                    <p>It is not required to build a custom player to use this feature.</p>
+                    <p>For more information, please check the <a href="https://github.com/ustream/embedapi/blob/master/README.md#syncedmeta">documentation of our Player API</a>.</p>
+                </section>
+</article>
+			
+			</div>
+			<div class="column column-4 sidebar">
+				<div class="stickyContent">
+					<h3>Related articles</h3>
+					<ul class="related">
+					
+					
+					
+						<li><a href="/api-docs/broadcasting-api/getting-started.html">Getting started</a></li>
+					
+        			
+					
+						<li><a href="/api-docs/broadcasting-api/channel.html">Channel API</a></li>
+					
+        			
+					
+						<li><a href="/api-docs/broadcasting-api/broadcaster.html">Broadcaster API</a></li>
+					
+        			
+					
+						<li><a href="/api-docs/broadcasting-api/socialstream.html">Social Stream API</a></li>
+					
+        			
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</main>
+
+	
+
+
+	<footer>
+	<div class='row'>
+		<ul class="footer-nav clear">
+			<li><a href="http://www.ustream.tv/platform/pro?itm_source=footer_saas&amp;itm_medium=onsite&amp;itm_content=Product&amp;itm_campaign=footer">Product</a></li>
+			<li><a href="http://www.ustream.tv/platform/broadcast-anywhere/new?itm_source=footer_saas&amp;itm_medium=onsite&amp;itm_content=Apps&amp;itm_campaign=footer">Apps</a></li>
+			<li><a href="http://www.ustream.tv/our-company?itm_source=footer_saas&amp;itm_medium=onsite&amp;itm_content=About&amp;itm_campaign=footer">About</a></li>
+			<li><a href="http://www.ustream.tv/press?itm_source=footer_saas&amp;itm_medium=onsite&amp;itm_content=press&amp;itm_campaign=footer">Press</a></li>
+			<li><a href="http://www.ustream.tv/our-company/career?itm_source=footer_saas&amp;itm_medium=onsite&amp;itm_content=Career&amp;itm_campaign=footer">Career</a></li>
+			<li><a href="http://www.ustream.tv/our-company/change?itm_source=footer_saas&amp;itm_medium=onsite&amp;itm_content=Change&amp;itm_campaign=footer">Change</a></li>
+			<li><a href="https://ustream.zendesk.com/home">Support</a></li>
+			<li><a href="http://www.ustream.tv/explore/all?itm_source=footer_saas&amp;itm_medium=onsite&amp;itm_content=Watch&amp;itm_campaign=footer">Watch</a></li>
+			<li><a href="https://www.ustream.tv/platform/plans?itm_source=footer_saas&amp;itm_medium=onsite&amp;itm_content=Plans_and_Pricing&amp;itm_campaign=footer">Plans and Pricing</a></li>
+		</ul>
+		<ul class='footer-copy clear'>
+			<li><span class="copyright">© 2015 Ustream, Inc. All rights reserved.</span></li>
+            <li><a class="copyright-policy" href="http://www.ustream.tv/copyright-policy?itm_source=footer_saas&amp;itm_medium=onsite&amp;itm_content=Copyright_policy&amp;itm_campaign=footer">Copyright Policy</a></li>
+            <li><a class="privacy-policy" href="http://www.ustream.tv/privacy-policy?itm_source=footer_saas&amp;itm_medium=onsite&amp;itm_content=Privacy_policy&amp;itm_campaign=footer">Privacy Policy</a></li>
+            <li><a class="terms-of-service" href="http://www.ustream.tv/terms?itm_source=footer_saas&amp;itm_medium=onsite&amp;itm_content=Terms_of_service&amp;itm_campaign=footer">Terms of Service</a></li>
+		</ul>
+		<ul class='social clear'>
+			<li><a href='http://www.facebook.com/ustream'><i class="glyphicon icon-facebook"></i></a></li>
+			<li><a href='http://twitter.com/ustream'><i class="glyphicon icon-twitter"></i></a></li>
+			<li><a href='https://www.linkedin.com/company/ustream-inc'><i class="glyphicon icon-linkedin"></i></a></li>
+			<li><a href='https://plus.google.com/+UstreamTv2007' rel='publisher'><i class="glyphicon icon-google-plus"></i></a></li>
+		</ul>
+	</div>
+</footer>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-1359697-47', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+</body>
+</html>

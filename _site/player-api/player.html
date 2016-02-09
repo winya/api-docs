@@ -1,0 +1,430 @@
+<!doctype html>
+<html>
+<head>
+	<title> Player API Documentation -  Ustream Developers</title>
+	<link rel="shortcut icon" href="/api-docs/favicon.ico" />
+	<meta charset="utf-8">
+	<meta name="description" content="Customize and control the viewing experience for your audience or create your own streaming applications with the Ustream open video platform and Application Programming Interfaces (APIs) and Software Development Kits (SDKs)."/>
+    <meta name="author" content="Ustream"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="robots" content="index, follow">
+	<script type="text/javascript" src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
+	<script src="/api-docs/js/highlight.pack.js"></script>
+	<script src="/api-docs/js/ustream-embedapi.min.js"></script>
+    <script src="/api-docs/js/apidocs.js"></script>
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600,700,300' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="http://static-cdn2.ustream.tv/v5/css/reset.css" type="text/css" media="screen">
+    <link rel="stylesheet" href="https://ustvstaticcdn2-a.akamaihd.net/packed/snorky_all.css" type="text/css" media="screen">
+    <link rel="stylesheet" href="/api-docs/css/apidocs.css" type="text/css" media="screen">
+</head>
+<body id="/player-api/player">
+	<nav id="Nav">
+	<div class="row">
+		<div class="nav-toggle">
+			<span class="bar"></span>
+			<span class="bar"></span>
+			<span class="bar"></span>
+		</div>
+		<a class="ustream-logo" href="/api-docs/"><span>Developers</span></a>
+		<ul class="nav">
+			
+			<li >
+				<a href="/api-docs/broadcasting-api/">Broadcasting API</i></a></li>	
+			
+			<li  class="selected" >
+				<a href="/api-docs/player-api/">Player API</i></a></li>	
+			
+			<li >
+				<a href="/api-docs/player-sdk/">Player SDK</i></a></li>	
+			
+			<li class="has-borderright sep"></li>
+			<li><a href="http://www.ustream.tv">Back to ustream.tv</a></li>
+		</ul>
+	</div>
+</nav>
+    <header class="hero small">
+	<div class="row">
+		<ul class="breadcrumb">
+			 
+			<li><a href="/api-docs/player-api/">Player API</a></li>
+		</ul>
+		<h1>Player API Documentation</h1>
+	</div>
+</header>
+<main>
+	<div class="row center gutter-20">
+		<div class="row">
+			<div class="column column-8">
+				<article data-sidenav="sidenav">
+                <section>
+                    <h2>Overview</h2>
+                        <p>Enables sites using the <a href="http://ustream.tv/" target="_blank">Ustream</a> embed iframe to build and adapt on the embed live player.</p>
+                        <p>The Player API provides basic methods to control the live stream or recorded video playback, and enables the user to access essential events of the live stream or the played video.</p>
+                        <p>The Player API requires <a href="http://www.w3.org/TR/webmessaging/" target="_blank">postMessage</a> DOM API, it won't work in browsers that does not support the postMessage API.</p>
+                </section>
+                
+                
+                
+                <section>
+                    <h2>Usage</h2>
+                    <p>Create an instance of the Embed API by providing the ID of the iframe, or the iframe DOM object itself:</p>
+                    <pre><code class="html">&lt;iframe id=&quot;UstreamIframe&quot; src=&quot;//www.ustream.tv/embed/1524&quot; width=&quot;640&quot; height=&quot;480&quot; allowfullscreen webkitallowfullscreen&gt;&lt;/iframe&gt;</code></pre>
+                    <pre><code class="javascript">var viewer = UstreamEmbed('UstreamIframe');</code></pre>
+                    
+					
+				
+					<h3>URL parameters</h3>
+					<p>The default behaviour of the player can be modified by extending the src URL with any of the following parameters:</p>
+                    <table class="table responsive">
+						<thead>
+							<tr>
+								<th>Parameter</th>
+								<th>Effect</th>
+								<th>Values</th>
+								<th>Default</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>allowfullscreen</td>
+								<td>Disables fullscreen and remove the button.</td>
+								<td>true/false</td>
+								<td>true</td>
+							</tr>
+							<tr>
+								<td>autoplay</td>
+								<td>Starts video playback automatically. (Enterprise feature)</td>
+								<td>true/false</td>
+								<td>false</td>
+							</tr>
+							<tr>
+								<td>controls</td>
+								<td>Hides all UI elements.</td>
+								<td>true/false</td>
+								<td>true</td>
+							</tr>
+							<tr>
+								<td>offaircontent</td>
+								<td>Disables displaying offair content.</td>
+								<td>true/false</td>
+								<td>true</td>
+							</tr>
+							<tr>
+								<td>quality</td>
+								<td>Overrides the automatic quality selection.</td>
+								<td>low, med, high, auto</td>
+								<td>auto</td>
+							</tr>
+							<tr>
+								<td>showtitle</td>
+								<td>Hides title and viewer count.</td>
+								<td>true/false</td>
+								<td>true</td>
+							</tr>
+							<tr>
+								<td>volume</td>
+								<td>Overrides the default volume. 0 is mute, 1 is max volume.</td>
+								<td>0.0-1.0</td>
+								<td>user setting</td>
+							</tr>
+						</tbody>
+					</table>
+                    
+                    <h3>callMethod</h3>
+                    <p>Calls a command method of the embed player, passing in any arguments.<br/>Available commands through <code>callMethod</code>:</p>
+
+                    
+                    <h4>play</h4>
+                    <p>Starts playing the currently loaded channel or video.</p>
+
+                    <h6>Example</h6>
+                    <pre><code class="javascript">viewer.callMethod('play');</code></pre>
+                    
+                    
+                    <h4>pause</h4>
+                    <p>Pauses the live stream, or the playback of a video.</p>
+
+                    <h6>Example</h6>
+                    <pre><code class="javascript">viewer.callMethod('pause');</code></pre>
+                    
+                    
+                    <h4>stop</h4>
+                    <p>Pauses the live stream, or stops the video and jumps back to the start.</p>
+
+                    <h6>Example</h6>
+                    <pre><code class="javascript">viewer.callMethod('stop');</code></pre>
+                    
+                    
+                    <h4>load</h4>
+                    <p>Loads a channel or a video in the player. Requires two additional arguments:</p>
+                    <ul>
+                        <li><code>type</code> - the loaded content type (channel | video)</li>
+                        <li><code>id</code> - the loaded content id</li>
+                    </ul>
+
+                    <h6>Example</h6>
+                    <pre><code class="javascript">viewer.callMethod('load', 'video', 5903947);
+viewer.callMethod('load', 'channel', 1524);</code></pre>
+                    
+                    
+                    <h4>seek</h4>
+                    <p>Jumps to given position in played recorded video. Requires one argument:</p>
+                    <ul>
+                        <li>position in seconds</li>
+                    </ul>
+
+                    <h6>Example</h6>
+                    <pre><code class="javascript">viewer.callMethod('seek', 180);</code></pre>
+                    
+                    
+                    <h4>volume</h4>
+                    <p>Sets the playback sound volume. Requires one argument:</p>
+                    <ul>
+                        <li>volume percent between 0-100</li>
+                    </ul>
+
+                    <h6>Example</h6>
+                    <pre><code class="javascript">viewer.callMethod('volume', 0); //mute</code></pre>
+                    
+                    
+                    <h4>quality</h4>
+                    <p>Sets the stream quality, if available. Requires one argument:</p>
+                    <ul>
+                        <li>a <code>qualityID</code> key from received quality options in <code>quality</code> event</li>
+                    </ul>
+
+                    <h6>Example</h6>
+                    <pre><code class="javascript">viewer.callMethod('quality', 16); //set to high</code></pre>
+                    
+                    
+                    
+                    <h3>getProperty</h3>
+                    <p>Read a property of the embed player. This method is <strong>asynchronous</strong>, the data will be passed to a callback function, given as argument.<br/></p>
+                    <p>Accessible properties by <code>getProperty</code>:</p>
+                    
+                    <h4>duration</h4>
+                    <p>Get the video duration in seconds.</p>
+
+                    <h6>Example</h6>
+                    <pre><code class="javascript">viewer.getProperty('duration', function (duration) {
+    ...
+});</code></pre>
+                    
+                    
+                    <h4>viewers</h4>
+                    <p>Get the current viewer count for the loaded live stream.</p>
+
+                    <h6>Example</h6>
+                    <pre><code class="javascript">viewer.getProperty('viewers', function (viewerNumber) {
+    ...
+});</code></pre>
+                    
+                    
+                    <h4>progress</h4>
+                    <p>Get the current content type and id as an array.</p>
+
+                    <h6>Example</h6>
+                    <pre><code class="javascript">viewer.getProperty('progress', function (progress) {
+    ...
+});</code></pre>
+                    
+                    
+                    <h4>content</h4>
+                    <p>Get the current progress for recorded video playback, in seconds.</p>
+
+                    <h6>Example</h6>
+                    <pre><code class="javascript">viewer.getProperty('content', function (content) {
+    // content == ['channel', 1524]
+    // or
+    // content == ['recorded', 123456]
+    ...
+});</code></pre>
+					
+					<h4>playingContent</h4>
+                    <p>Get the actual content type and id as an array. This will return the currently played offair video's id if the loaded content is an offair channel or with the channel id if the channel is live.</p>
+
+                    <h6>Example</h6>
+                    <pre><code class="javascript">viewer.callMethod('load', 'channel', 1524);
+
+// ...
+
+viewer.getProperty('playingContent', function (content) {
+    // content == ['channel', 1524]
+    //  - if it's live, or
+    // content == ['recorded', 123456]
+    //  - if it's offair and has offair video content, or
+    // content == []
+    //  - if it's offair and doesn't have offair video content
+});</code></pre>
+                    
+                    
+                    
+                    <h3>addListener &amp; removeListener</h3>
+                    <p>The embed player dispatches several events during playback. This method adds or removes event handlers to these events.</p>
+                    <p>The event handler callback receives two arguments:</p>
+                    <ul>
+                        <li><code>type</code> the type of the event</li>
+                        <li><code>data</code> optional data sent along the event</li>
+                    </ul>
+                    <p>Available events for <code>addListener</code> and <code>removeListener</code>:</p>
+                    
+                    
+                    <h4>live</h4>
+                    <p>Called when the currently loaded offline channel becomes live.</p>
+
+                    <h6>Example</h6>
+                    <pre><code class="javascript">viewer.addListener('live', callBack);</code></pre>
+                    
+                    
+                    <h4>offline</h4>
+                    <p>Called when the currently loaded live channel goes offline.</p>
+
+                    <h6>Example</h6>
+                    <pre><code class="javascript">viewer.addListener('offline', callBack);</code></pre>
+                    
+                    
+                    <h4>finished</h4>
+                    <p>Called when the currently loaded and played recorded video reaches its end.</p>
+
+                    <h6>Example</h6>
+                    <pre><code class="javascript">viewer.addListener('finished', callBack);</code></pre>
+                    
+                    
+                    <h4>playing</h4>
+                    <p>Called when the currently loaded content playback is started or stopped. Sends data along the event:</p>
+                    <ul>
+                        <li><code>playing</code> (boolean)</li>
+                    </ul>
+
+                    <h6>Example</h6>
+                    <pre><code class="javascript">viewer.addListener('playing', callBack);</code></pre>
+                    
+                    
+                    <h4>size</h4>
+                    <p>Called when the stream size is available, or changed (changes reported only in flash mode). Sent data is the size of the calculated embed iframe according to the player width, and the stream aspect ratio. The player bar height is included, if the controls are visible.</p>
+                    <p>Sends data along the event:</p>
+                    <ul>
+                        <li><code>size</code> (array) as [<code>width</code>, <code>height</code>] in pixels</li>
+                    </ul>
+
+                    <h6>Example</h6>
+                    <pre><code class="javascript">viewer.addListener('size', callBack);</code></pre>
+                    
+                    
+                    <h4>quality</h4>
+                    <p>Fired when the stream quality options are available.</p>
+                    <p>Receives an object, with the <code>qualityID</code> as keys, and an object with two properties as values:</p>
+                    <ul>
+                        <li><code>label</code> (string) label to show to users on control UI, eg.: "480p"</li>
+                        <li><code>active</code> (booelan) if this quality is used or set</li>
+                    </ul>
+
+                    <h6>Example</h6>
+                    <pre><code class="javascript">viewer.addListener('quality', callBack);</code></pre>
+                    <pre><code class="javascript">// example quality object
+{
+    "0":{"label":"240p","active":false},
+    "1":{"label":"360p","active":false},
+    "2":{"label":"480p","active":false},
+    "16":{"label":"BEST","active":true}
+}</code></pre>
+                    
+                    <h4>syncedmeta</h4>
+                    <p>Called when a synced metadata has arrived on the stream/recorded. Used for keep presentations in sync with the live stream / recorded.</p>
+                    <p>Received arguments: <code>data</code> (object)</p>
+
+                    <h6>Example</h6>
+                    <pre><code class="javascript">viewer.addListener('syncedmeta', callBack);</code></pre>
+                    
+                    
+                    <h4>content</h4>
+                    <p>Called when a the player content changes for some reason. Same data as received in <code>getProperty('content')</code></p>
+                    <p>Received arguments: <code>data</code> (object)</p>
+
+                    <h6>Example</h6>
+                    <pre><code class="javascript">viewer.addListener('content', callBack);</code></pre>
+                </section>
+</article>
+            
+			
+			</div>
+			<div class="column column-4 sidebar">
+				<div class="stickyContent">
+					<h3>Related articles</h3>
+					<ul class="related">
+					
+					
+					
+						<li><a href="/api-docs/player-api/player.html">Player API Documentation</a></li>
+					
+        			
+					
+						<li><a href="/api-docs/player-api/basic-example.html">Basic example</a></li>
+					
+        			
+					
+						<li><a href="/api-docs/player-api/dynamic-insertion.html">Dynamic insertion</a></li>
+					
+        			
+					
+						<li><a href="/api-docs/player-api/player-fullscreen.html">Fullscreen example</a></li>
+					
+        			
+					
+						<li><a href="/api-docs/player-api/player-responsive-embed.html">Responsive embed example</a></li>
+					
+        			
+					
+						<li><a href="/api-docs/player-api/player-multiple-instances.html">Multiple instances</a></li>
+					
+        			
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</main>
+
+	
+
+
+	<footer>
+	<div class='row'>
+		<ul class="footer-nav clear">
+			<li><a href="http://www.ustream.tv/platform/pro?itm_source=footer_saas&amp;itm_medium=onsite&amp;itm_content=Product&amp;itm_campaign=footer">Product</a></li>
+			<li><a href="http://www.ustream.tv/platform/broadcast-anywhere/new?itm_source=footer_saas&amp;itm_medium=onsite&amp;itm_content=Apps&amp;itm_campaign=footer">Apps</a></li>
+			<li><a href="http://www.ustream.tv/our-company?itm_source=footer_saas&amp;itm_medium=onsite&amp;itm_content=About&amp;itm_campaign=footer">About</a></li>
+			<li><a href="http://www.ustream.tv/press?itm_source=footer_saas&amp;itm_medium=onsite&amp;itm_content=press&amp;itm_campaign=footer">Press</a></li>
+			<li><a href="http://www.ustream.tv/our-company/career?itm_source=footer_saas&amp;itm_medium=onsite&amp;itm_content=Career&amp;itm_campaign=footer">Career</a></li>
+			<li><a href="http://www.ustream.tv/our-company/change?itm_source=footer_saas&amp;itm_medium=onsite&amp;itm_content=Change&amp;itm_campaign=footer">Change</a></li>
+			<li><a href="https://ustream.zendesk.com/home">Support</a></li>
+			<li><a href="http://www.ustream.tv/explore/all?itm_source=footer_saas&amp;itm_medium=onsite&amp;itm_content=Watch&amp;itm_campaign=footer">Watch</a></li>
+			<li><a href="https://www.ustream.tv/platform/plans?itm_source=footer_saas&amp;itm_medium=onsite&amp;itm_content=Plans_and_Pricing&amp;itm_campaign=footer">Plans and Pricing</a></li>
+		</ul>
+		<ul class='footer-copy clear'>
+			<li><span class="copyright">© 2015 Ustream, Inc. All rights reserved.</span></li>
+            <li><a class="copyright-policy" href="http://www.ustream.tv/copyright-policy?itm_source=footer_saas&amp;itm_medium=onsite&amp;itm_content=Copyright_policy&amp;itm_campaign=footer">Copyright Policy</a></li>
+            <li><a class="privacy-policy" href="http://www.ustream.tv/privacy-policy?itm_source=footer_saas&amp;itm_medium=onsite&amp;itm_content=Privacy_policy&amp;itm_campaign=footer">Privacy Policy</a></li>
+            <li><a class="terms-of-service" href="http://www.ustream.tv/terms?itm_source=footer_saas&amp;itm_medium=onsite&amp;itm_content=Terms_of_service&amp;itm_campaign=footer">Terms of Service</a></li>
+		</ul>
+		<ul class='social clear'>
+			<li><a href='http://www.facebook.com/ustream'><i class="glyphicon icon-facebook"></i></a></li>
+			<li><a href='http://twitter.com/ustream'><i class="glyphicon icon-twitter"></i></a></li>
+			<li><a href='https://www.linkedin.com/company/ustream-inc'><i class="glyphicon icon-linkedin"></i></a></li>
+			<li><a href='https://plus.google.com/+UstreamTv2007' rel='publisher'><i class="glyphicon icon-google-plus"></i></a></li>
+		</ul>
+	</div>
+</footer>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-1359697-47', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+</body>
+</html>

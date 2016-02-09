@@ -1,0 +1,184 @@
+---
+layout: post
+title: Fullscreen example
+weight: 3
+category: player-api
+categoryItemType: example
+categoryItemIsShown: 1
+categoryItemWidth: 
+categoryItemDescription: 
+categoryItemLabel: 
+--- 
+
+
+<article>
+	<section>
+		<p>Third party player controls should implement the fullscreen functionality on the client side with the <a href="https://developer.mozilla.org/en-US/docs/Web/Guide/API/DOM/Using_full_screen_mode">HTML5 Fullscreen API</a>.</p>
+		
+		
+		<h3>Necessary steps</h3>
+		<ul>
+			<li>switch your embed container to fullscreen mode with HTML5 FullScreen API</li>
+			<li>handle the iframe size accordingly</li>
+			<li>Ustream embed will adopt to the resized iframe size responsively</li>
+		</ul>
+		
+		<div id="Container" style="padding-bottom:56.25% !important; position:relative; display:block; width: 100% !important">
+			<iframe id="UstreamIframe" width="100%" height="100%" src="http://www.ustream.tv/embed/1524?controls=false&html5ui" frameborder="0" allowfullscreen webkitallowfullscreen style="position:absolute; top:0; left: 0"></iframe>
+		</div>
+		<div class="text-center panel">
+			<div id="FullScreenButton" class="button ghost default" style="display:inline-block;">custom fullscreen switch button</div>
+		</div>
+		
+		<h4>Javascript</h4>
+		<pre>
+<code>var fullScreenBtn = document.getElementById('fullScreenBtn');
+var container = document.getElementById('Container');
+
+document.addEventListener("fullscreenchange",changeHandler);
+document.addEventListener("webkitfullscreenchange",changeHandler);
+document.addEventListener("mozfullscreenchange",changeHandler);
+document.addEventListener("MSFullscreenChange", changeHandler, false);
+
+// trigger fullscreen change on our custom button click
+fullScreenBtn.addEventListener('click',onFullScreenBtnClick);
+
+// check if the current state is fullscreen or not
+function isFullScreen () {
+  return document.fullScreen ||
+    document.webkitIsFullScreen ||
+    document.mozfullScreen ||
+	document.msFullscreenElement;
+}
+
+// change everything on other change events too
+function changeHandler () {
+  container.className = isFullScreen() ? 'fullscreen' : '';
+}
+
+// fullscreen button event handler
+function onFullScreenBtnClick () {
+  // if we are in fullscreen, then exit
+  if (isFullScreen()) {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.webkitExitFullscreen) {
+      document.webkitExitFullscreen();
+    } else if (document.mozExitFullScreen) {
+      document.mozExitFullScreen();
+    } else if (document.msExitFullscreen) {
+      document.msExitFullscreen();
+    }
+    // if we are in non-fullscreen mode, open it
+  } else {
+    if (container.requestFullscreen) {
+      container.requestFullscreen();
+    } else if (container.webkitRequestFullscreen) {
+      container.webkitRequestFullscreen();
+    } else if (container.mozRequestFullScreen) {
+      container.mozRequestFullScreen();
+    } else if (container.msRequestFullscreen) {
+      container.msRequestFullscreen();
+    }
+  }
+}
+</code></pre>
+		
+		<h4>HTML</h4>
+		<pre>
+<code class="xml">&lt;div id=&quot;Container&quot;&gt;
+  &lt;iframe id=&quot;UstreamIframe&quot;
+    width=&quot;100%&quot; height=&quot;100%&quot;
+    src=&quot;http://www.ustream.tv/embed/1524?controls=false&quot;
+    frameborder=&quot;0&quot; allowfullscreen&gt;&lt;/iframe&gt;
+
+  &lt;div id=&quot;fullScreenBtn&quot;&gt; custom fullscreen button &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+		
+		<h4>CSS</h4>
+			<pre>
+<code class="css">#Viewer {
+  position: relative;
+  width: 640px;
+  height: 390px;
+}
+
+#Viewer.fullscreen {
+  width: 100%;
+  height: 100%;
+}
+
+#FullScreen {
+  cursor: pointer;
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  padding: 5px;
+  background: #38f;
+  color: #fff;
+}
+</code></pre>
+	</section>
+</article>
+
+
+<script type="text/javascript">
+	(function () {
+		var fullScreenButton = document.getElementById('FullScreenButton');
+		var container = document.getElementById('Container');
+
+		// handle fullscreen event changes because of ESC / exit browser buttons
+		document.addEventListener("fullscreenchange", changeHandler, false);
+		document.addEventListener("webkitfullscreenchange", changeHandler, false);
+		document.addEventListener("mozfullscreenchange", changeHandler, false);
+		document.addEventListener("MSFullscreenChange", changeHandler, false);
+
+		// trigger fullscreen change on our custom button click
+		fullScreenButton.addEventListener('click', onFullScreenButtonClick);
+
+		// check if the current state is fullscreen or not
+		function isFullScreen () {
+			return document.fullScreen ||
+			document.webkitIsFullScreen ||
+			document.mozfullScreen ||
+			document.msFullscreenElement;
+		}
+
+		// change everything on other change events too
+		function changeHandler () {
+			container.className = isFullScreen() ? 'fullscreen' : '';
+		}
+
+		// fullscreen button event handler
+		function onFullScreenButtonClick () {
+			// if we are in fullscreen, then exit
+			if (isFullScreen()) {
+
+				if (document.exitFullscreen) {
+					document.exitFullscreen();
+				} else if (document.webkitExitFullscreen) {
+					document.webkitExitFullscreen();
+				} else if (document.mozExitFullScreen) {
+					document.mozExitFullScreen();
+				} else if (document.msExitFullscreen) {
+					document.msExitFullscreen();
+				}
+
+				// if we are in non-fullscreen mode, open it
+			} else {
+
+				if (container.requestFullscreen) {
+					container.requestFullscreen();
+				} else if (container.webkitRequestFullscreen) {
+					container.webkitRequestFullscreen();
+				} else if (container.mozRequestFullScreen) {
+					container.mozRequestFullScreen();
+				} else if (container.msRequestFullscreen) {
+					container.msRequestFullscreen();
+				}
+
+			}
+		}
+	}());
+</script>

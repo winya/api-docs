@@ -1,0 +1,254 @@
+---
+layout: post
+title: Multiview example
+weight: 5
+category: player-api
+categoryItemType: example
+categoryItemIsShown: 1
+categoryItemWidth:
+categoryItemDescription:
+categoryItemLabel:
+---
+
+
+<article>
+	<section class="intro">
+		<h3>Multiview example</h3>
+
+		<p>In this example the content of the player is loaded and changed dynamically, providing an easy way for seamless switching between live or VOD contents.</p>
+		<p>This feature of the Embed API can be used in various use cases, like switching between</p>
+
+		<ul>
+			<li>multiple cameras</li>
+			<li>simultaneous sessions of a conference</li>
+			<li>multi-language streams</li>
+		</ul>
+		<p>or to promote further channels.</p>
+	</section>
+
+	<section class="example">
+		<style>
+			.player-container {
+				padding-bottom: 56.25%;
+				position: relative;
+				width: 100%;
+			}
+
+			.player-container iframe {
+				position: absolute;
+				top: 0;
+				right: 0;
+				width: 100%;
+				height: 100%;
+			}
+
+			.multiview-chooser {
+				margin-top: 1rem;
+			}
+
+			.multiview-chooser ul {
+				margin: 0;
+			}
+
+			.multiview-chooser li {
+				width: 24%;
+				float: left;
+				margin: 0;
+				padding: 0;
+			}
+
+			.multiview-chooser li:not(:first-of-type) {
+				margin-left: 1.33%;
+			}
+
+			.multiview-chooser li:before {
+				display: none;
+			}
+
+			.multiview-chooser a {
+				display: block;
+			}
+
+			.multiview-chooser a.active:after {
+				display: block;
+				content: ' ';
+				position: absolute;
+				top: 0;
+				right: 0;
+				bottom: 0;
+				left: 0;
+				z-index: 100;
+				box-sizing: border-box;
+				border: 3px solid #38f;
+			}
+
+			.multiview-chooser img {
+				margin: 0;
+				padding: 0;
+			}
+		</style>
+
+		<div class="player-container">
+			<iframe id="MultiviewPlayer" src="//www.ustream.tv/embed/12762028?html5ui" frameborder="0" allowfullscreen webkitallowfullscreen scrolling="no"></iframe>
+		</div>
+
+		<div class="multiview-chooser">
+			<ul>
+				<li><a href="#" class="active" data-app="channel" data-id="12762028">
+					<img src="http://static.ddmcdn.com/gif/apl-tvhighlights-pbpaplthumbnail.png" alt="Animal Planet L!VE"/>
+				</a></li>
+
+				<li><a href="#" data-app="channel" data-id="13628077">
+					<img src="http://static.ddmcdn.com/gif/pacific-reef-270x152.jpg" alt="APL!VE Pacific Reef"/>
+				</a></li>
+
+				<li><a href="#" data-app="channel" data-id="14812707">
+					<img src="http://static.ddmcdn.com/gif/apl_live_sharks_270x152.jpg" alt="APL!VE Reef Sharks"/>
+				</a></li>
+
+				<li><a href="#" data-app="channel" data-id="14225913">
+					<img src="http://static.ddmcdn.com/gif/apl-tanked-clownfish.png" alt="APL!VE Tanked"/>
+				</a></li>
+			</ul>
+		</div>
+		<div class="clear"></div>
+
+		<script>
+			(function(){
+				var _contents = document.querySelectorAll('.multiview-chooser a'),
+					_active = _contents[0],
+					embedApi = UstreamEmbed('MultiviewPlayer');
+
+				Array.prototype.forEach.call(_contents, function (_a){
+					_a.onclick = function(e){
+						e.preventDefault();
+						e.stopPropagation();
+
+						embedApi.callMethod(
+							'load',
+							this.getAttribute('data-app'),
+							this.getAttribute('data-id')
+						);
+
+						_active.classList.remove('active');
+						this.classList.add('active');
+						_active = this;
+
+						return false;
+					};
+				});
+			})();
+		</script>
+	</section>
+
+	<section class="code">
+		<h4>HTML</h4>
+		<pre><code class="xml">&lt;div class="player-container"&gt;
+    &lt;iframe id="MultiviewPlayer" src="//www.ustream.tv/embed/12762028?html5ui" frameborder="0" allowfullscreen webkitallowfullscreen scrolling="no"&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;div class="multiview-chooser"&gt;
+    &lt;ul&gt;
+        &lt;li&gt;&lt;a href="#" class="active" data-app="channel" data-id="12762028"&gt;
+            &lt;img src="http://static.ddmcdn.com/gif/apl-tvhighlights-pbpaplthumbnail.png" alt="Animal Planet L!VE"/&gt;
+        &lt;/a&gt;&lt;/li&gt;
+
+        &lt;li&gt;&lt;a href="#" data-app="channel" data-id="13628077"&gt;
+            &lt;img src="http://static.ddmcdn.com/gif/pacific-reef-270x152.jpg" alt="APL!VE Pacific Reef"/&gt;
+        &lt;/a&gt;&lt;/li&gt;
+
+        &lt;li&gt;&lt;a href="#" data-app="channel" data-id="14812707"&gt;
+            &lt;img src="http://static.ddmcdn.com/gif/apl_live_sharks_270x152.jpg" alt="APL!VE Reef Sharks"/&gt;
+        &lt;/a&gt;&lt;/li&gt;
+
+        &lt;li&gt;&lt;a href="#" data-app="channel" data-id="14225913"&gt;
+            &lt;img src="http://static.ddmcdn.com/gif/apl-tanked-clownfish.png" alt="APL!VE Tanked"/&gt;
+        &lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+&lt;/div&gt;</code></pre>
+
+		<h4>Javascript</h4>
+		<pre><code class="javascript">var _contents = document.querySelectorAll('.multiview-chooser a'),
+    _active = _contents[0],
+    embedApi = UstreamEmbed('MultiviewPlayer');
+
+Array.prototype.forEach.call(_contents, function (_a){
+    _a.onclick = function(e){
+        e.preventDefault();
+        e.stopPropagation();
+
+        embedApi.callMethod(
+            'load',
+            this.getAttribute('data-app'),
+            this.getAttribute('data-id')
+        );
+
+        _active.classList.remove('active');
+        this.classList.add('active');
+        _active = this;
+
+        return false;
+    };
+});</code></pre>
+
+		<h4>CSS</h4>
+		<pre><code class="css">.player-container {
+    padding-bottom: 56.25%;
+    position: relative;
+    width: 100%;
+}
+
+.player-container iframe {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.multiview-chooser {
+    margin-top: 1rem;
+}
+
+.multiview-chooser ul {
+    margin: 0;
+}
+
+.multiview-chooser li {
+    width: 24%;
+    float: left;
+    margin: 0;
+    padding: 0;
+}
+
+.multiview-chooser li:not(:first-of-type) {
+    margin-left: 1.33%;
+}
+
+.multiview-chooser li:before {
+    display: none;
+}
+
+.multiview-chooser a {
+    display: block;
+}
+
+.multiview-chooser a.active:after {
+    display: block;
+    content: ' ';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+    box-sizing: border-box;
+    border: 3px solid #38f;
+}
+
+.multiview-chooser img {
+    margin: 0;
+    padding: 0;
+}</code></pre>
+	</section>
+</article>

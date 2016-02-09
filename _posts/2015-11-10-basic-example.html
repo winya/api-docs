@@ -1,0 +1,358 @@
+---
+layout: post
+title: Basic example
+weight: 1
+category: player-api
+categoryItemType: example
+categoryItemIsShown: 1
+categoryItemWidth: 
+categoryItemDescription: 
+categoryItemLabel: 
+--- 
+
+<article class="row">
+	<div style="padding-bottom:56.25%; position:relative; display:block; width: 100%">
+		<iframe src="http://www.ustream.tv/embed/1524?html5ui" id="UstreamFrame" width="100%" height="100%" allowfullscreen webkitallowfullscreen style="border: 0 transparent none; position:absolute; top:0; left: 0"></iframe>
+	</div>
+	<div class="panel clear">
+		<div class="row gutter-30">
+			<div class="column column-6 global-options">
+				<div class="row main-controls">
+					<div class="button button-icon control-play"><i class="glyphicon icon-play-2"></i>Play</div>
+					<div class="button button-icon control-pause"><i class="glyphicon icon-pause-2"></i>Pause</div>
+				</div>
+				<div class="row status">
+					<label>Status</label>
+					<span style="display: none;" class="st-live label status">LIVE</span>
+					<span style="display: none;" class="st-offline status label">OFFLINE</span>
+					<span style="display: none;" class="st-playing label">PLAYING</span>
+					<span style="display: none;" class="st-ended label">ENDED</span>
+				</div>
+				<label>Volume</label>
+				<div class="input-button-inside">
+					<input type="text" id="SetVolume" placeholder="1-100" />
+					<button type="button" class="button small control-volume">Set volume</button>	
+				</div>
+				<label>Content</label>
+				<input type="text" placeholder="Content ID" id="LoadContent">
+				<div class="control-select">
+					<select class="media-selector">
+						<option value="channel" selected="selected">Channel</option>
+						<option value="video">Video</option>
+					</select>
+					<div class="select"><span class="label">Channel</span><i class="glyphicon icon-down-2 pull-right"></i></div>
+				</div>
+				<button type="button" id="Load" class="button control-load-channel">Load</button>
+			</div>
+			<div class="column column-6">
+				<div class="channel-settings hidden">
+					<label>Video quality</label>
+					<div class="control-select">
+						<select class="quality-selector">
+						</select>
+						<div class="select"><span class="label">Quality</span><i class="glyphicon icon-down-2 pull-right"></i></div>
+					</div>
+					<label>Current viewers</label>
+					<div class="input-button-inside">
+						<input type="text" id="Viewers" readonly="readonly"/>
+						<button type="button" class="button small control-viewers">Get viewers</button>	
+					</div>
+				</div>
+				<div class="recorded-settings hidden">
+					<label>Seek</label>
+					<div class="input-button-inside">
+						<input type="text" id="SeekTo" placeholder="Time in secounds" />
+						<button type="button" class="button small control-seek">Seek to</button>	
+					</div>
+					<label>Video duration</label>
+					<div class="input-button-inside">
+						<input type="text" id="Duration" placeholder="" readonly="readonly"/>
+						<button type="button" class="button small control-duration">Get duration</button>	
+					</div>
+					<label>Video progress</label>
+					<div class="input-button-inside">
+						<input type="text" id="Progress" placeholder="" readonly="readonly"/>
+						<button type="button" class="button small control-progress">Get progress</button>	
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row gutter-30">
+		<h3>Example media</h3>
+		
+		<div class="media clear" data-media="4307895" data-type="channel">
+			<a class="pull-left" href="#">
+				<img class="media-object" src="../images/example-channel-creativelive.png" style="border-color:transparent">
+			</a>
+			<div class="media-body">
+				<h4 class="media-heading">creativeLIVE <small>channel</small></h4>
+				creativeLIVE provides the best free, live creative education on the web. We offer high-quality workshops in photography, business, video, web and graphic design, and more.
+			</div>
+		</div>
+		<div class="media clear" data-media="1524" data-type="channel">
+			<a class="pull-left" href="#">
+				<img class="media-object" src="../images/example-channel-twit.png" style="border-color:transparent">
+			</a>
+			<div class="media-body">
+				<h4 class="media-heading">TWiT Live <small>channel</small></h4>
+				Live from the TWiT Brick House, non-stop technology news and conversation with Leo Laporte and friends.
+			</div>
+		</div>
+		<div class="media clear" data-media="6540154" data-type="channel">
+		<a class="pull-left" href="#">
+			<img class="media-object" src="../images/example-channel-nasa.jpg">
+		</a>
+		<div class="media-body">
+			<h4 class="media-heading">NASA Public <small>channel</small></h4>
+			NASA TV airs a variety of regularly scheduled, pre-recorded educational and public relations programming 24 hours a day on its various channels.
+		</div>
+	</div>
+		<div class="media clear" data-media="25728478" data-type="video">
+		<a class="pull-left" href="#">
+			<img class="media-object" src="../images/example-channel-beatport.png" style="border-color:transparent">
+		</a>
+		<div class="media-body">
+			<h4 class="media-heading">Paul van Dyk Beatport Live <small>recorded</small></h4>
+			Beatport is the world's leading music store and community for DJs. Join our crowd here on Ustream and be notified when we stream live every Friday from our offices in Berlin, Germany and Denver, Colorado USA.
+		</div>
+	</div>
+	</div>
+</article>
+<style>
+	.panel {
+		 padding:0;
+	}
+	.panel .column {
+		padding-top: 2rem;
+		padding-bottom: 2rem;
+	}
+	.row.main-controls, .row.status {
+		margin-bottom: 2rem;
+	}
+	.panel label ~ label {
+		margin-top: 2rem;
+	}
+	.row.status label {
+		margin-bottom: 0
+	}
+	.label[class*="st-"] {
+		padding: 0 .4rem;
+		font-size: 1rem;
+		text-transform: uppercase;
+		font-weight: 700;
+		line-height: 1.7rem;
+		border-radius: 2px;
+		display: inline-block;
+	}
+	.label.st-live {
+		background-color: #ff3d23;
+		color: white;
+	}
+	.label.st-offline {
+		background-color: #9cacbc;
+		color: white;
+	}
+	.label.st-playing {
+		background-color: #539eec;
+		color: white;
+	}
+	.label.st-ended {
+		background-color: #e166b7;
+		color: white;
+	}
+	.media {
+		display: block;
+	}
+	.media-object {
+		width: 9.6rem;
+		margin-right: 2rem;
+		
+	}
+	.media-body {
+		font-size: 1.3rem;
+		line-height: 1.9rem;
+		color: #7c8c9c;
+	}
+	.media-body h4 {
+		font-size: 1.5rem;
+		line-height: 2.4rem;
+		font-weight: 600;
+		color: #2c3c4c;
+		display: block;
+		margin-bottom: 1rem;
+	}
+	.media-body small {
+		font-size: 1.1rem;
+		text-transform: uppercase;
+		font-weight: 700;
+		line-height: 1.8rem;
+		color: #539eec;
+		display: block;
+	}
+	
+</style>
+<script type="text/javascript">
+
+	$(document).ready(function () {
+		
+		viewer = UstreamEmbed("UstreamFrame");
+		
+		
+		$('.media').on("click", function (e) {
+			clearFields();
+			var target = $(e.currentTarget),
+				media = target.data('media'),
+				type = target.data('type');
+			viewer.callMethod('load', type, media);
+			e.preventDefault();
+		});
+
+		/* set up controls */
+		$('article .button').click(function (e) {
+			var target = $(e.currentTarget),
+			
+				control = target[0].className.match(/control-([a-zA-Z0-9\-]*)/);
+			
+			if (control && control[1]) {
+
+				switch (control[1]) {
+
+					case "play":
+						viewer.callMethod('play');
+						break;
+					case "pause":
+						viewer.callMethod('pause');
+						break;
+					case "seek":
+						viewer.callMethod('seek', $("#SeekTo").val());
+						break;
+					case "volume":
+						viewer.callMethod('volume', $("#SetVolume").val());
+						break;
+					case "duration":
+						viewer.getProperty('duration', function (data) {
+							$('#Duration').val(data);
+						});
+						break;
+					case "progress":
+						viewer.getProperty('progress', function (data) {
+							$('#Progress').val(data);
+						});
+						break;
+					case "viewers":
+						viewer.getProperty('viewers', function (data) {
+							$('#Viewers').val(data);
+						});
+						break;
+					case "content":
+						viewer.getProperty('content', function (data) {
+							$('#Content').val(data.join(','));
+						});
+						break;
+					case "load-video":
+						clearFields();
+						viewer.callMethod('load', 'video', $("#LoadContent").val());
+						break;
+					case "load-channel":
+						clearFields();
+						viewer.callMethod('load', 'channel', $("#LoadContent").val());
+						break;
+				}
+
+			}
+
+			e.preventDefault();
+		});
+		
+		$('.quality-selector').change(function() {
+			viewer.callMethod('quality', $(this).val());
+		});
+		
+		$('.media-selector').change(function() {
+			$(this).next().find('span').text($(this).find('option:selected').text());
+			$('#Load').attr('class','button control-load-'+$(this).val());
+		});
+
+
+		/* populate quality selector with received data */
+		var populateQualitySelector = function (data) {
+			var list =  $('.quality-selector');
+			list.empty();
+			for (var id in data) {
+				list.append('<option value="' + id + '" ' + (data[id].selected ? 'selected="selected"' : '') +'>' + data[id].label + '</option>');
+			}
+			
+			//updating value of the custom select gui element
+			list.next().find('span').text(list.find('option:selected').text());
+		}
+
+		/* clear some data fields that are relevant to content */
+		var clearFields = function () {
+			populateQualitySelector({});
+			$('#Progress').val('');
+			$('#Viewers').val('');
+			$('#Duration').val('');
+			$('.st-ended').hide();
+			$('.st-playing').hide();
+			$('.st-offline').hide();
+			$('.st-live').hide();
+		}
+
+		/* event handler for events received from the embed iframe */
+		var onEmbedEvent = function (event, data) {
+			console.log(event, data);
+			switch (event) {
+				case "ready":
+					clearFields();
+					break;
+				case "quality":
+					populateQualitySelector(data);
+					break;
+				case "live":
+					$('.st-live').show();
+					$('.st-offline').hide();
+					break;
+				case "offline":
+					$('.st-offline').show();
+					$('.st-live').hide();
+					break;
+				case "playing":
+					if (data) {
+						$('.st-playing').show()
+					} else {
+						$('.st-playing').hide();
+					}
+					break;
+				case "finished":
+					$('.st-ended').show();
+					break;
+				case "content":
+					$(".media-selector option").filter(function() {
+						var t = data[0].replace('recorded','video');
+    					return $(this).val() == t; 
+					}).attr('selected', true);
+					$('.media-selector').trigger('change');
+					$('#LoadContent').val(data[1]);
+					
+					$('.channel-settings, .recorded-settings').addClass('hidden');
+					$('.'+data[0]+'-settings').removeClass('hidden');
+					
+					break;
+				case "size":
+					break;
+			}
+		}
+		viewer.addListener('ready', onEmbedEvent);
+		viewer.addListener('quality', onEmbedEvent);
+		viewer.addListener('live', onEmbedEvent);
+		viewer.addListener('offline', onEmbedEvent);
+		viewer.addListener('playing', onEmbedEvent);
+		viewer.addListener('finished', onEmbedEvent);
+		viewer.addListener('size', onEmbedEvent);
+		viewer.addListener('content', onEmbedEvent);
+		
+	});
+
+</script>
+	

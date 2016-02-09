@@ -1,0 +1,161 @@
+---
+layout: post
+title: Multiple instances
+weight: 5
+category: player-api
+categoryItemType: example
+categoryItemIsShown: 1
+categoryItemWidth: 
+categoryItemDescription: 
+categoryItemLabel: 
+--- 
+
+<article>
+	<section>
+		<div style="padding-bottom:56.25%; position:relative; display:block; width: 100%">
+			<iframe src="http://www.ustream.tv/embed/1524?html5ui" id="FrameAlpha" width="100%" height="100%" allowfullscreen webkitallowfullscreen style="border: 0 transparent none; position:absolute; top:0; left: 0"></iframe>
+		</div>
+		<div class="panel clear">
+			<div id="PlayAlpha" class="button button-icon control-play"><i class="glyphicon icon-play-2"></i>Play</div>
+			<div id="PauseAlpha" class="button button-icon control-pause"><i class="glyphicon icon-pause-2"></i>Pause</div>
+			<div class="pull-right" id="StatusAlpha">
+				<span style="display: none;" class="st-live label status">LIVE</span>
+				<span style="display: none;" class="st-offline status label">OFFLINE</span>
+				<span style="display: none;" class="st-playing label">PLAYING</span>
+				<span style="display: none;" class="st-ended label">ENDED</span>
+			</div>
+		</div>
+	</section>
+	
+	<section>
+		<div style="padding-bottom:56.25%; position:relative; display:block; width: 100%">
+			<iframe src="http://www.ustream.tv/embed/6540154?html5ui" id="FrameBeta" width="100%" height="100%" allowfullscreen webkitallowfullscreen style="border: 0 transparent none; position:absolute; top:0; left: 0"></iframe>
+		</div>
+		<div class="panel clear">
+			<div id="PlayBeta" class="button button-icon control-play"><i class="glyphicon icon-play-2"></i>Play</div>
+			<div id="PauseBeta" class="button button-icon control-pause"><i class="glyphicon icon-pause-2"></i>Pause</div>
+			<div class="pull-right" id="StatusBeta">
+				<span style="display: none;" class="st-live label status">LIVE</span>
+				<span style="display: none;" class="st-offline status label">OFFLINE</span>
+				<span style="display: none;" class="st-playing label">PLAYING</span>
+				<span style="display: none;" class="st-ended label">ENDED</span>
+			</div>
+		</div>
+	</section>
+	
+	<section>
+		<div style="padding-bottom:56.25%; position:relative; display:block; width: 100%">
+			<iframe src="http://www.ustream.tv/embed/recorded/24364591?html5ui" id="FrameGamma" width="100%" height="100%" allowfullscreen webkitallowfullscreen style="border: 0 transparent none; position:absolute; top:0; left: 0"></iframe>
+		</div>
+		<div class="panel clear">
+			<div id="PlayGamma" class="button button-icon control-play"><i class="glyphicon icon-play-2"></i>Play</div>
+			<div id="PauseGamma" class="button button-icon control-pause"><i class="glyphicon icon-pause-2"></i>Pause</div>
+			<div class="pull-right" id="StatusGamma">
+				<span style="display: none;" class="st-live label status">LIVE</span>
+				<span style="display: none;" class="st-offline status label">OFFLINE</span>
+				<span style="display: none;" class="st-playing label">PLAYING</span>
+				<span style="display: none;" class="st-ended label">ENDED</span>
+			</div>
+		</div>
+	</section>
+</article>
+<style>
+	.label[class*="st-"] {
+		padding: 0 .4rem;
+		font-size: 1rem;
+		text-transform: uppercase;
+		font-weight: 700;
+		line-height: 1.7rem;
+		border-radius: 2px;
+		display: inline-block;
+	}
+	.label.st-live {
+		background-color: #ff3d23;
+		color: white;
+	}
+	.label.st-offline {
+		background-color: #9cacbc;
+		color: white;
+	}
+	.label.st-playing {
+		background-color: #539eec;
+		color: white;
+	}
+	.label.st-ended {
+		background-color: #e166b7;
+		color: white;
+	}
+</style>
+<script type="text/javascript">
+
+	$(document).ready(function () {
+
+		/*
+		 create player instances
+		 */
+		var alpha = UstreamEmbed("FrameAlpha"),
+				beta = UstreamEmbed("FrameBeta"),
+				gamma = UstreamEmbed("FrameGamma");
+
+
+		/*
+		 bind controls to buttons
+		 */
+		$('#PlayAlpha').on('click', function (e) { e.preventDefault(); e.stopPropagation(); alpha.callMethod('play'); });
+		$('#PlayBeta').on('click', function (e) { e.preventDefault(); e.stopPropagation(); beta.callMethod('play'); });
+		$('#PlayGamma').on('click', function (e) { e.preventDefault(); e.stopPropagation(); gamma.callMethod('play'); });
+
+		$('#PauseAlpha').on('click', function (e) { e.preventDefault(); e.stopPropagation(); alpha.callMethod('pause'); });
+		$('#PauseBeta').on('click', function (e) { e.preventDefault(); e.stopPropagation(); beta.callMethod('pause'); });
+		$('#PauseGamma').on('click', function (e) { e.preventDefault(); e.stopPropagation(); gamma.callMethod('pause'); });
+
+
+		/*
+		 event handler for events received from the embed iframe
+		 */
+		var onEmbedEvent = function (id, event, data) {
+
+			var parent = $('#' + id);
+
+			switch (event) {
+				case "live":
+					parent.find('.st-live').show();
+					parent.find('.st-offline').hide();
+					break;
+				case "offline":
+					parent.find('.st-offline').show();
+					parent.find('.st-live').hide();
+					break;
+				case "playing":
+					if (data) {
+						parent.find('.st-playing').show()
+					} else {
+						parent.find('.st-playing').hide();
+					}
+					break;
+				case "finished":
+					parent.find('.st-ended').show();
+					break;
+			}
+		}
+
+		/*
+		 adding event handlers, one by one
+		 */
+		alpha.addListener('live', $.proxy(onEmbedEvent, null, 'StatusAlpha'));
+		alpha.addListener('offline', $.proxy(onEmbedEvent, null, 'StatusAlpha'));
+		alpha.addListener('playing', $.proxy(onEmbedEvent, null, 'StatusAlpha'));
+		alpha.addListener('finished', $.proxy(onEmbedEvent, null, 'StatusAlpha'));
+
+		beta.addListener('live', $.proxy(onEmbedEvent, null, 'StatusBeta'));
+		beta.addListener('offline', $.proxy(onEmbedEvent, null, 'StatusBeta'));
+		beta.addListener('playing', $.proxy(onEmbedEvent, null, 'StatusBeta'));
+		beta.addListener('finished', $.proxy(onEmbedEvent, null, 'StatusBeta'));
+
+		gamma.addListener('live', $.proxy(onEmbedEvent, null, 'StatusGamma'));
+		gamma.addListener('offline', $.proxy(onEmbedEvent, null, 'StatusGamma'));
+		gamma.addListener('playing', $.proxy(onEmbedEvent, null, 'StatusGamma'));
+		gamma.addListener('finished', $.proxy(onEmbedEvent, null, 'StatusGamma'));
+
+	});
+</script>

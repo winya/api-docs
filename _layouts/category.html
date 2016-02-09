@@ -1,0 +1,48 @@
+---
+layout: default
+---
+<header class="hero small">
+	<div class="row">
+		<h1>{{ page.title }}</h1>
+	</div>
+</header>
+<main>
+	<article class="row gutter-20" data-egalize-heights=".column-6 .panel-wrapper">
+		{{ content }}
+		
+		{% assign sorted_documentations = site.categories[page.category] | sort:'weight' | where:'categoryItemType','documentation' %}
+		{% for post in sorted_documentations %}
+		{% if post.categoryItemIsShown == 1 %}
+		<div class="column column-{{post.categoryItemWidth}}">
+			<div class="panel">
+				<div class="panel-wrapper">
+					<h4>{{post.title}}</h4>
+					<p>{{post.categoryItemDescription}}</p>
+					<div class="panel-buttons"><a href="{{site.baseurl}}{{post.url}}">{{post.categoryItemLabel}}</a></div>
+				</div>
+			</div>
+		</div>
+		{% endif %}
+        {% endfor %}
+		
+		{% assign sorted_examples = site.categories[page.category] | sort:'weight' | where:'categoryItemType','example' %}
+		{% for post in sorted_examples %}
+		{% if forloop.first %}
+		<div class="column column-6">
+			<div class="panel">
+				<div class="panel-wrapper">
+					<h4>Examples</h4>
+					<ul>
+		{% endif %}
+		{% if post.categoryItemIsShown == 1 %}
+						<li><a href="{{site.baseurl}}{{post.url}}">{{post.title}}</a></li>
+		{% endif %}
+		{% if forloop.last %}
+					</ul>
+				</div>
+			</div>
+		</div>
+		{% endif %}
+        {% endfor %}
+	</article>
+</main>

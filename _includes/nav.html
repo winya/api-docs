@@ -1,0 +1,18 @@
+<nav id="Nav">
+	<div class="row">
+		<div class="nav-toggle">
+			<span class="bar"></span>
+			<span class="bar"></span>
+			<span class="bar"></span>
+		</div>
+		<a class="ustream-logo" href="{{ site.baseurl }}/"><span>Developers</span></a>
+		<ul class="nav">
+			{% for c in site.data.categories %}
+			<li {% if c[0] == page.category %} class="selected" {% endif %}>
+				<a href="{{ site.baseurl }}/{{ c[0] }}/">{{ c[1].name }}</i></a></li>	
+			{% endfor %}
+			<li class="has-borderright sep"></li>
+			<li><a href="http://www.ustream.tv">Back to ustream.tv</a></li>
+		</ul>
+	</div>
+</nav>

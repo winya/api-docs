@@ -1,0 +1,2757 @@
+---
+layout: post
+title: Channel API
+weight: 2
+category: broadcasting-api
+categoryItemType: documentation
+categoryItemIsShown: 1
+categoryItemWidth: 6
+categoryItemDescription: Manage your channels remotely, read and change security settings, branding, video recording, and many more.
+categoryItemLabel: Read the documentation
+---
+
+<article data-sidenav="sidenav">
+	<section>
+		<h2>Basic actions</h2>
+
+		<h3>Getting channel's details</h3>
+		<table class="table fill-bg-light1 table-chromeless">
+			<tr>
+				<td class="verb">GET</td>
+				<td><a>https://api.ustream.tv/channels/CHANNEL_ID.FORMAT</a> (format can be json or xml)</td>
+			</tr>
+		</table>
+
+		<h6>Parameters</h6>
+		<table class="table responsive">
+			<tr>
+				<th>parameter</th>
+				<th>type</th>
+				<th>importance</th>
+				<th width="100%">Description</th>
+			</tr>
+			<tr>
+				<td>detail_level</td>
+				<td>string</td>
+				<td>OPTIONAL</td>
+				<td>Verbosity level. Possible value: "minimal". In case of minimal verbosity level the result set is limited to id, title, picture, owner and locks data. If the channel is protected (see <a href="channel.html#security">security</a> section), only minimal data can be get without valid access token.</td>
+			</tr>
+		</table>
+
+		<h6>Response</h6>
+		<p>A key-value structures under a "channel" element. Example:</p>
+		<pre><code class="json">"channel": {
+	"id": "1111",
+	"title": "Channel title",
+	"description": "Description of channel",
+	"tags": [
+		"tag1",
+		"tag2"
+	],
+	"url": "channel-title",
+	"status": "offair",
+	"last_broadcast_at": 1400000000,
+	"tinyurl": "http://ustre.am/asdasd1",
+	"stats": {
+		"viewer_total": 10000000,
+		"viewer": 1000
+	},
+	"thumbnail": {
+		"live": "https://ustvstaticcdn1-a.akamaihd.net/images/defaults/channel_192x108:1.png"
+	},
+	"owner": {
+		"id": "1234",
+		"username": "api-user",
+		"picture": "https://ustvstaticcdn1-a.akamaihd.net/images/defaults/user_48x48:1.png"
+	},
+	"locks": []
+}</code></pre>
+
+		<p>Minimal response example:</p>
+		<pre><code class="json">"channel": {
+	"id": "1111",
+	"title": "Channel title",
+	"owner": {
+		"id": "1234",
+		"username": "api-user",
+		"picture": "https://ustvstaticcdn1-a.akamaihd.net/images/defaults/user_48x48:1.png"
+	},
+	"picture": {
+		"90x90": "https://ustvstaticcdn1-a.akamaihd.net/images/defaults/channel_90x90:1.png",
+		"66x66": ...
+	},
+	"locks": {
+		"hash": {
+			"type": "advanced",
+			"auth_method": "custom"
+		}
+	}
+}</code></pre>
+
+		<p>Explanation of some values:</p>
+		<table class="table responsive">
+			<tr>
+				<th>key</th>
+				<th>type</th>
+				<th width="100%">Description</th>
+			</tr>
+			<tr>
+				<td>url</td>
+				<td>string</td>
+				<td>Channel url name</td>
+			</tr>
+			<tr>
+				<td>status</td>
+				<td>string</td>
+				<td>Possible values: "live" or "offair"</td>
+			</tr>
+			<tr>
+				<td>last_broadcast_at</td>
+				<td>int</td>
+				<td>Last broadcast time in UNIX timestamp format</td>
+			</tr>
+			<tr>
+				<td>stats.viewer_total</td>
+				<td>int</td>
+				<td>Total viewer number</td>
+			</tr>
+			<tr>
+				<td>stats.viewer</td>
+				<td>int</td>
+				<td>Current viewer number when channel is live</td>
+			</tr>
+			<tr>
+				<td>locks</td>
+				<td>array</td>
+				<td>
+					<table class="table responsive">
+						<tr>
+							<th>key</th>
+							<th>type</th>
+							<th width="100%">Description</th>
+						</tr>
+						<tr>
+							<td>hash</td>
+							<td>array</td>
+							<td>3rd party viewer authentication is enabled for the channel. The "type" attribute can be either "basic" or "advanced". In case of advanced authentication, the "auth_method" attribute can contain "twostepauth" or "samlsso" for Ustream-supported authentication schemes or "custom" for other authentication methods.</td>
+						</tr>
+						<tr>
+							<td>password</td>
+							<td>array</td>
+							<td>Empty array if channel is password protected</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+
+		<h6>Error codes</h6>
+		<table class="table responsive">
+			<tr>
+				<th>error value</th>
+				<th>HTTP response code</th>
+				<th width="100%">Error conditions</th>
+			</tr>
+			<tr>
+				<td>not_found</td>
+				<td>404 Not Found</td>
+				<td>The given channel does not exist.</td>
+			</tr>
+			<tr>
+				<td>unauthorized</td>
+				<td>401 Unauthorized</td>
+				<td>The channel is locked.</td>
+			</tr>
+		</table>
+
+		<h3>Creating a channel</h3>
+		<p>Create a new channel for the current account.</p>
+
+		<h4>Prerequisites</h4>
+		<p>The caller must have an access token capable initializing channel creation. To obtain a token, the client must request one from the authorization server.</p>
+		<p>Clients can acquire tokens without expiration by asking for "offline" scope. By using this scope the token will never expire.</p>
+		<p>Example initialization of a web-server token-acquiring flow:</p>
+		<pre>https://www.ustream.tv/oauth2/authorize?response_type=code&amp;client_id=A...Z&amp;redirect_uri=http://...</pre>
+		<p>Example initialization of an implicit token-acquiring flow:</p>
+		<pre>https://www.ustream.tv/oauth2/authorize?response_type=token&amp;client_id=A...Z&amp;redirect_uri=http://...</pre>
+		<p><a href="getting-started.html#examples_9">See more examples</a></p>
+
+		<h4>Channel creation</h4>
+		<table class="table fill-bg-light1 table-chromeless">
+			<tr>
+				<td class="verb">POST</td>
+				<td><a href="https://api.ustream.tv/users/self/channels.json">https://api.ustream.tv/users/self/channels.json</a></td>
+			</tr>
+		</table>
+
+		<h6>Parameters</h6>
+		<table class="table responsive">
+			<tr>
+				<th>parameter</th>
+				<th>type</th>
+				<th>importance</th>
+				<th width="100%">Description</th>
+			</tr>
+			<tr>
+				<td><strong>title</strong></td>
+				<td>string</td>
+				<td>REQUIRED</td>
+				<td>Create the channel with this title</td>
+			</tr>
+			<tr>
+				<td>description</td>
+				<td>string</td>
+				<td>OPTIONAL</td>
+				<td>Create the channel with this description</td>
+			</tr>
+		</table>
+
+		<p>The body of the call should contain the channel title optionally it can contain channel description and tags. The Content-Type of the request should be <strong>application/x-www-form-urlencoded</strong>.</p>
+		<p>Example:</p>
+		<pre><code class="nohighlight">POST users/self/channels.json HTTP/1.1
+Host: api.ustream.tv
+Authorization: Bearer 3c2573673b782f6544405a22636f3d5d3b6f3950
+Content-Type: application/x-www-form-urlencoded
+
+title=API+Testing+Channel</code></pre>
+		<p class="note">The token in the above call is only an example.</p>
+
+		<h6>Positive response</h6>
+		<pre><code class="json">{
+	"channel": {
+		"id":"13091307",
+		"title":"Whatever Test 1234",
+		"url":"whatever-test-1234",
+		"tiny_url":"http://ustre.am/SVE7"
+	}
+}</code></pre>
+
+		<h6>Possible negative responses</h6>
+		<ul>
+			<li><strong>401 Unauthorized</strong>: The provided Access Token is missing, revoked, expired or malformed</li>
+			<li><strong>409 Conflict</strong>: The channel title or the channel url is already in use</li>
+			<li><strong>400 Bad Request</strong>: The channel title is invalid</li>
+			<li><strong>503 Service Unavailable</strong>: There is a temporary error on the server which makes it impossible to serve the request</li>
+		</ul>
+
+		<h3>Edit channel details</h3>
+		<p>Edit a channel's title, description and tags.</p>
+		<table class="table fill-bg-light1 table-chromeless">
+			<tr>
+				<td class="verb">PUT</td>
+				<td><a>https://api.ustream.tv/channels/CHANNEL_ID.FORMAT</a>
+					(format can be json or xml)</td>
+			</tr>
+		</table>
+
+		<h6>Parameters</h6>
+		<table class="table responsive">
+			<tr>
+				<th>parameter</th>
+				<th>type</th>
+				<th>importance</th>
+				<th width="100%">Description</th>
+			</tr>
+			<tr>
+				<td><strong>title</strong></td>
+				<td>string</td>
+				<td>REQUIRED</td>
+				<td>Channel title</td>
+			</tr>
+			<tr>
+				<td><strong>description</strong></td>
+				<td>string</td>
+				<td>OPTIONAL</td>
+				<td>Channel description</td>
+			</tr>
+			<tr>
+				<td><strong>tags</strong></td>
+				<td>string</td>
+				<td>OPTIONAL</td>
+				<td>Comma separated list of channel tags</td>
+			</tr>
+		</table>
+
+		<h6>Response</h6>
+		<p>On success a response with HTTP status 204 No Content is returned.</p>
+
+		<h6>Error codes</h6>
+		<table class="table responsive">
+			<tr>
+				<th>error value</th>
+				<th>HTTP response code</th>
+				<th width="100%">Error conditions</th>
+			</tr>
+			<tr>
+				<td>lack_of_ownership</td>
+				<td>403 Forbidden</td>
+				<td>The api user is not allowed to manage the given channel</td>
+			</tr>
+			<tr>
+				<td>input_validation_error</td>
+				<td>400 Bad request</td>
+				<td>If validation fails</td>
+			</tr>
+			<tr>
+				<td>not_found</td>
+				<td>404 Not found</td>
+				<td>Channel not found</td>
+			</tr>
+		</table>
+
+		<h3>Deleting a channel</h3>
+		<p>Permanently delete a channel from the current account.</p>
+		<table class="table fill-bg-light1 table-chromeless">
+			<tr>
+				<td class="verb">DELETE</td>
+				<td><a>https://api.ustream.tv/channels/CHANNEL_ID.FORMAT</a> (format can be json or xml)</td>
+			</tr>
+		</table>
+
+		<h6>Parameters</h6>
+		<p>This request has no parameters.</p>
+
+		<h6>Response</h6>
+		<p>On success a response with HTTP status 200 OK is returned.</p>
+
+		<h6>Error codes</h6>
+		<table class="table responsive">
+			<thead>
+				<tr>
+					<th>error value</th>
+					<th>HTTP response code</th>
+					<th width="100%">Error conditions</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>lack_of_ownership</td>
+					<td>403 Forbidden</td>
+					<td>The given channel does not belong to the user.</td>
+				</tr>
+				<tr>
+					<td>not_found</td>
+					<td>404 Not Found</td>
+					<td>The given channel does not exist.</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<h3>Listing the user's channels</h3>
+		<p>Get a detailed list of the user's channels, including live status, thumbnail, and mobile and broadcast urls</p>
+		<table class="table fill-bg-light1 table-chromeless">
+			<tr>
+				<td class="verb">GET</td>
+				<td><a>https://api.ustream.tv/users/self/channels.FORMAT</a>
+					(format can be json or xml)</td>
+			</tr>
+		</table>
+
+		<h6>Parameters</h6>
+		<table class="table responsive">
+			<tr>
+				<th>parameter</th>
+				<th>type</th>
+				<th>importance</th>
+				<th width="100%">Description</th>
+			</tr>
+			<tr>
+				<td><strong>p</strong></td>
+				<td>integer</td>
+				<td>OPTIONAL</td>
+				<td>Requested page number (1 by default)</td>
+			</tr>
+			<tr>
+				<td><strong>pagesize</strong></td>
+				<td>integer</td>
+				<td>OPTIONAL</td>
+				<td>Requested page size (100 by default)</td>
+			</tr>
+		</table>
+
+		<h6>Response</h6>
+		<p>A set of a key-value structures under a "channels" element. All of these elements are containing these informations:</p>
+		<table class="table responsive">
+			<tr>
+				<th>key</th>
+				<th>type</th>
+				<th width="100%">Description</th>
+			</tr>
+			<tr>
+				<td>id</td>
+				<td>string</td>
+				<td>Identifier of the channel</td>
+			</tr>
+			<tr>
+				<td>title</td>
+				<td>string</td>
+				<td>Title of the channel</td>
+			</tr>
+			<tr>
+				<td>url</td>
+				<td>string</td>
+				<td>Long web URL of the channel (<a>http://www.ustream.tv/channel/</a>...)</td>
+			</tr>
+			<tr>
+				<td>tiny_url</td>
+				<td>string</td>
+				<td>Shortened web URL of the channel (<a>http://ustre.am/</a>...) - suitable for sharing on Twitter / Facebook</td>
+			</tr>
+			<tr>
+				<td>status</td>
+				<td>string</td>
+				<td>Possible values: "online" or "offline". "online" means that the stream is viewable on the Ustream website.</td>
+			</tr>
+			<tr>
+				<td>broadcast_urls</td>
+				<td>array of string</td>
+				<td>Array of RTMP URLs (strings) where the client can broadcast. Client should fall-back to the second/third one if it provided and the previous element seems failing. Provided only in case of client explicitly asks for with a "broadcaster" detail_level query parameter.</td>
+			</tr>
+			<tr>
+				<td>default</td>
+				<td>boolean, optional</td>
+				<td>True if this is the default channel for the user. False or missing if it is not the default channel.</td>
+			</tr>
+			<tr>
+				<td>live_thumbnail</td>
+				<td>string</td>
+				<td>Listed when the channel is online.</td>
+			</tr>
+		</table>
+
+		<p>The paging information can be found inside the "paging" element. Example:</p>
+		<pre><code class="json">
+"paging": {
+  "previous": {
+	"href": "https://api.ustream.tv/users/self/channels.json?pagesize=PAGESIZE&p=PREVIOUS_PAGE"
+  },
+  "actual": {
+	"href": "https://api.ustream.tv/users/self/channels.json?pagesize=PAGESIZE&p=PAGE"
+  },
+  "next": {
+	"href": "https://api.ustream.tv/users/self/channels.json?pagesize=PAGESIZE&p=NEXT_PAGE"
+  }
+}</code></pre>
+	</section>
+
+	<section>
+		<h2>Security</h2>
+
+		<h3>Password protection</h3>
+		<p>When enabled, viewers must enter a password to view the show. This feature is currently disabled in both the iOS and Android apps.</p>
+		<table class="table fill-bg-light1 table-chromeless">
+			<tr>
+				<td class="verb">GET, PUT, DELETE</td>
+				<td><a>https://api.ustream.tv/channels/CHANNEL_ID/locks/password.FORMAT</a> (format can be json or xml)</td>
+			</tr>
+		</table>
+
+		<h6>Supported HTTP methods:</h6>
+		<table class="table responsive">
+			<tr>
+				<th>HTTP method</th>
+				<th width="100%">Description</th>
+			</tr>
+			<tr>
+				<td>GET</td>
+				<td>Returns the password protection status</td>
+			</tr>
+			<tr>
+				<td>PUT</td>
+				<td>Sets the channel password and enables password protection as well</td>
+			</tr>
+			<tr>
+				<td>DELETE</td>
+				<td>Removes the channel password, disables password protection status</td>
+			</tr>
+		</table>
+
+		<h6>Parameters</h6>
+		<p>GET and DELETE requests have no parameters.<br> The parameters for the PUT request:</p>
+		<table class="table responsive">
+			<tr>
+				<th>parameter</th>
+				<th>type</th>
+				<th>importance</th>
+				<th width="100%">Description</th>
+			</tr>
+			<tr>
+				<td><strong>password</strong></td>
+				<td>string</td>
+				<td>REQUIRED</td>
+				<td>The new channel password</td>
+			</tr>
+		</table>
+
+		<h6>Response</h6>
+		<p>For DELETE and PUT an empty response is returned.<br> The result for the GET request:</p>
+		<table class="table responsive">
+			<tr>
+				<th>key</th>
+				<th>type</th>
+				<th width="100%">Description</th>
+			</tr>
+			<tr>
+				<td>enabled</td>
+				<td>boolean</td>
+				<td>password protection status</td>
+			</tr>
+		</table>
+
+		<h6>Error codes</h6>
+		<table class="table responsive">
+			<tr>
+				<th>error value</th>
+				<th>HTTP response code</th>
+				<th width="100%">Error conditions</th>
+			</tr>
+			<tr>
+				<td>input_validation_error</td>
+				<td>400 Bad Request</td>
+				<td>The given password is invalid.</td>
+			</tr>
+			<tr>
+				<td>lack_of_ownership</td>
+				<td>403 Forbidden</td>
+				<td>The given channel does not belong to the user.</td>
+			</tr>
+			<tr>
+				<td>not_found</td>
+				<td>404 Not Found</td>
+				<td>The given channel does not exist.</td>
+			</tr>
+		</table>
+
+		<h3>3rd party viewer authentication</h3>
+		<p>Use third party authentication on viewing Ustream video content (live or recorded video). Technically it is a handshake mechanism between your service and the Ustream infrastructure.</p>
+
+		<h4>Basic authentication</h4>
+		<table class="table fill-bg-light1 table-chromeless">
+			<tr>
+				<td class="verb">PUT</td>
+				<td><a>https://api.ustream.tv/channels/CHANNEL_ID/locks/hash/basic.FORMAT</a> (format can be json or xml)</td>
+			</tr>
+		</table>
+
+		<h6>Parameters</h6>
+		<table class="table responsive">
+			<tr>
+				<th>parameter</th>
+				<th>type</th>
+				<th>importance</th>
+				<th width="100%">Description</th>
+			</tr>
+			<tr>
+				<td><strong>url</strong></td>
+				<td>string</td>
+				<td>REQUIRED</td>
+				<td>Third party url</td>
+			</tr>
+			<tr>
+				<td><strong>secret</strong></td>
+				<td>string</td>
+				<td>REQUIRED</td>
+				<td>Secret key</td>
+			</tr>
+		</table>
+
+		<h6>Response</h6>
+		<p>On success a response with HTTP status 201 Created is returned when new hash lock was inserted for the channel.<br> On success a response with HTTP status 204 No Content is returned when an old hash lock was updated for the channel.<br/>Specific error codes:</p>
+		<table class="table responsive">
+			<tr>
+				<th>error value</th>
+				<th>HTTP response code</th>
+				<th width="100%">Error conditions</th>
+			</tr>
+			<tr>
+				<td>invalid_request</td>
+				<td>400 Bad Request</td>
+				<td>When one or more required parameters are missing or the user
+					has no access to hash lock</td>
+			</tr>
+			<tr>
+				<td>invalid_type</td>
+				<td>400 Bad Request</td>
+				<td>The specified type is invalid or unsupported</td>
+			</tr>
+		</table>
+
+		<h4>Advanced authentication</h4>
+		<table class="table fill-bg-light1 table-chromeless">
+			<tr>
+				<td class="verb">PUT</td>
+				<td><a>https://api.ustream.tv/channels/CHANNEL_ID/locks/hash/advanced.FORMAT</a> (format can be json or xml)</td>
+			</tr>
+		</table>
+
+		<h6>Parameters</h6>
+		<table class="table responsive">
+			<tr>
+				<th>parameter</th>
+				<th>type</th>
+				<th>importance</th>
+				<th width="100%">Description</th>
+			</tr>
+			<tr>
+				<td><strong>url</strong></td>
+				<td>string</td>
+				<td>REQUIRED</td>
+				<td>Third party url</td>
+			</tr>
+			<tr>
+				<td><strong>secret</strong></td>
+				<td>string</td>
+				<td>REQUIRED</td>
+				<td>Secret key</td>
+			</tr>
+			<tr>
+				<td><strong>message</strong></td>
+				<td>string</td>
+				<td>REQUIRED</td>
+				<td>Displayed message</td>
+			</tr>
+			<tr>
+				<td><strong>button_caption</strong></td>
+				<td>string</td>
+				<td>REQUIRED</td>
+				<td>Button caption</td>
+			</tr>
+			<tr>
+				<td><strong>popup_width</strong></td>
+				<td>int</td>
+				<td>REQUIRED</td>
+				<td>Popup width</td>
+			</tr>
+			<tr>
+				<td><strong>popup_height</strong></td>
+				<td>string</td>
+				<td>REQUIRED</td>
+				<td>Popup height</td>
+			</tr>
+		</table>
+
+		<h6>Response</h6>
+		<p>On success a response with HTTP status 201 Created is returned when new hash lock was inserted for the channel.<br> On success a response with HTTP status 204 No Content is returned when an old hash lock was updated for the channel.<br/>Specific error codes:</p>
+		<table class="table responsive">
+			<tr>
+				<th>error value</th>
+				<th>HTTP response code</th>
+				<th width="100%">Error conditions</th>
+			</tr>
+			<tr>
+				<td>invalid_request</td>
+				<td>400 Bad Request</td>
+				<td>When one or more required parameters are missing or the user has no access to hash lock</td></tr>
+			<tr>
+				<td>invalid_type</td>
+				<td>400 Bad Request</td>
+				<td>The specified type is invalid or unsupported</td>
+			</tr>
+		</table>
+
+		<h4>Remove authentication</h4>
+		<table class="table fill-bg-light1 table-chromeless">
+			<tr>
+				<td class="verb">DELETE</td>
+				<td><a>https://api.ustream.tv/channels/CHANNEL_ID/locks/hash.FORMAT</a> (format can be json or xml)</td>
+			</tr>
+		</table>
+
+		<h6>Parameters</h6>
+		<p>This request has no parameters.</p>
+
+		<h6>Response</h6>
+		<p>On success a response with HTTP status 200 OK is returned.</p>
+
+		<h3>Embed restriction</h3>
+		<p>By default all Ustream channels can be embedded anywhere across the internet. By restricting the embed URLs, you can control the viewing experience and limit distribution to your own preferred partners.</p>
+
+		<h4>Get embed lock status</h4>
+		<table class="table fill-bg-light1 table-chromeless">
+			<tr>
+				<td>GET</td>
+				<td><a>https://api.ustream.tv/channels/CHANNEL_ID/locks/embed.FORMAT</a> (format can be json or xml)</td>
+			</tr>
+		</table>
+
+		<h6>Parameters</h6>
+		<p>This request has no parameters.</p>
+
+		<h6>Response</h6>
+		<p>On success a response with HTTP status 200</p>
+		<table class="table responsive">
+			<tr>
+				<th>key</th>
+				<th>type</th>
+				<th width="100%">Description</th>
+			</tr>
+			<tr>
+				<td>locked</td>
+				<td>string</td>
+				<td>Returns TRUE if the embed lock is set to the channel, FALSE otherwise</td>
+			</tr>
+		</table>
+
+		<h6>Error codes</h6>
+		<table class="table responsive">
+			<tr>
+				<th>error value</th>
+				<th>HTTP response code</th>
+				<th width="100%">Error conditions</th>
+			</tr>
+			<tr>
+				<td>invalid_request</td>
+				<td>402 Payment Required</td>
+				<td>If the user does not have the embed_restriction benefit</td>
+			</tr>
+		</table>
+
+		<h4>Edit embed lock</h4>
+		<table class="table fill-bg-light1 table-chromeless">
+			<tr>
+				<td class="verb">PUT</td>
+				<td><a>https://api.ustream.tv/channels/CHANNEL_ID/locks/embed.FORMAT</a> (format can be json or xml)</td>
+			</tr>
+		</table>
+
+		<h6>Parameters</h6>
+		<table class="table responsive">
+			<tr>
+				<th>parameter</th>
+				<th>type</th>
+				<th>importance</th>
+				<th width="100%">Description</th>
+			</tr>
+			<tr>
+				<td><strong>locked</strong></td>
+				<td>string</td>
+				<td>REQUIRED</td>
+				<td>Set embed lock on channel when parameter locked==TRUE,
+					remove embed lock when locked==FALSE</td>
+			</tr>
+		</table>
+
+		<h6>Response</h6>
+		<p>On success a response with HTTP status 204 No Content is returned.</p>
+
+		<h6>Error codes</h6>
+		<table class="table responsive">
+			<tr>
+				<th>error value</th>
+				<th>HTTP response code</th>
+				<th width="100%">Error conditions</th>
+			</tr>
+			<tr>
+				<td>invalid_request</td>
+				<td>402 Payment Required</td>
+				<td>If the user does not have the embed_restriction benefit</td>
+			</tr>
+			<tr>
+				<td>invalid_request</td>
+				<td>400 Bad Request</td>
+				<td>If the request parameter is missing or invalid</td>
+			</tr>
+		</table>
+
+		<h4>Get embed lock url whitelist</h4>
+		<table class="table fill-bg-light1 table-chromeless">
+			<tr>
+				<td class="verb">GET</td>
+				<td><a>https://api.ustream.tv/channels/CHANNEL_ID/locks/embed/allowed-urls.FORMAT</a> (format can be json or xml)</td>
+			</tr>
+		</table>
+
+		<h6>Parameters</h6>
+		<p>This request has no parameters.</p>
+
+		<h6>Response</h6>
+		<p>On success a response with HTTP status 200</p>
+		<table class="table responsive">
+			<tr>
+				<th>key</th>
+				<th>type</th>
+				<th width="100%">Description</th>
+			</tr>
+			<tr>
+				<td>allowed_urls</td>
+				<td>array</td>
+				<td>Return the url list from the allowed urls embed lock list no matter where it was set. Return empty array if the lock is FALSE.</td>
+			</tr>
+		</table>
+
+		<h6>Error codes</h6>
+		<table class="table responsive">
+			<tr>
+				<th>error value</th>
+				<th>HTTP response code</th>
+				<th width="100%">Error conditions</th>
+			</tr>
+			<tr>
+				<td>invalid_request</td>
+				<td>402 Payment Required</td>
+				<td>If the user does not have the embed_restriction benefit</td>
+			</tr>
+		</table>
+
+		<h4>Add url to embed lock url whitelist</h4>
+		<table class="table fill-bg-light1 table-chromeless">
+			<tr>
+				<td class="verb">POST</td>
+				<td><a>https://api.ustream.tv/channels/CHANNEL_ID/locks/embed/allowed-urls.FORMAT</a> (format can be json or xml)</td>
+			</tr>
+
+		</table>
+
+		<h6>Parameters</h6>
+		<table class="table responsive">
+			<tr>
+				<th>parameter</th>
+				<th>type</th>
+				<th>importance</th>
+				<th width="100%">Description</th>
+			</tr>
+			<tr>
+				<td><strong>url</strong></td>
+				<td>string</td>
+				<td>REQUIRED</td>
+				<td>Add the url to the url whitelist</td>
+			</tr>
+		</table>
+		<p>You can only add one URL per API call.</p>
+
+		<h6>Response</h6>
+		<p>On success a response with HTTP status 201 Created is returned.</p>
+
+		<h6>Error codes</h6>
+		<table class="table responsive">
+			<tr>
+				<th>error value</th>
+				<th>HTTP response code</th>
+				<th width="100%">Error conditions</th>
+			</tr>
+			<tr>
+				<td>invalid_request</td>
+				<td>402 Payment Required</td>
+				<td>If the user does not have the embed_restriction benefit</td>
+			</tr>
+			<tr>
+				<td>invalid_request</td>
+				<td>400 Bad Request</td>
+				<td>If the request parameter is missing or invalid</td>
+			</tr>
+		</table>
+
+		<h4>Empty the embed lock url whitelist</h4>
+		<table class="table fill-bg-light1 table-chromeless">
+			<tr>
+				<td class="verb">DELETE</td>
+				<td><a>https://api.ustream.tv/channels/CHANNEL_ID/locks/embed/allowed-urls.FORMAT</a> (format can be json or xml)</td>
+			</tr>
+		</table>
+
+		<h6>Parameters</h6>
+		<p>This request has no parameters.</p>
+
+		<h6>Response</h6>
+		<p>On success a response with HTTP status 200 OK is returned.</p>
+
+		<h6>Error codes</h6>
+		<table class="table responsive">
+			<tr>
+				<th>error value</th>
+				<th>HTTP response code</th>
+				<th width="100%">Error conditions</th>
+			</tr>
+			<tr>
+				<td>invalid_request</td>
+				<td>402 Payment Required</td>
+				<td>If the user does not have the embed_restriction benefit</td>
+			</tr>
+		</table>
+
+		<h3>Sharing control</h3>
+		<p>By turning this feature on the sharing feature will be removed from the viewer.</p>
+		<table class="table fill-bg-light1 table-chromeless">
+			<tr>
+				<td class="verb">PUT</td>
+				<td><a>https://api.ustream.tv/channels/CHANNEL_ID/settings/viewer.FORMAT</a> (format can be json or xml)</td>
+			</tr>
+		</table>
+
+		<h6>Parameters</h6>
+		<table class="table responsive">
+			<tr>
+				<th>parameter</th>
+				<th>type</th>
+				<th>importance</th>
+				<th width="100%">Description</th>
+			</tr>
+			<tr>
+				<td><strong>sharing</strong></td>
+				<td>boolean</td>
+				<td>REQUIRED</td>
+				<td>Enable or disable sharing</td>
+			</tr>
+		</table>
+
+		<h6>Response</h6>
+		<p>On success a response with HTTP status 200 OK is returned.</p>
+
+		<h6>Error Codes</h6>
+		<table class="table responsive">
+			<tr>
+				<th>error value</th>
+				<th>HTTP response code</th>
+				<th width="100%">Error conditions</th>
+			</tr>
+			<tr>
+				<td>invalid_sharing</td>
+				<td>400 Bad Request</td>
+				<td>The specified sharing is invalid or unsupported.</td>
+			</tr>
+			<tr>
+				<td>payment_required</td>
+				<td>402 Payment Required</td>
+				<td>The user does not have access to control sharing</td>
+			</tr>
+		</table>
+	</section>
+
+	<section>
+		<h2>Whitelabel Broadcasting</h2>
+
+		<h3>Branding control</h3>
+		<p>With co-branding, you can display your brand prominently in the player. With full branding, you can even remove the default Ustream watermark. No-branding allows removing the Ustream watermark and go with no watermark at all.</p>
+
+		<h4>Set branding type</h4>
+		<table class="table fill-bg-light1 table-chromeless">
+			<tr>
+				<td class="verb">PUT</td>
+				<td><a>https://api.ustream.tv/channels/CHANNEL_ID/branding.FORMAT</a> (format can be json or xml)</td>
+			</tr>
+		</table>
+
+		<h6>Parameters</h6>
+		<table class="table responsive">
+			<tr>
+				<th>parameter</th>
+				<th>type</th>
+				<th>importance</th>
+				<th width="100%">Description</th>
+			</tr>
+			<tr>
+				<td><strong>type</strong></td>
+				<td>string</td>
+				<td>REQUIRED</td>
+				<td>Branding type</td>
+			</tr>
+		</table>
+		<p class="note">The type parameter must be passed in the HTTP body, not in the URL.</p>
+
+		<h6>Available branding types</h6>
+		<table class="table responsive">
+			<tr>
+				<th>type</th>
+				<th width="100%">Description</th>
+			</tr>
+			<tr>
+				<td>co</td>
+				<td>Co-branding</td>
+			</tr>
+			<tr>
+				<td>full</td>
+				<td>Full-branding</td>
+			</tr>
+			<tr>
+				<td>no</td>
+				<td>No branding</td>
+			</tr>
+		</table>
+
+		<h6>Response</h6>
+		<p>On success a response with HTTP status 200 OK is returned.</p>
+
+		<h6>Error codes</h6>
+		<table class="table responsive">
+			<tr>
+				<th>error value</th>
+				<th>HTTP response code</th>
+				<th width="100%">Error conditions</th>
+			</tr>
+			<tr>
+				<td>invalid_type</td>
+				<td>400 Bad Request</td>
+				<td>The specified type is invalid or unsupported.</td>
+			</tr>
+			<tr>
+				<td>payment_required</td>
+				<td>402 Payment Required</td>
+				<td>The user does not have access to the specified branding type</td>
+			</tr>
+		</table>
+
+		<h4>Disable branding</h4>
+		<table class="table fill-bg-light1 table-chromeless">
+			<tr>
+				<td class="verb">DELETE</td>
+				<td>
+					<a>https://api.ustream.tv/channels/CHANNEL_ID/branding.FORMAT</a> (format can be json or xml)</td>
+			</tr>
+		</table>
+
+		<h6>Parameters</h6>
+		<p>This request has no parameters.</p>
+
+		<h6>Response</h6>
+		<p>On success a response with HTTP status 200 OK is returned.</p>
+
+		<h4>Update logo settings</h4>
+		<table class="table fill-bg-light1 table-chromeless">
+			<tr>
+				<td class="verb">PUT</td>
+				<td><a>https://api.ustream.tv/channels/CHANNEL_ID/branding/logo/LOGO_ID/settings.FORMAT</a> (format can be json or xml)</td>
+			</tr>
+		</table>
+		<p class="note">Only 0 is supported as LOGO_ID currently.</p>
+
+		<h6>Parameters</h6>
+		<table class="table responsive">
+			<tr>
+				<th>parameter</th>
+				<th>type</th>
+				<th>importance</th>
+				<th width="100%">Description</th>
+			</tr>
+			<tr>
+				<td><strong>position</strong></td>
+				<td>string</td>
+				<td>REQUIRED</td>
+				<td>Logo position<br/>Supported values: "top-left", "top-middle", "top-right", "middle-left", "middle-right", "bottom-left", "bottom-middle", "bottom-right"</td>
+			</tr>
+			<tr>
+				<td><strong>margin</strong></td>
+				<td>unsigned int</td>
+				<td>REQUIRED</td>
+				<td>Amount of margin</td>
+			</tr>
+			<tr>
+				<td><strong>link</strong></td>
+				<td>string</td>
+				<td>REQUIRED</td>
+				<td>Logo click url (valid url, or empty string)</td>
+			</tr>
+		</table>
+		<p class="note">The type parameter must be passed in the HTTP body, not in the URL.</p>
+
+		<h6>Response</h6>
+		<p>On success a response with HTTP status 200 OK is returned.</p>
+
+		<h6>Error codes</h6>
+		<table class="table responsive">
+			<tr>
+				<th>error value</th>
+				<th>HTTP response code</th>
+				<th width="100%">Error conditions</th>
+			</tr>
+			<tr>
+				<td>invalid_position</td>
+				<td>400 Bad Request</td>
+				<td>The specified position is invalid or unsupported.</td>
+			</tr>
+			<tr>
+				<td>invalid_margin</td>
+				<td>400 Bad Request</td>
+				<td>The specified margin is invalid.</td>
+			</tr>
+			<tr>
+				<td>invalid_link</td>
+				<td>400 Bad Request</td>
+				<td>The specified link is invalid.</td>
+			</tr>
+			<tr>
+				<td>payment_required</td>
+				<td>402 Payment Required</td>
+				<td>The user does not have access to channel branding</td>
+			</tr>
+		</table>
+
+		<h4>Uploading logo</h4>
+		<table class="table fill-bg-light1 table-chromeless">
+			<tr>
+				<td class="verb">PUT</td>
+				<td><a>https://api.ustream.tv/channels/CHANNEL_ID/branding/logo/LOGO_ID.FORMAT</a> (format can be json or xml)</td>
+			</tr>
+		</table>
+		<p class="note">Only 0 is supported as LOGO_ID currently.</p>
+
+		<h6>Request</h6>
+		<p>The logo must be passed in the HTTP body.</p>
+
+		<table class="table responsive">
+			<tr>
+				<td class="verb">Supported image types</td>
+				<td width="100%">image/jpeg, image/png, image/gif</td>
+			</tr>
+			<tr>
+				<td class="verb">Maximum width</td>
+				<td>170px</td>
+			</tr>
+			<tr>
+				<td class="verb">Maximum height</td>
+				<td>170px</td>
+			</tr>
+		</table>
+
+		<h6>Response</h6>
+		<p>On success a response with HTTP status 200 OK is returned.</p>
+
+		<h6>Error codes</h6>
+		<table class="table responsive">
+			<tr>
+				<th>error value</th>
+				<th>HTTP response code</th>
+				<th width="100%">Error conditions</th>
+			</tr>
+			<tr>
+				<td>invalid_file</td>
+				<td>400 Bad Request</td>
+				<td>The specified file is invalid or unsupported.</td>
+			</tr>
+			<tr>
+				<td>invalid_image</td>
+				<td>400 Bad Request</td>
+				<td>The specified image is invalid.</td>
+			</tr>
+			<tr>
+				<td>payment_required</td>
+				<td>402 Payment Required</td>
+				<td>The user does not have access to channel branding</td>
+			</tr>
+		</table>
+
+		<h3>Channel page control</h3>
+		<p>Your channel and videos will not be found anywhere on ustream.tv. Viewers will only be able to watch embedded players on external websites. If you want the channel to appear only on your own website, make sure to restrict URL embeds to your site as well.</p>
+
+		<h4>Get page lock setting</h4>
+		<table class="table fill-bg-light1 table-chromeless">
+			<tr>
+				<td class="verb">GET</td>
+				<td><a>https://api.ustream.tv/channels/CHANNEL_ID/locks/page.FORMAT</a>(format can be json or xml)</td>
+			</tr>
+		</table>
+
+		<h6>Parameters</h6>
+		<p>This request has no parameters.</p>
+
+		<h6>Response</h6>
+		<p>On success a response with HTTP status 200</p>
+		<table class="table responsive">
+			<tr>
+				<th>key</th>
+				<th>type</th>
+				<th width="100%">Description</th>
+			</tr>
+			<tr>
+				<td>locked</td>
+				<td>string</td>
+				<td>Returns TRUE if the page lock is set to the channel, FALSE otherwise</td>
+			</tr>
+		</table>
+
+		<h6>Error codes</h6>
+		<table class="table responsive">
+			<tr>
+				<th>error value</th>
+				<th>HTTP response code</th>
+				<th width="100%">Error conditions</th>
+			</tr>
+			<tr>
+				<td>invalid_request</td>
+				<td>402 Payment Required</td>
+				<td>If the user does not have the page_lock benefit</td>
+			</tr>
+		</table>
+
+		<h4>Edit page lock</h4>
+		<table class="table fill-bg-light1 table-chromeless">
+			<tr>
+				<td class="verb">PUT</td>
+				<td>
+					<a>https://api.ustream.tv/channels/CHANNEL_ID/locks/page.FORMAT</a>
+					(format can be json or xml)</td>
+			</tr>
+		</table>
+
+		<h6>Parameters</h6>
+		<table class="table responsive">
+			<tr>
+				<th>parameter</th>
+				<th>type</th>
+				<th>importance</th>
+				<th width="100%">Description</th>
+			</tr>
+			<tr>
+				<td><strong>locked</strong></td>
+				<td>string</td>
+				<td>REQUIRED</td>
+				<td>Set page lock on channel when parameter locked==TRUE, remove
+					page lock when locked==FALSE</td>
+			</tr>
+		</table>
+
+		<h6>Response</h6>
+		<p>On success a response with HTTP status 204 No Content is returned.</p>
+
+		<h6>Error codes</h6>
+		<table class="table responsive">
+			<tr>
+				<th>error value</th>
+				<th>HTTP response code</th>
+				<th width="100%">Error conditions</th>
+			</tr>
+			<tr>
+				<td>invalid_request</td>
+				<td>402 Payment Required</td>
+				<td>If the user does not have the page_lock benefit</td>
+			</tr>
+			<tr>
+				<td>invalid_request</td>
+				<td>400 Bad Request</td>
+				<td>If the request parameter is missing or invalid</td>
+			</tr>
+		</table>
+
+		<h3>Hide viewer numbers</h3>
+		<p>By setting this feature the viewer number of a live channel will not be visible in the viewer.</p>
+		<table class="table fill-bg-light1 table-chromeless">
+			<tr>
+				<td class="verb">PUT</td>
+				<td><a>https://api.ustream.tv/channels/CHANNEL_ID/settings/hide-viewers.FORMAT</a> (format can be json or xml)</td>
+			</tr>
+		</table>
+
+		<h6>Parameters</h6>
+		<table class="table responsive">
+			<tr>
+				<th>parameter</th>
+				<th>type</th>
+				<th>importance</th>
+				<th width="100%">Description</th>
+			</tr>
+			<tr>
+				<td><strong>value</strong></td>
+				<td>boolean</td>
+				<td>REQUIRED</td>
+				<td>Enable or disable viewer number hiding</td>
+			</tr>
+		</table>
+
+		<h6>Response</h6>
+		<p>On success a response with HTTP status 200 OK is returned.</p>
+
+		<h6>Error codes</h6>
+		<table class="table responsive">
+			<tr>
+				<th>error value</th>
+				<th>HTTP response code</th>
+				<th width="100%">Error conditions</th>
+			</tr>
+			<tr>
+				<td>invalid_value</td>
+				<td>400 Bad Request</td>
+				<td>The specified value is invalid or unsupported.</td>
+			</tr>
+			<tr>
+				<td>lack_of_ownership</td>
+				<td>403 Forbidden</td>
+				<td>The given channel does not belong to the user.</td>
+			</tr>
+		</table>
+	</section>
+
+	<section>
+		<h2>Channel design</h2>
+
+		<h3>Channel page background</h3>
+		<h4>Get</h4>
+		<p>Get current background color</p>
+		<table class="table fill-bg-light1 table-chromeless">
+			<tr>
+				<td class="verb">GET</td>
+				<td><a>https://api.ustream.tv/channels/CHANNEL_ID/design/background.FORMAT</a> (format can be json or xml)</td>
+			</tr>
+		</table>
+
+		<h6>Parameters</h6>
+		<p>This request has no parameters.</p>
+
+		<h6>Response</h6>
+		<p>A key-value structures under a "background" element.</p>
+		<table class="table responsive">
+			<tr>
+				<th>key</th>
+				<th>type</th>
+				<th width="100%">Description</th>
+			</tr>
+			<tr>
+				<td>color</td>
+				<td>string</td>
+				<td>Channel page background color in hex RGB format</td>
+			</tr>
+		</table>
+
+		<h6>Error codes</h6>
+		<table class="table responsive">
+			<tr>
+				<th>error value</th>
+				<th>HTTP response code</th>
+				<th width="100%">Error conditions</th>
+			</tr>
+			<tr>
+				<td>lack_of_ownership</td>
+				<td>403 Forbidden</td>
+				<td>The api user is not allowed to manage the given channel</td>
+			</tr>
+			<tr>
+				<td>not_found</td>
+				<td>404 Not found</td>
+				<td>Channel not found</td>
+			</tr>
+		</table>
+
+		<h4>Edit background color</h4>
+		<table class="table fill-bg-light1 table-chromeless">
+			<tr>
+				<td class="verb">PUT</td>
+				<td><a>https://api.ustream.tv/channels/CHANNEL_ID/design/background.FORMAT</a> (format can be json or xml)</td>
+			</tr>
+		</table>
+
+		<h6>Parameters</h6>
+		<table class="table responsive">
+			<tr>
+				<th>parameter</th>
+				<th>type</th>
+				<th>importance</th>
+				<th width="100%">Description</th>
+			</tr>
+			<tr>
+				<td>color</td>
+				<td>string</td>
+				<td>REQUIRED</td>
+				<td>Channel page background color in hex RGB format</td>
+			</tr>
+		</table>
+
+		<h6>Response</h6>
+		<p>On success a response with HTTP status 200 OK is returned.</p>
+
+		<h6>Error codes</h6>
+		<table class="table responsive">
+			<tr>
+				<th>error value</th>
+				<th>HTTP response code</th>
+				<th width="100%">Error conditions</th>
+			</tr>
+			<tr>
+				<td>lack_of_ownership</td>
+				<td>403 Forbidden</td>
+				<td>The api user is not allowed to manage the given channel</td>
+			</tr>
+			<tr>
+				<td>bad_request</td>
+				<td>400 Bad request</td>
+				<td>If validation fails</td>
+			</tr>
+			<tr>
+				<td>not_found</td>
+				<td>404 Not found</td>
+				<td>Channel not found</td>
+			</tr>
+		</table>
+
+		<h4>Remove settings</h4>
+		<table class="table fill-bg-light1 table-chromeless">
+			<tr>
+				<td class="verb">DELETE</td>
+				<td><a>https://api.ustream.tv/channels/CHANNEL_ID/design/background.FORMAT</a>
+					(format can be json or xml)</td>
+			</tr>
+
+		</table>
+
+		<h6>Parameters</h6>
+		<p>This request has no parameters.</p>
+
+		<h6>Response</h6>
+		<p>On success a response with HTTP status 200 OK is returned.</p>
+
+		<h6>Error codes</h6>
+		<table class="table responsive">
+			<tr>
+				<th>error value</th>
+				<th>HTTP response code</th>
+				<th width="100%">Error conditions</th>
+			</tr>
+			<tr>
+				<td>lack_of_ownership</td>
+				<td>403 Forbidden</td>
+				<td>The api user is not allowed to manage the given channel</td>
+			</tr>
+			<tr>
+				<td>not_found</td>
+				<td>404 Not found</td>
+				<td>Channel not found</td>
+			</tr>
+		</table>
+	</section>
+
+	<section>
+		<h2>Channel managers</h2>
+		<p>This feature enables a user (the master) to add managers to their channels with administrative rights. The activated managers receive benefits of managed channels, independently from their current plans. A managed channel can have at most 500 managers, but only 3 managers can be activated simultaneously by default.</p>
+
+		<h4>Getting channel managers</h4>
+		<table class="table fill-bg-light1 table-chromeless">
+			<tr>
+				<td class="verb">GET</td>
+				<td><a>https://api.ustream.tv/users/self/managers.FORMAT</a> (format can be json or xml)</td>
+			</tr>
+		</table>
+
+		<h6>Parameters</h6>
+		<p>This request has no parameters.</p>
+
+		<h6>Response</h6>
+		<p>On success a response with HTTP status 200 OK is returned.</p>
+		<table class="table responsive">
+			<tr>
+				<th>key</th>
+				<th>type</th>
+				<th width="100%">Description</th>
+			</tr>
+			<tr>
+				<td>user_id</td>
+				<td>string</td>
+				<td>User identifier of the channel manager</td>
+			</tr>
+			<tr>
+				<td>email</td>
+				<td>string</td>
+				<td>E-mail address of the channel manager</td>
+			</tr>
+			<tr>
+				<td>alias</td>
+				<td>string</td>
+				<td>Alias name of the channel manager</td>
+			</tr>
+			<tr>
+				<td>active</td>
+				<td>boolean</td>
+				<td>Active flag.</td>
+			</tr>
+			<tr>
+				<td>channels</td>
+				<td>array</td>
+				<td>Array of managed channel identifiers</td>
+			</tr>
+		</table>
+
+		<h6>Error codes</h6>
+		<table class="table responsive">
+			<tr>
+				<th>error value</th>
+				<th>HTTP response code</th>
+				<th width="100%">Error conditions</th>
+			</tr>
+			<tr>
+				<td>invalid_request</td>
+				<td>402 Payment required</td>
+				<td>The user does not have active subaccount benefit</td>
+			</tr>
+		</table>
+
+		<h4>Adding a new channel manager</h4>
+		<table class="table fill-bg-light1 table-chromeless">
+			<tr>
+				<td class="verb">POST</td>
+
+				<td><a>https://api.ustream.tv/users/self/managers.FORMAT</a>
+					(format can be json or xml)</td>
+			</tr>
+
+		</table>
+
+		<h6>Parameters</h6>
+		<table class="table responsive">
+			<tr>
+				<th>parameter</th>
+				<th>type</th>
+				<th>importance</th>
+				<th width="100%">Description</th>
+			</tr>
+			<tr>
+				<td>email</td>
+				<td>string</td>
+				<td>REQUIRED</td>
+				<td>The e-mail address of a registered Ustream user</td>
+			</tr>
+			<tr>
+				<td>alias</td>
+				<td>string</td>
+				<td>OPTIONAL</td>
+				<td>Alias name for the channel manager</td>
+			</tr>
+		</table>
+
+		<h6>Response</h6>
+		<p>On success a response with HTTP status 201 Created is returned.</p>
+		<table class="table responsive">
+			<tr>
+				<th>key</th>
+				<th>type</th>
+				<th width="100%">Description</th>
+			</tr>
+			<tr>
+				<td>user_id</td>
+				<td>string</td>
+				<td>User identifier of the created channel manager</td>
+			</tr>
+			<tr>
+				<td>email</td>
+				<td>string</td>
+				<td>E-mail address of the channel manager</td>
+			</tr>
+			<tr>
+				<td>alias</td>
+				<td>string</td>
+				<td>Alias name of the channel manager</td>
+			</tr>
+			<tr>
+				<td>active</td>
+				<td>boolean</td>
+				<td>Active flag (false by default)</td>
+			</tr>
+		</table>
+
+		<h6>Error codes</h6>
+		<table class="table responsive">
+			<tr>
+				<th>error value</th>
+				<th>HTTP response code</th>
+				<th width="100%">Error conditions</th>
+			</tr>
+			<tr>
+				<td>invalid_request</td>
+				<td>402 Payment required</td>
+				<td>The user does not have active subaccount benefit</td>
+			</tr>
+			<tr>
+				<td>bad_request</td>
+				<td>400 Bad request</td>
+				<td>If validation fails, user not found or is already a channel
+					manager</td>
+			</tr>
+		</table>
+
+		<h4>Modifying a channel manager</h4>
+		<table class="table fill-bg-light1 table-chromeless">
+			<tr>
+				<td class="verb">PUT</td>
+				<td><a>https://api.ustream.tv/users/self/managers/MANAGER_ID.FORMAT</a> (format can be json or xml)</td>
+			</tr>
+		</table>
+
+		<h6>Parameters</h6>
+		<table class="table responsive">
+			<tr>
+				<th>parameter</th>
+				<th>type</th>
+				<th>importance</th>
+				<th width="100%">Description</th>
+			</tr>
+			<tr>
+				<td>alias</td>
+				<td>string</td>
+				<td>OPTIONAL</td>
+				<td>Alias name for the channel manager</td>
+			</tr>
+			<tr>
+				<td>active</td>
+				<td>boolean</td>
+				<td>REQUIRED</td>
+				<td>Sets the manager active flag</td>
+			</tr>
+		</table>
+
+		<h6>Response</h6>
+		<p>On success a response with HTTP status 200 OK is returned.</p>
+
+		<h6>Error codes</h6>
+		<table class="table responsive">
+			<tr>
+				<th>error value</th>
+				<th>HTTP response code</th>
+				<th width="100%">Error conditions</th>
+			</tr>
+			<tr>
+				<td>invalid_request</td>
+				<td>402 Payment required</td>
+				<td>The user does not have active subaccount benefit</td>
+			</tr>
+			<tr>
+				<td>bad_request</td>
+				<td>400 Bad request</td>
+				<td>If validation fails</td>
+			</tr>
+			<tr>
+				<td>not_found</td>
+				<td>404 Not found</td>
+				<td>Channel manager not found</td>
+			</tr>
+			<tr>
+				<td>limit_reached</td>
+				<td>403 Forbidden</td>
+				<td>The maximum active channel manager count has been reached, no more active managers allowed</td>
+			</tr>
+		</table>
+
+		<h4>Getting channel manager</h4>
+		<table class="table fill-bg-light1 table-chromeless">
+			<tr>
+				<td class="verb">GET</td>
+				<td><a>https://api.ustream.tv/users/self/managers/MANAGER_ID.FORMAT</a> (format can be json or xml)</td>
+			</tr>
+		</table>
+
+		<h6>Parameters</h6>
+		<p>This request has no parameters.</p>
+
+		<h6>Response</h6>
+		<p>On success a response with HTTP status 200 OK is returned.</p>
+		<table class="table responsive">
+			<tr>
+				<th>key</th>
+				<th>type</th>
+				<th width="100%">Description</th>
+			</tr>
+			<tr>
+				<td>user_id</td>
+				<td>string</td>
+				<td>User identifier of the channel manager</td>
+			</tr>
+			<tr>
+				<td>email</td>
+				<td>string</td>
+				<td>E-mail address of the channel manager</td>
+			</tr>
+			<tr>
+				<td>alias</td>
+				<td>string</td>
+				<td>Alias name of the channel manager</td>
+			</tr>
+			<tr>
+				<td>active</td>
+				<td>boolean</td>
+				<td>Active flag.</td>
+			</tr>
+			<tr>
+				<td>channels</td>
+				<td>array</td>
+				<td>Array of managed channel identifiers</td>
+			</tr>
+		</table>
+
+		<h6>Error codes</h6>
+		<table class="table responsive">
+			<tr>
+				<th>error value</th>
+				<th>HTTP response code</th>
+				<th width="100%">Error conditions</th>
+			</tr>
+			<tr>
+				<td>invalid_request</td>
+				<td>402 Payment required</td>
+				<td>The user does not have active subaccount benefit</td>
+			</tr>
+		</table>
+
+		<h4>Deleting a channel manager</h4>
+		<table class="table fill-bg-light1 table-chromeless">
+			<tr>
+				<td class="verb">DELETE</td>
+				<td><a>https://api.ustream.tv/users/self/managers/MANAGER_ID.FORMAT</a> (format can be json or xml)</td>
+			</tr>
+		</table>
+
+		<h6>Parameters</h6>
+		<p>This request has no parameters.</p>
+
+		<h6>Response</h6>
+		<p>On success a response with HTTP status 200 OK is returned.</p>
+
+		<h6>Error codes</h6>
+		<table class="table responsive">
+			<tr>
+				<th>error value</th>
+				<th>HTTP response code</th>
+				<th width="100%">Error conditions</th>
+			</tr>
+			<tr>
+				<td>invalid_request</td>
+				<td>402 Payment required</td>
+				<td>The user does not have active subaccount benefit</td>
+			</tr>
+			<tr>
+				<td>not_found</td>
+				<td>404 Not found</td>
+				<td>Channel manager not found</td>
+			</tr>
+		</table>
+
+		<h4>Grant access to a user for a channel</h4>
+		<table class="table fill-bg-light1 table-chromeless">
+			<tr>
+				<td class="verb">PUT</td>
+				<td><a>https://api.ustream.tv/channels/CHANNEL_ID/managers/MANAGER_ID.FORMAT</a> (format can be json or xml)</td>
+			</tr>
+		</table>
+
+		<h6>Parameters</h6>
+		<p>This request has no parameters.</p>
+
+		<h6>Response</h6>
+		<p>On success a response with HTTP status 200 OK is returned.</p>
+
+		<h6>Error codes</h6>
+		<table class="table responsive">
+			<tr>
+				<th>error value</th>
+				<th>HTTP response code</th>
+				<th width="100%">Error conditions</th>
+			</tr>
+			<tr>
+				<td>invalid_request</td>
+				<td>402 Payment required</td>
+				<td>The user does not have active subaccount benefit</td>
+			</tr>
+			<tr>
+				<td>lack_of_ownership</td>
+				<td>403 Forbidden</td>
+				<td>The channel does not belong to the master user</td>
+			</tr>
+			<tr>
+				<td>not_found</td>
+				<td>404 Not found</td>
+				<td>Channel manager not found</td>
+			</tr>
+		</table>
+
+		<h4>Revoke access from a user on a channel</h4>
+		<table class="table fill-bg-light1 table-chromeless">
+			<tr>
+				<td class="verb">DELETE</td>
+				<td><a>https://api.ustream.tv/channels/CHANNEL_ID/managers/MANAGER_ID.FORMAT</a> (format can be json or xml)</td>
+			</tr>
+		</table>
+
+		<h6>Parameters</h6>
+		<p>This request has no parameters.</p>
+
+		<h6>Response</h6>
+		<p>On success a response with HTTP status 200 OK is returned.</p>
+
+		<h6>Error Codes</h6>
+		<table class="table responsive">
+			<tr>
+				<th>error value</th>
+				<th>HTTP response code</th>
+				<th width="100%">Error conditions</th>
+			</tr>
+			<tr>
+				<td>invalid_request</td>
+				<td>402 Payment required</td>
+				<td>The user does not have active subaccount benefit</td>
+			</tr>
+			<tr>
+				<td>lack_of_ownership</td>
+				<td>403 Forbidden</td>
+				<td>The channel does not belong to the master user</td>
+			</tr>
+			<tr>
+				<td>not_found</td>
+				<td>404 Not found</td>
+				<td>Channel manager not found</td>
+			</tr>
+		</table>
+	</section>
+
+	<section>
+		<h2>Stream settings</h2>
+
+		<h3>Multi quality streaming</h3>
+		<p>By turning this feature on your stream will be transcoded to several versions with different quality settings.</p>
+
+		<table class="table fill-bg-light1 table-chromeless">
+			<tr>
+				<td class="verb">PUT</td>
+				<td><a>https://api.ustream.tv/channels/CHANNEL_ID/settings/multi-quality.FORMAT</a> (format can be json or xml)</td>
+			</tr>
+		</table>
+
+		<h6>Parameters</h6>
+		<table class="table responsive">
+			<tr>
+				<th>parameter</th>
+				<th>type</th>
+				<th>importance</th>
+				<th width="100%">Description</th>
+			</tr>
+			<tr>
+				<td><strong>value</strong></td>
+				<td>boolean</td>
+				<td>REQUIRED</td>
+				<td>Enable or disable multi quality in viewer</td>
+			</tr>
+		</table>
+
+		<h6>Response</h6>
+		<p>On success a response with HTTP status 200 OK is returned.</p>
+
+		<h6>Error codes</h6>
+		<table class="table responsive">
+			<tr>
+				<th>error value</th>
+				<th>HTTP response code</th>
+				<th width="100%">Error conditions</th>
+			</tr>
+			<tr>
+				<td>invalid_value</td>
+				<td>400 Bad Request</td>
+				<td>The specified value is invalid or unsupported.</td>
+			</tr>
+			<tr>
+				<td>payment_required</td>
+				<td>402 Payment Required</td>
+				<td>The user does not have access to control multi quality</td>
+			</tr>
+		</table>
+	</section>
+
+	<section>
+		<h2>Recording</h2>
+
+		<h3>Start/stop recording</h3>
+		<p>During broadcast clients can control recorder on an owned channel. There's no direct feedback on the results of the operation.</p>
+		<table class="table fill-bg-light1 table-chromeless">
+			<tr>
+				<td class="verb">POST</td>
+				<td><a>https://api.ustream.tv/channels/CHANNEL_ID/recorder.FORMAT</a> (format can be json or xml)</td>
+			</tr>
+		</table>
+
+		<h6>Parameters</h6>
+		<table class="table responsive">
+			<tr>
+				<th>parameter</th>
+				<th>type</th>
+				<th>importance</th>
+				<th width="100%">Description</th>
+			</tr>
+			<tr>
+				<td><strong>command</strong></td>
+				<td>string</td>
+				<td>REQUIRED</td>
+				<td>The command should be "start" or "stop"</td>
+			</tr>
+		</table>
+
+		<h6>Response</h6>
+		<p>On success a response with HTTP status "202 Accepted" is returned.</p>
+		<p>On the stop command the response body will contain information about the resulting video (id and API resource uri)</p>
+
+		<p>Example usage:</p>
+		<pre><code class="http">POST /channels/42/recorder.json HTTP/1.1
+Host: api.ustream.tv
+Authorization: Bearer 3c2573673b782f6544405a22636f3d5d3b6f3950
+Content-Type: application/x-www-form-urlencoded
+
+command=stop</code></pre>
+
+		<p>Example reponse (for stop command):</p>
+		<pre><code class="json">{
+	"video": {
+		"id": 11111,
+		"url": "https://api.ustream.tv/videos/11111.json"
+	}
+}</code></pre>
+
+		<h3>Getting recording status</h3>
+		<p>During broadcast you can ask for that information using the GET HTTP method on the same resource.</p>
+		<table class="table fill-bg-light1 table-chromeless">
+			<tr>
+				<td class="verb">GET</td>
+				<td><a>https://api.ustream.tv/channels/CHANNEL_ID/recorder.FORMAT</a>(format can be json or xml)</td>
+			</tr>
+		</table>
+
+		<p>Example reponse:</p>
+		<pre><code class="json">{
+	"video": {
+		"id": 11111,
+		"url": "https://api.ustream.tv/videos/11111.json"
+	}
+}</code></pre>
+
+		<h3>Autorecord</h3>
+		<p>Videos can be automatically created when broadcasting. The behaviour can be controlled by this resource.</p>
+		<table class="table fill-bg-light1 table-chromeless">
+			<tr>
+				<td class="verb">PUT</td>
+				<td>
+					<a>https://api.ustream.tv/channels/CHANNEL_ID/settings/autorecord.FORMAT</a>
+					(format can be json or xml)</td>
+			</tr>
+		</table>
+
+		<h6>Parameters</h6>
+		<table class="table responsive">
+			<tr>
+				<th>parameter</th>
+				<th>type</th>
+				<th>importance</th>
+				<th width="100%">Description</th>
+			</tr>
+			<tr>
+				<td>value</td>
+				<td>string</td>
+				<td>REQUIRED</td>
+				<td>Possible values: disabled, private, public. If the value is disabled, no auto-recorded video gets created for the channel when broadcasting. If the value is private, then the new auto-record will be private by default. In case of public the created auto-records will be public by default. </td>
+			</tr>
+		</table>
+
+		<h6>Response</h6>
+		<p>On success a response with HTTP status 200 OK is returned.</p>
+
+		<h6>Error codes</h6>
+		<table class="table responsive">
+			<tr>
+				<th>error value</th>
+				<th>HTTP response code</th>
+				<th width="100%">Error conditions</th>
+			</tr>
+			<tr>
+				<td>invalid_value</td>
+				<td>400 Bad Request</td>
+				<td>The specified value is invalid or unsupported.</td>
+			</tr>
+			<tr>
+				<td>payment_required</td>
+				<td>402 Payment Required</td>
+				<td>The user does not have access to control autorecord settings</td>
+			</tr>
+		</table>
+
+		<h3>Getting record time limit</h3>
+		<p>Gets the maximum allowed length of recorded videos for the channel.</p>
+		<table class="table fill-bg-light1 table-chromeless">
+			<tr>
+				<td class="verb">GET</td>
+				<td>
+					<a>https://api.ustream.tv/channels/CHANNEL_ID/limits/recording.FORMAT</a>
+					(format can be json or xml)</td>
+			</tr>
+		</table>
+
+		<h6>Parameters</h6>
+		<p>This request has no parameters.</p>
+
+		<h6>Response</h6>
+		<table class="table responsive">
+			<tr>
+				<th>key</th>
+				<th>type</th>
+				<th width="100%">Description</th>
+			</tr>
+			<tr>
+				<td>time</td>
+				<td>integer</td>
+				<td>record time limit in seconds</td>
+			</tr>
+		</table>
+
+		<h6>Error codes</h6>
+		<table class="table responsive">
+			<tr>
+				<th>error value</th>
+				<th>HTTP response code</th>
+				<th width="100%">Error conditions</th>
+			</tr>
+			<tr>
+				<td>lack_of_ownership</td>
+				<td>403 Forbidden</td>
+				<td>The given channel does not belong to the user.</td>
+			</tr>
+			<tr>
+				<td>not_found</td>
+				<td>404 Not Found</td>
+				<td>The given channel does not exist.</td>
+			</tr>
+		</table>
+	</section>
+
+	<section>
+		<h2>Video</h2>
+
+		<h3>Listing the videos of channel</h3>
+		<p>Get a detailed list of the videos of channel</p>
+		<table class="table fill-bg-light1 table-chromeless">
+			<tr>
+				<td class="verb">GET</td>
+				<td><a>https://api.ustream.tv/channels/CHANNEL_ID/videos.FORMAT</a> (format can be json or xml)</td>
+			</tr>
+		</table>
+
+		<h6>Parameters</h6>
+		<table class="table responsive">
+			<tr>
+				<th>parameter</th>
+				<th>type</th>
+				<th>importance</th>
+				<th width="100%">Description</th>
+			</tr>
+			<tr>
+				<td>page</td>
+				<td>integer</td>
+				<td>OPTIONAL</td>
+				<td>Requested page number (1 by default)</td>
+			</tr>
+			<tr>
+				<td>pagesize</td>
+				<td>integer</td>
+				<td>OPTIONAL</td>
+				<td>Requested page size (50 by default, max 50)</td>
+			</tr>
+			<tr>
+				<td>q</td>
+				<td>string</td>
+				<td>OPTIONAL</td>
+				<td>Search for text in video related data</td>
+			</tr>
+			<tr>
+				<td>sort</td>
+				<td>string</td>
+				<td>OPTIONAL</td>
+				<td>Result order. Possible values: recent,popular (default: recent)</td>
+			</tr>
+			<tr>
+				<td>filter</td>
+				<td>set</td>
+				<td>OPTIONAL</td>
+				<td>
+					<table class="table responsive">
+						<tr>
+							<th>parameter</th>
+							<th>type</th>
+							<th>importance</th>
+							<th width="100%">Description</th>
+						</tr>
+						<tr>
+							<td>protect</td>
+							<td>string</td>
+							<td>OPTIONAL</td>
+							<td>Filter videos by protection levels. Levels: public, private (default: empty)</td>
+						</tr>
+						<tr>
+							<td>vod</td>
+							<td>boolean</td>
+							<td>OPTIONAL</td>
+							<td>Filter PPV VODs from result when true (default: false)</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+
+		<h6>Response</h6>
+		<p>A set of a key-value structures under a "videos" element. Example:</p>
+		<pre><code class="json">"videos": [
+	{
+		"id": "111",
+		"title": "Title of video",
+		"description": "Description of video",
+		"url": "http://www.ustream.tv/recorded/111",
+		"length": "12345.123456",
+		"created_at": 1399388736,
+		"file_size": "120000",
+		"views": 0,
+		"thumbnail": {
+			"default": "https://ustvstaticcdn1-a.akamaihd.net/111.jpg"
+		},
+		"media_urls": {
+			"flv": "http://tcdn.ustream.tv/video/111"
+		},
+		"links": {
+			"channel": {
+				"href": "https://api.ustream.tv/channels/1.json"
+			}
+		}
+	},
+	...
+]</code></pre>
+
+		<p>Explanation of some values:</p>
+		<table class="table responsive">
+			<tr>
+				<th>key</th>
+				<th>type</th>
+				<th width="100%">Description</th>
+			</tr>
+			<tr>
+				<td>length</td>
+				<td>float</td>
+				<td>Video length in second</td>
+			</tr>
+			<tr>
+				<td>created_at</td>
+				<td>int</td>
+				<td>Video create date in UNIX timestamp</td>
+			</tr>
+			<tr>
+				<td>file_size</td>
+				<td>int</td>
+				<td>Video file size in byte</td>
+			</tr>
+		</table>
+
+		<p>The paging information can be found under the "paging" element. Example:</p>
+		<pre><code class="json">"paging": {
+	"previous": ".../CHANNEL_ID/videos.json?pagesize=PAGE_SIZE&page=PREVIOUS_PAGE",
+	"next": ".../channels/CHANNEL_ID/videos.json?pagesize=PAGE_SIZE&page=NEXT_PAGE"
+}</code></pre>
+
+		<h6>Error codes</h6>
+		<table class="table responsive">
+			<tr>
+				<th>error value</th>
+				<th>HTTP response code</th>
+				<th width="100%">Error conditions</th>
+			</tr>
+			<tr>
+				<td>invalid_token</td>
+				<td>401 Authorization required</td>
+				<td>The video list is protected, only the owner with a valid token can access it.</td>
+			</tr>
+			<tr>
+				<td>not_found</td>
+				<td>404 Not Found</td>
+				<td>The given channel does not exist.</td>
+			</tr>
+		</table>
+
+		<h3>Video details</h3>
+
+		<h4>Get video details</h4>
+		<table class="table fill-bg-light1 table-chromeless">
+			<tr>
+				<td class="verb">GET</td>
+				<td><a>https://api.ustream.tv/videos/VIDEO_ID.FORMAT</a> (format can be json or xml)</td>
+			</tr>
+		</table>
+
+		<h6>Parameters</h6>
+		<table class="table responsive">
+			<tr>
+				<th>parameter</th>
+				<th>type</th>
+				<th>importance</th>
+				<th width="100%">Description</th>
+			</tr>
+			<tr>
+				<td>detail_level</td>
+				<td>string</td>
+				<td>OPTIONAL</td>
+				<td>Verbosity level. Possible value: "minimal". In case of minimal verbosity level the result set is limited to id, and links data. If the channel is protected (see <a href="channel.html#security">security</a> section), only minimal data can be get without valid access token.</td>
+			</tr>
+		</table>
+
+		<h6>Response</h6>
+		<p>A key-value structures under a "video" element. Example:</p>
+		<pre><code class="json">"video": {
+	"id": "111",
+	"title": "Title of video",
+	"description": "Description of video",
+	"url": "http://www.ustream.tv/recorded/111",
+	"length": "12345.123456",
+	"created_at": 1399388736,
+	"file_size": "120000",
+	"views": 0,
+	"thumbnail": {
+		"default": "https://ustvstaticcdn1-a.akamaihd.net/111.jpg"
+	},
+	"media_urls": {
+		"flv": "http://tcdn.ustream.tv/video/111"
+	},
+	"links": {
+		"channel": {
+			"href": "https://api.ustream.tv/channels/1.json",
+			"id": "1"
+		}
+	}
+}</code></pre>
+
+		<p>Minimal response example:</p>
+		<pre><code class="json">"video": {
+	"id": "111",
+	"links": {
+		"channel": {
+			"href": "https://api.ustream.tv/channels/1.json",
+			"id": "1"
+		}
+	}
+}</code></pre>
+
+		<p>Explanation of some values:</p>
+		<table class="table responsive">
+			<tr>
+				<th>key</th>
+				<th>type</th>
+				<th width="100%">Description</th>
+			</tr>
+			<tr>
+				<td>length</td>
+				<td>float</td>
+				<td>Video length in second</td>
+			</tr>
+			<tr>
+				<td>created_at</td>
+				<td>int</td>
+				<td>Video create date in UNIX timestamp</td>
+			</tr>
+			<tr>
+				<td>file_size</td>
+				<td>int</td>
+				<td>Video file size in byte</td>
+			</tr>
+		</table>
+
+		<h6>Error codes</h6>
+		<table class="table responsive">
+			<tr>
+				<th>error value</th>
+				<th>HTTP response code</th>
+				<th width="100%">Error conditions</th>
+			</tr>
+			<tr>
+				<td>not_found</td>
+				<td>404 Not Found</td>
+				<td>The given video does not exist.</td>
+			</tr>
+		</table>
+
+		<h4>Edit video details</h4>
+		<table class="table fill-bg-light1 table-chromeless">
+			<tr>
+				<td class="verb">PUT</td>
+				<td>
+					<a>https://api.ustream.tv/videos/VIDEO_ID.FORMAT</a>
+					(format can be json or xml)</td>
+			</tr>
+		</table>
+
+		<h6>Parameters</h6>
+		<table class="table responsive">
+			<tr>
+				<th>parameter</th>
+				<th>type</th>
+				<th>importance</th>
+				<th width="100%">Description</th>
+			</tr>
+			<tr>
+				<td><strong>title</strong></td>
+				<td>string</td>
+				<td>REQUIRED</td>
+				<td>Video title</td>
+			</tr>
+			<tr>
+				<td><strong>description</strong></td>
+				<td>string</td>
+				<td>REQUIRED</td>
+				<td>Video description</td>
+			</tr>
+			<tr>
+				<td>protect</td>
+				<td>string</td>
+				<td>OPTIONAL</td>
+				<td>Video protection level. Possible values: public, private</td>
+			</tr>
+		</table>
+
+		<h6>Response</h6>
+		<p>On success a response with HTTP status 200 OK is returned.</p>
+
+		<h6>Error codes</h6>
+		<table class="table responsive">
+			<tr>
+				<th>error value</th>
+				<th>HTTP response code</th>
+				<th width="100%">Error conditions</th>
+			</tr>
+			<tr>
+				<td>invalid_value</td>
+				<td>400 Bad Request</td>
+				<td>The specified value is invalid or unsupported.</td>
+			</tr>
+			<tr>
+				<td>lack_of_ownership</td>
+				<td>403 Forbidden</td>
+				<td>The given video does not belong to the user.</td>
+			</tr>
+			<tr>
+				<td>not_found</td>
+				<td>404 Not Found</td>
+				<td>The given video does not exist.</td>
+			</tr>
+		</table>
+
+		<h4>Deleting a video</h4>
+		<p>Permanently delete a video from the current account.</p>
+		<table class="table fill-bg-light1 table-chromeless">
+			<tr>
+				<td class="verb">DELETE</td>
+
+				<td><a>https://api.ustream.tv/videos/VIDOE_ID.FORMAT</a>
+					(format can be json or xml)</td>
+			</tr>
+
+		</table>
+
+		<h6>Parameters</h6>
+		<p>This request has no parameters.</p>
+
+		<h6>Response</h6>
+		<p>On success a response with HTTP status 200 OK is returned.</p>
+
+		<h6>Error codes</h6>
+		<table class="table responsive">
+			<tr>
+				<th>error value</th>
+				<th>HTTP response code</th>
+				<th width="100%">Error conditions</th>
+			</tr>
+			<tr>
+				<td>lack_of_ownership</td>
+				<td>403 Forbidden</td>
+				<td>The given video does not belong to the user.</td>
+			</tr>
+			<tr>
+				<td>not_found</td>
+				<td>404 Not Found</td>
+				<td>The given video does not exist.</td>
+			</tr>
+		</table>
+
+		<h3>Video expiration</h3>
+		<p>A video gets deleted when expires. These videos can be saved by setting the time of the expiration.</p>
+
+		<h4>Getting video expiration</h4>
+		<table class="table fill-bg-light1 table-chromeless">
+			<tr>
+				<td class="verb">GET</td>
+				<td>
+					<a>https://api.ustream.tv/videos/VIDEO_ID/expiration.FORMAT</a>
+					(format can be json or xml)</td>
+			</tr>
+		</table>
+
+		<h6>Parameters</h6>
+		<p>This request has no parameters.</p>
+
+		<h6>Response</h6>
+		<p>On success a response with HTTP status 200 OK is returned.</p>
+		<table class="table responsive">
+			<tr>
+				<th>key</th>
+				<th>type</th>
+				<th width="100%">Description</th>
+			</tr>
+			<tr>
+				<td>rule</td>
+				<td>string</td>
+				<td>Valid values: never, at_given_time</td>
+			</tr>
+			<tr>
+				<td>expires_at</td>
+				<td>integer</td>
+				<td>If rule field is at_given_time, expires_at contains the UNIX timestamp of the expiration. If the rule is never, expires_at field is not provided.</td>
+			</tr>
+		</table>
+
+		<h6>Error codes</h6>
+		<table class="table responsive">
+			<tr>
+				<th>error value</th>
+				<th>HTTP response code</th>
+				<th width="100%">Error conditions</th>
+			</tr>
+			<tr>
+				<td>lack_of_ownership</td>
+				<td>403 Forbidden</td>
+				<td>The api user is not allowed to manage the given channel</td>
+			</tr>
+			<tr>
+				<td>forbidden</td>
+				<td>403 Forbidden</td>
+				<td>Managing the expiration is disabled at system level or user has no permission to manage the expiration of videos.</td>
+			</tr>
+			<tr>
+				<td>not_found</td>
+				<td>404 Not found</td>
+				<td>The specified video_id does not exist</td>
+			</tr>
+		</table>
+
+		<h4>Setting video expiration</h4>
+		<table class="table fill-bg-light1 table-chromeless">
+			<tr>
+				<td class="verb">PUT</td>
+				<td><a>https://api.ustream.tv/videos/VIDEO_ID/expiration.FORMAT</a> (format can be json or xml)</td>
+			</tr>
+		</table>
+
+		<h6>Parameters</h6>
+		<table class="table responsive">
+			<tr>
+				<th>parameter</th>
+				<th>type</th>
+				<th>importance</th>
+				<th width="100%">Description</th>
+			</tr>
+			<tr>
+				<td>rule</td>
+				<td>string</td>
+				<td>REQUIRED</td>
+				<td>Supported value: never.</td>
+			</tr>
+		</table>
+
+		<h6>Response</h6>
+		<p>On success a response with HTTP status 200 OK is returned.</p>
+
+		<h6>Error codes</h6>
+		<table class="table responsive">
+			<tr>
+				<th>error value</th>
+				<th>HTTP response code</th>
+				<th width="100%">Error conditions</th>
+			</tr>
+			<tr>
+				<td>bad_request</td>
+				<td>400 Bad request</td>
+				<td>Invalid request body: either rule is not provided or rule value is not valid.</td>
+			</tr>
+			<tr>
+				<td>lack_of_ownership</td>
+				<td>403 Forbidden</td>
+				<td>The api user is not allowed to manage the given channel</td>
+			</tr>
+			<tr>
+				<td>forbidden</td>
+				<td>403 Forbidden</td>
+				<td>Setting the expiration is disabled at system level or user has no permissions to modify the expiration of videos.</td>
+			</tr>
+			<tr>
+				<td>not_found</td>
+				<td>404 Not found</td>
+				<td>The specified video_id does not exist</td>
+			</tr>
+		</table>
+	</section>
+
+	<section>
+		<h2>Event</h2>
+
+		<h3>Listing the upcoming events of a channel</h3>
+		<p>Get a detailed list of the events of a channel</p>
+		<table class="table fill-bg-light1 table-chromeless">
+			<tr>
+				<td class="verb">GET</td>
+				<td><a>https://api.ustream.tv/channels/CHANNEL_ID/upcoming-events.FORMAT</a> (format can be json or xml)</td>
+			</tr>
+		</table>
+
+		<h6>Parameters</h6>
+		<table class="table responsive">
+			<tr>
+				<th>parameter</th>
+				<th>type</th>
+				<th>importance</th>
+				<th width="100%">Description</th>
+			</tr>
+			<tr>
+				<td>page</td>
+				<td>integer</td>
+				<td>OPTIONAL</td>
+				<td>Requested page number (1 by default)</td>
+			</tr>
+			<tr>
+				<td>pagesize</td>
+				<td>integer</td>
+				<td>OPTIONAL</td>
+				<td>Requested page size (50 by default, max 50)</td>
+			</tr>
+		</table>
+
+		<h6>Response</h6>
+		<p>A set of a key-value structures under an "events" element. Example:</p>
+		<pre><code class="json">"events": [
+	{
+		"id": "111",
+		"title": "Title of the event",
+		"description": "Description of the event",
+		"start": 1399388736,
+		"duration": 900,
+	},
+	...
+]</code></pre>
+
+		<p>Explanation of some values:</p>
+		<table class="table responsive">
+			<tr>
+				<th>key</th>
+				<th>type</th>
+				<th width="100%">Description</th>
+			</tr>
+			<tr>
+				<td>start</td>
+				<td>int</td>
+				<td>Event start date in UNIX timestamp</td>
+			</tr>
+			<tr>
+				<td>duration</td>
+				<td>int</td>
+				<td>Expected duration of the event in seconds</td>
+			</tr>
+		</table>
+
+		<p>The paging information can be found under the "paging" element. Example:</p>
+		<pre><code class="json">"paging": {
+	"previous": ".../CHANNEL_ID/upcoming-events.json?pagesize=PAGE_SIZE&page=PREVIOUS_PAGE",
+	"next": ".../channels/CHANNEL_ID/upcoming-events.json?pagesize=PAGE_SIZE&page=NEXT_PAGE"
+}</code></pre>
+
+		<h6>Error codes</h6>
+		<table class="table responsive">
+			<tr>
+				<th>error value</th>
+				<th>HTTP response code</th>
+				<th width="100%">Error conditions</th>
+			</tr>
+			<tr>
+				<td>invalid_token</td>
+				<td>401 Authorization required</td>
+				<td>The event list is protected, only the owner with a valid token can access it.</td>
+			</tr>
+			<tr>
+				<td>not_found</td>
+				<td>404 Not Found</td>
+				<td>The given channel does not exist.</td>
+			</tr>
+		</table>
+	</section>
+
+	<section>
+		<h2>Channel hooks</h2>
+		<p>Hooks can be registered for different channel events. When a channel event is fired, a HTTP POST request is sent to the registered hook recipient URL. You can use to these endpoints with <a href="authentication.html#client_credentials">Client Credentials</a>.</p>
+
+		<h4>Hook registration</h4>
+		<table class="table fill-bg-light1 table-chromeless">
+			<tr>
+				<td class="verb">PUT</td>
+				<td><a>https://api.ustream.tv/channels/CHANNEL_ID/hooks/EVENT.FORMAT</a> (format can be json or xml)</td>
+			</tr>
+		</table>
+
+		<h6>Parameters</h6>
+		<table class="table responsive">
+			<tr>
+				<th>parameter</th>
+				<th>type</th>
+				<th>importance</th>
+				<th width="100%">Description</th>
+			</tr>
+			<tr>
+				<td>recipient</td>
+				<td>string</td>
+				<td>REQUIRED</td>
+				<td>The URL where the event notifications will be sent.</td>
+			</tr>
+		</table>
+
+		<h6>Response</h6>
+		<p>On success a response with HTTP status 204 No content is returned.</p>
+
+		<h6>Error codes</h6>
+		<table class="table responsive">
+			<tr>
+				<th>error value</th>
+				<th>HTTP response code</th>
+				<th width="100%">Error conditions</th>
+			</tr>
+			<tr>
+				<td>not_found</td>
+				<td>404 Not found</td>
+				<td>The given channel does not exist</td>
+			</tr>
+			<tr>
+				<td>bad_request</td>
+				<td>400 Bad request</td>
+				<td>Some of the incoming parameters are invalid.</td>
+			</tr>
+		</table>
+
+		<h4>Getting a channel hook</h4>
+		<table class="table fill-bg-light1 table-chromeless">
+			<tr>
+				<td class="verb">GET</td>
+				<td><a>https://api.ustream.tv/channels/CHANNEL_ID/hooks/EVENT.FORMAT</a> (format can be json or xml)</td>
+			</tr>
+		</table>
+
+		<h6>Parameters</h6>
+		<p>This request has no parameters.</p>
+
+		<h6>Response</h6>
+		<p>On success a response with HTTP status 200 OK is returned.</p>
+
+		<table class="table responsive">
+			<tr>
+				<th>key</th>
+				<th>type</th>
+				<th width="100%">Description</th>
+			</tr>
+			<tr>
+				<td>recipient</td>
+				<td>string</td>
+				<td>the hook recipient URL</td>
+			</tr>
+			<tr>
+				<td>status</td>
+				<td>string</td>
+				<td>pending, active or suspended</td>
+			</tr>
+		</table>
+
+		<h6>Error codes</h6>
+		<table class="table responsive">
+			<tr>
+				<th>error value</th>
+				<th>HTTP response code</th>
+				<th width="100%">Error conditions</th>
+			</tr>
+			<tr>
+				<td>not_found</td>
+				<td>404 Not found</td>
+				<td>Channel does not exist or no hook registered for the channel</td>
+			</tr>
+		</table>
+
+		<h4>Deleting a channel hook</h4>
+		<table class="table fill-bg-light1 table-chromeless">
+			<tr>
+				<td class="verb">DELETE</td>
+				<td><a>https://api.ustream.tv/channels/CHANNEL_ID/hooks/EVENT.FORMAT</a> (format can be json or xml)</td>
+			</tr>
+		</table>
+
+		<h6>Parameters</h6>
+		<p>This request has no parameters.</p>
+
+		<h6>Response</h6>
+		<p>On success a response with HTTP status 200 OK is returned.</p>
+
+		<h6>Error codes</h6>
+		<table class="table responsive">
+			<tr>
+				<th>error value</th>
+				<th>HTTP response code</th>
+				<th width="100%">Error conditions</th>
+			</tr>
+			<tr>
+				<td>not_found</td>
+				<td>404 Not found</td>
+				<td>Channel not found</td>
+			</tr>
+			<tr>
+				<td>bad_request</td>
+				<td>400 Bad request</td>
+				<td>Invalid event type.</td>
+			</tr>
+		</table>
+
+		<h3>Supported events</h3>
+		<table class="table responsive">
+			<tr>
+				<th>Event</th>
+				<th width="100%">Description</th>
+			</tr>
+			<tr>
+				<td>channel.status.live</td>
+				<td>A channel goes live</td>
+			</tr>
+			<tr>
+				<td>channel.status.offair</td>
+				<td>A channel goes offair</td>
+			</tr>
+		</table>
+
+		<h3>Handshake method</h3>
+		<p>A newly registered hook is inactive by default. In order to make it active, a basic handshake must be implemented at the recipient URL before the hook registration.</p>
+		<p>After the hook was registered a POST request is sent to the recipient URL with a X-Hook-Secret HTTP header. Recipients must reply to this request with the same secret string in their X-Hook-Secret response header to make sure that the registered recipient URL is owned by the API user. This handshake request will also contain an "event" and "channelId" in the body (JSON encoded) property with the corresponding values of your freshly registered hook. Using these values you can re-use the same hook to handle multiple secrets based on these identifiers.</p>
+
+		<h4>Handshake example</h4>
+		<p>Your app needs to be notified about channel 123 whenever it goes live, so the app initiates a new hook.</p>
+		<pre><code class="nohighlight">POST /channels/123/hooks/channel.status.live.json HTTP/1.1
+Host: api.ustream.tv
+Authorization: Bearer 782f6544405a22636f3d5d3b63c2573673bf3950
+Content-Type: application/x-www-form-urlencoded
+
+recipient=http://your-app.url/hook-receiver</code></pre>
+
+		<p>If everything went smoothly, your app will get simply:</p>
+		<pre><code class="nohighlight">HTTP/1.1 204 No Content</code></pre>
+		<p>Asynchronously, the handshake mechanism will start promptly, our hook server will call your hook to exchange a secret.</p>
+
+		<pre><code class="nohighlight">POST /hook-receiver HTTP/1.1
+Host: your-app.url
+Content-Type: application/json
+Content-Length: 46
+X-Hook-Secret: open-sesame!</code>
+
+<code class="json">{
+	"event": "channel.status.live",
+	"channelId": 123
+}</code></pre>
+
+		<p>Your hook implementation should store that secret and echo the <strong>X-Hook-Secret</strong> header in the response.</p>
+		<pre><code class="nohighlight">HTTP/1.1 200 OK
+Content-Length: 0
+X-Hook-Secret: open-sesame!</code></pre>
+
+		<h3>Receiving webhook events</h3>
+		<p>On an event triggered interested by you, our hook server will call your receiver:</p>
+		<pre><code class="nohighlight">POST /hook-receiver HTTP/1.1
+Host: your-app.url
+Content-Type: application/json
+Content-Length: 76
+X-Hook-Signature: 61f34d324ac51dde1288825dab2111</code>
+
+<code class="json">{
+	"event": "channel.status.live",
+	"channelId": 123,
+	"when": 1234567890
+}</code></pre>
+
+		<p>The property "when" will contain the exact time of the event occurred. Its provided as a unix timestamp.</p>
+		<p>Your receiver should verify the signature provided in the request <strong>X-Hook-Signature</strong> header, using <strong>HMAC-SHA1</strong> algorithm with the the previously exchanged secret and the full request body as-is.</p>
+	</section>
+</article>

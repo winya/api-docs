@@ -1,0 +1,817 @@
+<!doctype html>
+<html>
+<head>
+	<title> Getting started -  Ustream Developers</title>
+	<link rel="shortcut icon" href="/api-docs/favicon.ico" />
+	<meta charset="utf-8">
+	<meta name="description" content="Customize and control the viewing experience for your audience or create your own streaming applications with the Ustream open video platform and Application Programming Interfaces (APIs) and Software Development Kits (SDKs)."/>
+    <meta name="author" content="Ustream"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="robots" content="index, follow">
+	<script type="text/javascript" src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
+	<script src="/api-docs/js/highlight.pack.js"></script>
+	<script src="/api-docs/js/ustream-embedapi.min.js"></script>
+    <script src="/api-docs/js/apidocs.js"></script>
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600,700,300' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="http://static-cdn2.ustream.tv/v5/css/reset.css" type="text/css" media="screen">
+    <link rel="stylesheet" href="https://ustvstaticcdn2-a.akamaihd.net/packed/snorky_all.css" type="text/css" media="screen">
+    <link rel="stylesheet" href="/api-docs/css/apidocs.css" type="text/css" media="screen">
+</head>
+<body id="/broadcasting-api/getting-started">
+	<nav id="Nav">
+	<div class="row">
+		<div class="nav-toggle">
+			<span class="bar"></span>
+			<span class="bar"></span>
+			<span class="bar"></span>
+		</div>
+		<a class="ustream-logo" href="/api-docs/"><span>Developers</span></a>
+		<ul class="nav">
+			
+			<li  class="selected" >
+				<a href="/api-docs/broadcasting-api/">Broadcasting API</i></a></li>	
+			
+			<li >
+				<a href="/api-docs/player-api/">Player API</i></a></li>	
+			
+			<li >
+				<a href="/api-docs/player-sdk/">Player SDK</i></a></li>	
+			
+			<li class="has-borderright sep"></li>
+			<li><a href="http://www.ustream.tv">Back to ustream.tv</a></li>
+		</ul>
+	</div>
+</nav>
+    <header class="hero small">
+	<div class="row">
+		<ul class="breadcrumb">
+			 
+			<li><a href="/api-docs/broadcasting-api/">Broadcasting API</a></li>
+		</ul>
+		<h1>Getting started</h1>
+	</div>
+</header>
+<main>
+	<div class="row center gutter-20">
+		<div class="row">
+			<div class="column column-8">
+				        <article data-sidenav="sidenav">
+            <section>
+                <h2>Overview</h2>
+                <p>Ustream allows third-party clients to access Ustream users&#39; resources (data) via a HTTP-based (RESTful) API. It also provides a Broadcaster Library that is capable of broadcasting to a user&#39;s channel. Both the REST API and the Broadcaster Library uses the OAuth 2.0 protocol for authentication and authorization.</p>
+                
+                
+                
+                <h3>Basic workflow</h3>
+                <p>The basic workflow of a third-party Client is the following:</p>
+                <ol>
+                    <li><strong>Authorize the user:</strong> Obtain and validate the user&#39;s credentials (username and password). The client must never store these credentials, only pass it to the server for authorization.</li>
+                    <li><strong>Obtain an access token:</strong> If the user&#39;s credentials were entered correctly, the third-party client can obtain an access token. Once this token is received, it can be used to access the user&#39;s resources until the token expires or the user revokes it on the Ustream website.</li>
+                    <li><strong>Access the user&#39;s resources:</strong> The client can use Ustream&#39;s REST API or the Ustream Broadcasting Library to access the user&#39;s resources (data) or to broadcast to the user&#39;s channel. The client authorizes itself using the access token, with methods described by the OAuth 2.0 Protocol Draft.</li>
+                </ol>
+                
+                
+                
+                <h3>Authorization Flows</h3>
+                <p>The OAuth 2.0 protocol provides several flows (workflows) for the first two phases. It depends on the type and architecture of the client which flow is the most suitable. The following flows are supported:</p>
+                <ul>
+                    <li><strong>Implicit flow:</strong> Suitable for standalone, native clients (desktop / mobile). The user enters its credentials to a secure login webpage. After logging in, the browser is redirected to a special URL (defined by the client), passing the access token in the URL.</li>
+                    <li><strong>Authorization code flow:</strong> Suitable for third-party websites which contain a client and a server component. The user enters its credentials to a secure login webpage. After logging in, the browser is redirected to a special URL (defined by the client), passing an authorization code in the URL. The third-party server obtains the access token with another HTTP request in the background, using the authorization code. This method is more secure than the implicit flow if the third-party client has a client+server model. See the OAuth2 Draft for details.</li>
+                </ul>
+                
+                
+                
+                <h3>Endpoints</h3>
+                <p>The webpages and HTTP services invoked in during this authorization process are called endpoints. Ustream has the following endpoints:</p>
+                <ul>
+                    <li><strong>Authorization endpoint:</strong> this is the webpage where the user enters his/her credentials.</li>
+                    <li><strong>Token endpoint:</strong> this is the HTTP service where the access token can be obtained in an authorization code flow (when using the implicit flow, the access token can be obtained directly from the authorization endpoint).</li>
+                </ul>
+                
+                
+                
+                <h3>Access tokens</h3>
+                <p>There are two types of access tokens: <strong>Bearer tokens</strong> and <strong>MAC tokens.</strong> They are equivalent in the sense that they can access the same resources on the Ustream REST API. The difference is that while bearer tokens can be only used on encrypted channels (HTTPS), MAC tokens are suitable on non-encrypted channels as well.</p>
+                <p>If the client uses the Ustream Broadcasting Library, it must use MAC tokens: the broadcasting is done on the RTMP protocol, which is unencrypted. If the client only uses the REST API, the bearer tokens are preferred because their usage is very simple and lightweight.</p>
+                <p>Bearer tokens and MAC tokens can be obtained in the same way: the authorization endpoint has a token type parameter, so the client can specify what kind of token it wants to create.</p>
+                
+                
+                
+                <h3>Token scopes, expiration</h3>
+                <p>By default, access tokens have a limited lifetime (they expire in a day) and can access only a limited amount of resources. In the authorization process the client can request extra permissions (scopes) from the user to overcome these limitations. These requests are shown to the user on the authorization endpoint. Ustream currently supports the following scopes:</p>
+                <ul>
+                    <li><strong>Offline scope:</strong> If this scope is enabled, the access token never expires.</li>
+                    <li><strong>Broadcaster scope:</strong> If this Scope is enabled, the access token can be used for broadcasting with the Ustream Broadcasting Library. This scope are enabled only for MAC tokens.</li>
+                </ul>
+            </section>
+            
+            
+            
+            
+            <section>
+                <h2>OAuth2 authorization server endpoints</h2>
+                
+                
+                
+                <h3>Authorization endpoint</h3>
+                <table class="table responsive">
+                    <tr>
+                        <td><strong>Location</strong></td>
+                        <td><a>https://www.ustream.tv/oauth2/authorize</a></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Supported flows</strong></td>
+                        <td>Authorization code, Implicit</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Supported HTTP methods</strong></td>
+                        <td>GET, POST</td>
+                    </tr>
+                </table>
+                <p>The Authorization endpoint is a secure web page that contains a login form. The client should show this page to the user in an embedded browser. When the user completes the login process, the browser is redirected to a special URL. The client can capture this redirect call, and obtain the authorization code or access token (depending on the flow type).</p>
+                <p>The parameters below specify the behavior of the authorization endpoint. They have to be set in GET or POST HTTP parameters.</p>
+                
+                <h6>Supported OAuth 2.0 standard parameters</h6>
+                <table class="table responsive">
+                    <tr>
+                        <th>parameter</th>
+                        <th>type</th>
+                        <th>importance</th>
+                        <th width="80%">description</th>
+                    </tr>
+                    <tr>
+                        <td><strong>response_type</strong></td>
+                        <td>string</td>
+                        <td>REQUIRED</td>
+                        <td>"code" for Authorization Code Flow; "token" for Implicit Flow</td>
+                    </tr>
+                    <tr>
+                        <td><strong>client_id</strong></td>
+                        <td>string</td>
+                        <td>REQUIRED</td>
+                        <td>40 character sha1 hash that identifies the Client. Provided by Ustream.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>redirect_uri</strong></td>
+                        <td>string</td>
+                        <td>REQUIRED</td>
+                        <td>The URI where the browser will redirect after the authentication process. The prefix of this URI must be registered at Ustream.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>state</strong></td>
+                        <td>string</td>
+                        <td>OPTIONAL</td>
+                        <td>This value is sent as a GET parameter to the redirect_uri, to prevent XSRF attacks. See OAuth2 Draft for details.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>scope</strong></td>
+                        <td>string</td>
+                        <td>OPTIONAL</td>
+                        <td>"offline" for Offline Scope, "broadcaster" for Broadcaster Scope, or space separated urlencoded list of these strings</td>
+                    </tr>
+                </table>
+                
+                <h6>Ustream specific extra parameters</h6>
+                <table class="table responsive">
+                    <tr>
+                        <th>parameter</th>
+                        <th>type</th>
+                        <th>importance</th>
+                        <th width="80%">description</th>
+                    </tr>
+                    <tr>
+                        <td><strong>token_type</strong></td>
+                        <td>string</td>
+                        <td>OPTIONAL</td>
+                        <td>The Access Token type. If this parameter is set, must be "bearer" for Bearer Token, or "mac" for MAC token. Default value: "bearer".</td>
+                    </tr>
+                    <tr>
+                        <td><strong>device_name</strong></td>
+                        <td>string</td>
+                        <td>OPTIONAL</td>
+                        <td>Full product name of the Client device or application. It is used for easy identification of the OAuth2 Token. The User will be able to review which Clients are connected to his/her account, and revoke these grants on the Ustream website.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>display</strong></td>
+                        <td>string</td>
+                        <td>OPTIONAL</td>
+                        <td>If set to "touch", a mobile-optimized version will be shown</td>
+                    </tr>
+                    <tr>
+                        <td><strong>lang</strong></td>
+                        <td>string</td>
+                        <td>OPTIONAL</td>
+                        <td>Show the authorization page in this locale (e.g. en_US); This parameter will also set the language of the newly registered users. See section 4.2.1. for available locales.</td>
+                    </tr>
+                </table>
+                
+                <h6>Result</h6>
+                <p>The result values below are appended to the <em>redirect_uri</em> as HTTP GET parameters. If the <em>response_type</em> parameter is "code", the following values are returned:</p>
+                <table class="table responsive">
+                    <tr>
+                        <th>name</th>
+                        <th width="80%">description</th>
+                    </tr>
+                    <tr>
+                        <td><strong>code</strong></td>
+                        <td>an authorization code (40 character length, hexa encoded sha1 hash)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>state</strong></td>
+                        <td>if state was sent to the endpoint, we send it back</td>
+                    </tr>
+                </table>
+                <p class="note">MAC tokens are currently not implemented for Authorization Code Flow.</p>
+                
+                <p>If the <em>response_type</em> is "token" and <em>token_type</em> is "bearer" (or not set), the following values are returned:</p>
+                <table class="table responsive">
+                    <tr>
+                        <th>name</th>
+                        <th width="80%">description</th>
+                    </tr>
+                    <tr>
+                        <td><strong>access_token</strong></td>
+                        <td>Access Token (40 character length, hexa encoded sha1 hash)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>expires_in</strong></td>
+                        <td>Token's current lifetime, in seconds</td>
+                    </tr>
+                    <tr>
+                        <td><strong>token_type</strong></td>
+                        <td>Will be "bearer"</td>
+                    </tr>
+                    <tr>
+                        <td><strong>state</strong></td>
+                        <td>if state was sent to the endpoint, we send it back</td>
+                    </tr>
+                </table>
+
+                <p>If the <em>response_type</em> is "token" and <em>token_type</em> is "mac", the following values are returned:</p>
+                <table class="table responsive">
+                    <tr>
+                        <th>name</th>
+                        <th width="80%">description</th>
+                    </tr>
+                    <tr>
+                        <td><strong>access_token</strong></td>
+                        <td>Access Token (40 character length, hexa encoded sha1 hash). Referred as <em>macId</em> in the Ustream Broadcaster Library.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>expires_in</strong></td>
+                        <td>Token's current lifetime, in seconds. Not set if Offline Scope is enabled.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>mac_key</strong></td>
+                        <td>MAC secret (40 character length, hexa encoded sha1 hash). Referred as <em>macSecret</em> in the Ustream Broadcaster Library.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>created_at</strong></td>
+                        <td>UTC timestamp of the creation datetime. Referred as <em>macIssueTime</em> in the Ustream Broadcaster Library.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>mac_algorithm</strong></td>
+                        <td>Will be "hmac-sha-1"</td>
+                    </tr>
+                    <tr>
+                        <td><strong>token_type</strong></td>
+                        <td>Will be "mac"</td>
+                    </tr>
+                    <tr>
+                        <td><strong>state</strong></td>
+                        <td>If state was sent to the endpoint, we send it back</td>
+                    </tr>
+                </table>
+                
+                <h6>Error handling</h6>
+                <p>If the authentication was not successful, there is no HTTP redirection: the User can stay on the Authorization Endpoint page until the correct credentials are entered. It is also possible to sign up a new user, or to request a password reset if the password is forgotten.</br>If the User authenticates correctly, but presses "Deny" on the authorization page, the browser is redirected to the <em>redirect_uri</em> with the following parameters:</p>
+                <table class="table responsive">
+                    <tr>
+                        <th>name</th>
+                        <th width="80%">description</th>
+                    </tr>
+                    <tr>
+                        <td><strong>error</strong></td>
+                        <td>"access_denied"</td>
+                    </tr>
+                    <tr>
+                        <td><strong>state</strong></td>
+                        <td>If state was sent to the endpoint, we send it back</td>
+                    </tr>
+                </table>
+        
+        
+        
+                <h3>Token Endpoint</h3>
+                <table class="table responsive">
+                    <tr>
+                        <td><strong>Location</strong></td>
+                        <td><a>https://www.ustream.tv/oauth2/token</a></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Supported Flows</strong></td>
+                        <td>Authorization Code</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Supported HTTP methods</strong></td>
+                        <td>POST</td>
+                    </tr>
+                </table>
+        
+        
+                <h4>Token for Authorization Code</h4>
+                <p>When the Client receives the Authorization Code, the server-side component of the Client calls this Endpoint to return the Access Token. The parameters below must be set as HTTP POST parameters.</p>
+                <table class="table responsive">
+                    <tr>
+                        <th>parameter</th>
+                        <th>type</th>
+                        <th>importance</th>
+                        <th width="80%">description</th>
+                    </tr>
+                    <tr>
+                        <td><strong>grant_type</strong></td>
+                        <td>string</td>
+                        <td>REQUIRED</td>
+                        <td>MUST be "authorization_code" in this case.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>client_id</strong></td>
+                        <td>string</td>
+                        <td>REQUIRED</td>
+                        <td>40 character sha1 hash, provided by Ustream.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>code</strong></td>
+                        <td>string</td>
+                        <td>REQUIRED</td>
+                        <td>The Authorization Code received from the Authorization Endpoint.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>redirect_uri</strong></td>
+                        <td>string</td>
+                        <td>REQUIRED</td>
+                        <td>The redirection URI used by the authorization Server to return the authorization response in the previous step.</td>
+                    </tr>
+                </table>
+                <p class="note">The Token Endpoint currently works for Bearer Tokens only.</p>
+        
+                <p>In addition to the parameters above, the Client has to provide its Client secret (provided along with the Client key) to authenticate itself. The authentication is done with HTTP Basic authorization method. Example HTTP Header:</p>
+                <pre>Authorization: Basic bc345abc45d6789abcdef0123aef0126789def01</pre>
+                
+                <h6>Response</h6>
+                <p>The response of the Token Endpoint is a JSON object. JSON response on success (for Bearer Tokens):</p>
+                <table class="table responsive">
+                    <tr>
+                        <th>name</th>
+                        <th width="80%">description</th>
+                    </tr>
+                    <tr>
+                        <td><strong>access_token</strong></td>
+                        <td>Access Token (40 character length, hexa encoded sha1 hash)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>expires_in</strong></td>
+                        <td>Token's current lifetime, in seconds. Will not be set if Offline Scope is enabled.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>token_type</strong></td>
+                        <td>Will be "bearer"</td>
+                    </tr>
+                </table>
+        
+        
+                <h4>Token for Resource Owner Password Credentials</h4>
+                <p>The server-side component of the Client calls this Endpoint to return the Access Token using resource owner's credentials (username and password). The parameters below must be set as HTTP POST parameters.</p>
+                <table class="table responsive">
+                    <tr>
+                        <th>parameter</th>
+                        <th>type</th>
+                        <th>importance</th>
+                        <th width="80%">description</th>
+                    </tr>
+                    <tr>
+                        <td><strong>grant_type</strong></td>
+                        <td>string</td>
+                        <td>REQUIRED</td>
+                        <td>MUST be "password" in this case.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>client_id</strong></td>
+                        <td>string</td>
+                        <td>REQUIRED</td>
+                        <td>40 character sha1 hash, provided by Ustream.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>client_secret</strong></td>
+                        <td>string</td>
+                        <td>REQUIRED</td>
+                        <td>40 character sha1 hash, provided by Ustream.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>username</strong></td>
+                        <td>string</td>
+                        <td>REQUIRED</td>
+                        <td>Ustream username</td>
+                    </tr>
+                    <tr>
+                        <td><strong>password</strong></td>
+                        <td>string</td>
+                        <td>REQUIRED</td>
+                        <td>Ustream password</td>
+                    </tr>
+                    <tr>
+                        <td><strong>device_name</strong></td>
+                        <td>string</td>
+                        <td>OPTIONAL</td>
+                        <td>device name</td>
+                    </tr>
+                    <tr>
+                        <td><strong>token_type</strong></td>
+                        <td>string</td>
+                        <td>OPTIONAL</td>
+                        <td>Must be "bearer" or "mac"</td>
+                    </tr>
+                    <tr>
+                        <td><strong>scope</strong></td>
+                        <td>string</td>
+                        <td>OPTIONAL</td>
+                        <td>"offline" for Offline Scope, "broadcaster" for Broadcaster Scope, or space separated urlencoded list of these strings</td>
+                    </tr>
+                </table>
+                
+                <p>In addition to the parameters above, the Client has to provide its Client secret (provided along with the Client key) to authenticate itself. The authentication is done with HTTP Basic authorization method. Example HTTP Header:</p>
+                <pre><code class="http">Authorization: Basic bc345abc45d6789abcdef0123aef0126789def01</code></pre>
+                
+                <h6>Response</h6>
+                <table class="table responsive">
+                    <tr>
+                        <th>name</th>
+                        <th width="80%">description</th>
+                    </tr>
+                    <tr>
+                        <td><strong>access_token</strong></td>
+                        <td>Access Token (40 character length, hexa encoded sha1 hash)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>expires_in</strong></td>
+                        <td>Token's current lifetime, in seconds. Will not be set if Offline Scope is enabled.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>token_type</strong></td>
+                        <td>Will be "bearer" or "mac"</td>
+                    </tr>
+                    <tr>
+                        <td><strong>mac_key</strong></td>
+                        <td>MAC secret (40 character length, hexa encoded sha1 hash). Referred as macSecret in the Ustream Broadcaster Library.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>created_at</strong></td>
+                        <td>UTC timestamp of the creation datetime. Referred as macIssueTime in the Ustream Broadcaster Library.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>mac_algorithm</strong></td>
+                        <td>Will be "hmac-sha-1"</td>
+                    </tr>
+                </table>
+
+        
+                <h4>Token for Client</h4>
+                <p>There are several API resources which aren't connected to any user. Those are resources implemented for the API client (application). <a href="channel.html#channel_hooks">Hook management</a> is a good example for that. Those resources needs the clients to identify themselves. For that purpose we implemented the Client Credentials OAuth2 Flow which provides your app a client access token. With normal user level tokens these resources dedicated to clients are inaccessible, however a client token can access the application owner user's resources.<br>The parameters below must be set as HTTP POST parameters.</p>
+                <table class="table responsive">
+                    <tr>
+                        <th>parameter</th>
+                        <th>type</th>
+                        <th>importance</th>
+                        <th width="80%">description</th>
+                    </tr>
+                    <tr>
+                        <td><strong>grant_type</strong></td>
+                        <td>string</td>
+                        <td>REQUIRED</td>
+                        <td>MUST be "client_credentials" in this case.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>client_id</strong></td>
+                        <td>string</td>
+                        <td>REQUIRED</td>
+                        <td>40 character sha1 hash, provided by Ustream.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>device_name</strong></td>
+                        <td>string</td>
+                        <td>OPTIONAL</td>
+                        <td>device name</td>
+                    </tr>
+                    <tr>
+                        <td><strong>token_type</strong></td>
+                        <td>string</td>
+                        <td>OPTIONAL</td>
+                        <td>Must be "bearer" or "mac"</td>
+                    </tr>
+                    <tr>
+                        <td><strong>scope</strong></td>
+                        <td>string</td>
+                        <td>OPTIONAL</td>
+                        <td>"offline" for Offline Scope, "broadcaster" for Broadcaster Scope, or space separated urlencoded list of these strings</td>
+                    </tr>
+                </table>
+        
+                <p>In addition to the parameters above, the Client has to provide its Client secret (provided along with the Client key) to authenticate itself. The authentication is done with HTTP Basic authorization method. Example HTTP Header:</p>
+                <pre><code class="http">Authorization: Basic bc345abc45d6789abcdef0123aef0126789def01</code></pre>
+                
+                <h6>Response</h6>
+                <table class="table responsive">
+                    <tr>
+                        <th>name</th>
+                        <th width="80%">description</th>
+                    </tr>
+                    <tr>
+                        <td><strong>access_token</strong></td>
+                        <td>Access Token (40 character length, hexa encoded sha1 hash)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>expires_in</strong></td>
+                        <td>Token's current lifetime, in seconds. Will not be set if Offline Scope is enabled.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>token_type</strong></td>
+                        <td>Will be "bearer" or "mac"</td>
+                    </tr>
+                    <tr>
+                        <td><strong>mac_key</strong></td>
+                        <td>MAC secret (40 character length, hexa encoded sha1 hash). Referred as macSecret in the Ustream Broadcaster Library.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>created_at</strong></td>
+                        <td>UTC timestamp of the creation datetime. Referred as macIssueTime in the Ustream Broadcaster Library.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>mac_algorithm</strong></td>
+                        <td>Will be "hmac-sha-1"</td>
+                    </tr>
+                </table>
+        
+                <h6>Error responses for Authorization Code, Password, and Client Credentials token flows</h6>
+                <p>If there is an error, the Token Endpoint returns a JSON object with the following format:</p>
+                <pre><code class="json">{
+    "error": "ERROR_VALUE"
+}</code></pre>
+                
+                <p>It also sends a HTTP status code indicating the error. Possible error responses:</p>
+                <table class="table responsive">
+                    <tr>
+                        <th>error value</th>
+                        <th>HTTP response code</th>
+                        <th>Error conditions</th>
+                    </tr>
+                    <tr>
+                        <td><strong>invalid_request</strong></td>
+                        <td>400 Bad Request</td>
+                        <td>When one or more required parameters are missing</td>
+                    </tr>
+                    <tr>
+                        <td><strong>unsupported_grant_type</strong></td>
+                        <td>501 Not implemented</td>
+                        <td>When Client asks for an unsupported grant type, currently only "authorization_code" is supported, "client_credentials", "refresh_token", and "password" types are not.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>invalid_grant</strong></td>
+                        <td>400 Bad Request</td>
+                        <td>When the supplied authorization_code does not exists or expired</td>
+                    </tr>
+                    <tr>
+                        <td><strong>invalid_client</strong></td>
+                        <td>400 Bad Request</td>
+                        <td>When the referred Client is missing, the secret is wrong or the authorization requester Client and token requester Client does not match.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>server_error</strong></td>
+                        <td>503 Server Error</td>
+                        <td>The Server cannot handle the request at this moment for some reason. Try again later.</td>
+                    </tr>
+                </table>
+                
+        
+        
+                <h3>Examples</h3>
+                
+        
+                <h4>Authorization Code Flow</h4>
+                <ol>
+                    <li>
+                        <p>The Client opens a browser with the Authorization Endpoint:</p>
+                        <pre>https://www.ustream.tv/oauth2/authorize
+?response_type=code
+&amp;client_id=AAAAAAAAAABBBBBBBBBBCCCCCCCCCCDDDDDDDDDD
+&amp;redirect_uri=http://example.com/get_access_token
+&amp;device_name=My%20Device
+&amp;scope=offline+broadcaster
+&amp;display=touch
+&amp;state=XYZ</pre></li>
+                    <li>
+                        <p>The User enters his/her credentials and presses the Allow button. The browser is redirected to the following URL:</p>
+                        <pre>http://example.com/get_access_token?code=19d8dbb3ebac55f110c3b526e38bcfdfbf46d659&amp;state=XYZ</pre>
+                    </li>
+                    <li>
+                        <p>The page handler at <a>http://example.com/get_access_token</a> retrieves the Access Token using the Token Endpoint:</p>
+                        <pre><code class="nohighlight">POST /oauth2/token HTTP/1.1
+    Host: www.ustream.tv
+    Authorization: Basic xxxxxxxxxxyyyyyyyyyywwwwwwwwwwzzzzzzzzzz
+    Content-Type: application/x-www-form-urlencoded
+    grant_type=authorization_code&amp;client_id=AAAAAAAAAABBBBBBBBBBCCCCCCCCCCDDDDDDDDDD
+    &amp;code=19d8dbb3ebac55f110c3b526e38bcfdfbf46d659&amp;redirect_uri=http://example.com/get_access_token
+    </code></pre></li>
+                    <li>
+                        <p>The response of Token Endpoint contains the Access Token:</p>
+                        <pre><code class="nohighlight">HTTP/1.1 200 OK
+    Cache-Control: no-store
+    Content-Type:application/json; charset=UTF-8
+    {"access_token":"ab345cdef123ef1267890abcdef04567890abcd1", "token_type":"bearer", "expires_in":86400}
+    </code></pre></li>
+                </ol>
+                <h4>Implicit Flow, requesting for MAC tokens on a mobile-optimized
+    authorization page</h4>
+                <ol>
+                    <li><p>The Client opens a browser with the Authorization Endpoint:</p>
+                    <pre>https://www.ustream.tv/oauth2/authorize
+?response_type=token
+&amp;token_type=mac
+&amp;client_id=AAAAAAAAAABBBBBBBBBBCCCCCCCCCCDDDDDDDDDD
+&amp;redirect_uri=http://example.com/token
+&amp;device_name=My%20Device
+&amp;scope=offline+broadcaster
+&amp;display=touch
+&amp;state=XYZ
+</pre></li>
+                <li class="hide-counter">
+                    <ol>
+                        <li>
+                            <p>The User enters his/her credentials and presses the Allow button. The browser is redirected to the following URL:</p>
+                            <pre>http://example.com/token
+?access_token=1a446888dfaa921e189479409d638d680dfdbf77
+&amp;token_type=mac
+&amp;mac_key=dfc337d39b0941650b67051a622885cb0eb67a51
+&amp;mac_algorithm=hmac-sha-1
+&amp;created_at=1310000546
+&amp;state=XYZ
+</pre></li>
+
+                        <li>
+                            <p>The user cancels the authorization page or presses <em>Deny</em> after authentication. The browser is redirected to the following URL:</p>
+                            <pre>http://example.com/token?error=access_denied&amp;state=XYZ</pre>
+                        </li>
+                    </ol>
+                </li>
+            </ol>
+        </section>
+    
+    
+    
+    
+        <section>
+                <h2>Testing API from command line (with curl)</h2>
+                
+            
+            
+                <h3>Get an access token</h3>
+
+                <pre>
+https://www.ustream.tv/oauth2/authorize
+?response_type=token
+&amp;client_id=057ce944b015ec9fdf546dfbbe1b7af4b19e8158
+&amp;redirect_uri=https://www.ustream.tv/oauth2/redirect
+&amp;device_name=MyDevice
+&amp;display=touch
+&amp;state=XYZ</pre>
+                <p>After logging in, the browser is redirected to a special URL (defined by the Client), passing the Access Token in the URL. As you can see in the examples below, you should use Authorization HTTP header with token in the requests: "Authorization: Bearer 3c2573673b782f6544405a22636f3d5d3b6f3950"</p>
+                
+            
+            
+                <h3>Creating a channel (POST)</h3>
+                <pre><code>$curl -i -X POST -H "Authorization: Bearer 3c2573673b782f6544405a22636f3d5d3b6f3950" -d "title=Whatever+Test+1234" https://api.ustream.tv/users/self/channels.json</code></pre>
+                <pre><code class="nohighlight">HTTP/1.1 201 CREATED
+Server: nginx/1.2.6
+Date: Tue, 15 Jan 2013 13:08:06 GMT
+Content-Type: application/json; charset=UTF-8
+Content-Length: 123
+Connection: keep-alive
+Vary: Host
+X-Powered-By: PHP/5.3.20-1~dotdeb.0
+Cache-Control: no-store
+Accept-Ranges: bytes
+X-Varnish: 703443498
+Age: 0
+Via: 1.1 varnish
+{"channel":{"id":"13091307","title":"Whatever Test 1234","url":"whatever-test-1234","tiny_url":"http://ustre.am/SVE7"}}
+</code></pre>
+                
+            
+            
+                <h3>Acquiring the streamkey for an external broadcasting application</h3>
+                <p>If you wish to use an non-Ustream provided broadcaster application or appliance (like Flash Live Media Encoder, Wirecast, Tricaster, etc., you will need a streamkey to authenticate with Ustream and proving that broadcasting to that particular channel is allowed. Also you should get the ingest point where your device or application should connect.</p>
+                <p>You can access the streamkey (it is usually the parameter "stream" in the configuration of these devices) the following way. The endpoint requires you to provide the OAuth2 authorization key to complete. The endpoint is at <a class="url">https://api.ustream.tv/channels/CHANNEL_ID/authorizations/broadcasting.json</a></p>
+                
+                <h6>Example call</h6>
+                <pre><code class="nohighlight">GET /channels/123456/authorizations/broadcasting.json
+Host: api.ustream.tv
+Authorization: Bearer 3c2573673b782f6544405a22636f3d5d3b6f3950
+Content-Type: application/x-www-form-urlencoded</code></pre>
+                
+                <h6>Example response</h6>
+                <pre><code class="nohighlight">HTTP/1.1 200 OK
+Cache-Control: no-store
+{"streaming_key": "kqDlIyGb0H47g8SRSyKjyxAqPmiwTbw3"}
+</code></pre>
+                
+            
+            
+                <h3>Acquiring the channelkey for an external broadcasting application</h3>
+                <p>If you wish to use Flash media live encoder , you will need the channelkey to authenticate with Ustream and proving that broadcasting to that particular channel is allowed. Also you should get the ingest point where your device or application should connect.</p>
+                <p>You can access the channelkey (it is usually the parameter "stream" in the configuration of these devices) the following way. The endpoint requires you to provide the OAuth2 authorization key to complete. The endpoint is at <a class="url">https://api.ustream.tv/channels/CHANNEL_ID/authorizations/broadcasting/channel_key.json</a></p>
+
+                <h6>Example call</h6>
+                <pre><code class="nohighlight">GET /channels/123456/authorizations/broadcasting/channel_key.json
+Host: api.ustream.tv
+Authorization: Bearer 3c2573673b782f6544405a22636f3d5d3b6f3950
+Content-Type: application/x-www-form-urlencoded
+</code></pre>
+                <h6>Example response</h6>
+                <pre><code class="nohighlight">HTTP/1.1 200 OK
+Cache-Control: no-store
+{"channel_key": "kqDlIyGb0H47g8SRSyKjyxAqPmiwTbw3"}</code>
+</pre>
+            </section>
+        </article>
+			</div>
+			<div class="column column-4 sidebar">
+				<div class="stickyContent">
+					<h3>Related articles</h3>
+					<ul class="related">
+					
+					
+					
+						<li><a href="/api-docs/broadcasting-api/getting-started.html">Getting started</a></li>
+					
+        			
+					
+						<li><a href="/api-docs/broadcasting-api/channel.html">Channel API</a></li>
+					
+        			
+					
+						<li><a href="/api-docs/broadcasting-api/broadcaster.html">Broadcaster API</a></li>
+					
+        			
+					
+						<li><a href="/api-docs/broadcasting-api/socialstream.html">Social Stream API</a></li>
+					
+        			
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</main>
+
+	
+
+
+	<footer>
+	<div class='row'>
+		<ul class="footer-nav clear">
+			<li><a href="http://www.ustream.tv/platform/pro?itm_source=footer_saas&amp;itm_medium=onsite&amp;itm_content=Product&amp;itm_campaign=footer">Product</a></li>
+			<li><a href="http://www.ustream.tv/platform/broadcast-anywhere/new?itm_source=footer_saas&amp;itm_medium=onsite&amp;itm_content=Apps&amp;itm_campaign=footer">Apps</a></li>
+			<li><a href="http://www.ustream.tv/our-company?itm_source=footer_saas&amp;itm_medium=onsite&amp;itm_content=About&amp;itm_campaign=footer">About</a></li>
+			<li><a href="http://www.ustream.tv/press?itm_source=footer_saas&amp;itm_medium=onsite&amp;itm_content=press&amp;itm_campaign=footer">Press</a></li>
+			<li><a href="http://www.ustream.tv/our-company/career?itm_source=footer_saas&amp;itm_medium=onsite&amp;itm_content=Career&amp;itm_campaign=footer">Career</a></li>
+			<li><a href="http://www.ustream.tv/our-company/change?itm_source=footer_saas&amp;itm_medium=onsite&amp;itm_content=Change&amp;itm_campaign=footer">Change</a></li>
+			<li><a href="https://ustream.zendesk.com/home">Support</a></li>
+			<li><a href="http://www.ustream.tv/explore/all?itm_source=footer_saas&amp;itm_medium=onsite&amp;itm_content=Watch&amp;itm_campaign=footer">Watch</a></li>
+			<li><a href="https://www.ustream.tv/platform/plans?itm_source=footer_saas&amp;itm_medium=onsite&amp;itm_content=Plans_and_Pricing&amp;itm_campaign=footer">Plans and Pricing</a></li>
+		</ul>
+		<ul class='footer-copy clear'>
+			<li><span class="copyright">© 2015 Ustream, Inc. All rights reserved.</span></li>
+            <li><a class="copyright-policy" href="http://www.ustream.tv/copyright-policy?itm_source=footer_saas&amp;itm_medium=onsite&amp;itm_content=Copyright_policy&amp;itm_campaign=footer">Copyright Policy</a></li>
+            <li><a class="privacy-policy" href="http://www.ustream.tv/privacy-policy?itm_source=footer_saas&amp;itm_medium=onsite&amp;itm_content=Privacy_policy&amp;itm_campaign=footer">Privacy Policy</a></li>
+            <li><a class="terms-of-service" href="http://www.ustream.tv/terms?itm_source=footer_saas&amp;itm_medium=onsite&amp;itm_content=Terms_of_service&amp;itm_campaign=footer">Terms of Service</a></li>
+		</ul>
+		<ul class='social clear'>
+			<li><a href='http://www.facebook.com/ustream'><i class="glyphicon icon-facebook"></i></a></li>
+			<li><a href='http://twitter.com/ustream'><i class="glyphicon icon-twitter"></i></a></li>
+			<li><a href='https://www.linkedin.com/company/ustream-inc'><i class="glyphicon icon-linkedin"></i></a></li>
+			<li><a href='https://plus.google.com/+UstreamTv2007' rel='publisher'><i class="glyphicon icon-google-plus"></i></a></li>
+		</ul>
+	</div>
+</footer>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-1359697-47', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+</body>
+</html>
