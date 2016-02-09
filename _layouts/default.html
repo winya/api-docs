@@ -13,6 +13,12 @@
 	<script src="{{site.baseurl}}/js/highlight.pack.js"></script>
 	<script src="{{site.baseurl}}/js/ustream-embedapi.min.js"></script>
     <script src="{{site.baseurl}}/js/apidocs.js"></script>
+	<script>
+	  if (window.location.href.indexOf('http://developers.ustream.tv') === -1) {
+		window.location.href = 'http://developers.ustream.tv{{ page.url }}';
+	  }
+	</script>
+	<link rel="canonical" href="http://developers.ustream.tv{{ page.url }}"/>
 	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600,700,300' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="http://static-cdn2.ustream.tv/v5/css/reset.css" type="text/css" media="screen">
     <link rel="stylesheet" href="https://ustvstaticcdn2-a.akamaihd.net/packed/snorky_all.css" type="text/css" media="screen">
