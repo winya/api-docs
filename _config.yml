@@ -38,3 +38,6 @@ paginate: 0
 # Exclude metadata and development time dependencies (like Grunt plugins)
 exclude: [README.md, Gemfile, Gemfile.lock, Overview.md]
 
+# Plugins
+gems:
+  - jekyll-sitemap
