@@ -134,11 +134,10 @@
             });
             
 			//bind events
-			base.onScroll();
-			base.onResize();
 			$(window).scroll(base.onScroll);
+			base.onScroll();
 			$(window).resize(base.onResize);
-			$(window).load(base.onResize);
+			base.onResize();
         };
 		base.onScroll = function() {			
 			var windowTop = $(window).scrollTop();
@@ -207,16 +206,12 @@ $(document).ready(function() {
        return true;
     });
     $('nav .nav-toggle').on('click',function() {
-        $('#Nav').toggleClass('show');
-        if ($('#Nav').hasClass('show')) {
-            $('#Nav').css('height', $('#Nav').height() + $('#Nav .nav').outerHeight());
+        $('nav').toggleClass('show');
+        if ($('nav').hasClass('show')) {
+            $('nav').css('height', $('nav').height() + $('nav .nav').outerHeight());
         } else {
-            $('#Nav').removeAttr('style');
+            $('nav').removeAttr('style');
         }
     });
-	
-	$(window).on('resize', function() {
-		$('#Nav').removeClass('show').removeAttr('style');
-	})
     
 });
