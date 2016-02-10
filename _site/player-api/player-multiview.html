@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
-	<title> Multiple instances -  Ustream Developers</title>
+	<title> Multiview example -  Ustream Developers</title>
 	<link rel="shortcut icon" href="/favicon.ico" />
 	<meta charset="utf-8">
 	<meta name="description" content="Customize and control the viewing experience for your audience or create your own streaming applications with the Ustream open video platform and Application Programming Interfaces (APIs) and Software Development Kits (SDKs)."/>
@@ -15,16 +15,16 @@
     <script src="/js/apidocs.js"></script>
 	<script>
 	  if (window.location.href.indexOf('http://developers.ustream.tv') === -1) {
-		window.location.href = 'http://developers.ustream.tv/player-api/player-multiple-instances.html';
+		window.location.href = 'http://developers.ustream.tv/player-api/player-multiview.html';
 	  }
 	</script>
-	<link rel="canonical" href="http://developers.ustream.tv/player-api/player-multiple-instances.html"/>
+	<link rel="canonical" href="http://developers.ustream.tv/player-api/player-multiview.html"/>
 	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600,700,300' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="http://static-cdn2.ustream.tv/v5/css/reset.css" type="text/css" media="screen">
     <link rel="stylesheet" href="https://ustvstaticcdn2-a.akamaihd.net/packed/snorky_all.css" type="text/css" media="screen">
     <link rel="stylesheet" href="/css/apidocs.css" type="text/css" media="screen">
 </head>
-<body id="/player-api/player-multiple-instances">
+<body id="/player-api/player-multiview">
 	<nav id="Nav">
 	<div class="row">
 		<div class="nav-toggle">
@@ -55,7 +55,7 @@
 			 
 			<li><a href="/player-api/">Player API</a></li>
 		</ul>
-		<h1>Multiple instances</h1>
+		<h1>Multiview example</h1>
 	</div>
 </header>
 <main>
@@ -63,154 +63,247 @@
 		<div class="row">
 			<div class="column column-8">
 				<article>
-	<section>
-		<div style="padding-bottom:56.25%; position:relative; display:block; width: 100%">
-			<iframe src="http://www.ustream.tv/embed/1524?html5ui" id="FrameAlpha" width="100%" height="100%" allowfullscreen webkitallowfullscreen style="border: 0 transparent none; position:absolute; top:0; left: 0"></iframe>
-		</div>
-		<div class="panel clear">
-			<div id="PlayAlpha" class="button button-icon control-play"><i class="glyphicon icon-play-2"></i>Play</div>
-			<div id="PauseAlpha" class="button button-icon control-pause"><i class="glyphicon icon-pause-2"></i>Pause</div>
-			<div class="pull-right" id="StatusAlpha">
-				<span style="display: none;" class="st-live label status">LIVE</span>
-				<span style="display: none;" class="st-offline status label">OFFLINE</span>
-				<span style="display: none;" class="st-playing label">PLAYING</span>
-				<span style="display: none;" class="st-ended label">ENDED</span>
-			</div>
-		</div>
+	<section class="intro">
+		<h3>Multiview example</h3>
+
+		<p>In this example the content of the player is loaded and changed dynamically, providing an easy way for seamless switching between live or VOD contents.</p>
+		<p>This feature of the Embed API can be used in various use cases, like switching between</p>
+
+		<ul>
+			<li>multiple cameras</li>
+			<li>simultaneous sessions of a conference</li>
+			<li>multi-language streams</li>
+		</ul>
+		<p>or to promote further channels.</p>
 	</section>
-	
-	<section>
-		<div style="padding-bottom:56.25%; position:relative; display:block; width: 100%">
-			<iframe src="http://www.ustream.tv/embed/6540154?html5ui" id="FrameBeta" width="100%" height="100%" allowfullscreen webkitallowfullscreen style="border: 0 transparent none; position:absolute; top:0; left: 0"></iframe>
+
+	<section class="example">
+		<style>
+			.player-container {
+				padding-bottom: 56.25%;
+				position: relative;
+				width: 100%;
+			}
+
+			.player-container iframe {
+				position: absolute;
+				top: 0;
+				right: 0;
+				width: 100%;
+				height: 100%;
+			}
+
+			.multiview-chooser {
+				margin-top: 1rem;
+			}
+
+			.multiview-chooser ul {
+				margin: 0;
+			}
+
+			.multiview-chooser li {
+				width: 24%;
+				float: left;
+				margin: 0;
+				padding: 0;
+			}
+
+			.multiview-chooser li:not(:first-of-type) {
+				margin-left: 1.33%;
+			}
+
+			.multiview-chooser li:before {
+				display: none;
+			}
+
+			.multiview-chooser a {
+				display: block;
+			}
+
+			.multiview-chooser a.active:after {
+				display: block;
+				content: ' ';
+				position: absolute;
+				top: 0;
+				right: 0;
+				bottom: 0;
+				left: 0;
+				z-index: 100;
+				box-sizing: border-box;
+				border: 3px solid #38f;
+			}
+
+			.multiview-chooser img {
+				margin: 0;
+				padding: 0;
+			}
+		</style>
+
+		<div class="player-container">
+			<iframe id="MultiviewPlayer" src="//www.ustream.tv/embed/12762028?html5ui" frameborder="0" allowfullscreen webkitallowfullscreen scrolling="no"></iframe>
 		</div>
-		<div class="panel clear">
-			<div id="PlayBeta" class="button button-icon control-play"><i class="glyphicon icon-play-2"></i>Play</div>
-			<div id="PauseBeta" class="button button-icon control-pause"><i class="glyphicon icon-pause-2"></i>Pause</div>
-			<div class="pull-right" id="StatusBeta">
-				<span style="display: none;" class="st-live label status">LIVE</span>
-				<span style="display: none;" class="st-offline status label">OFFLINE</span>
-				<span style="display: none;" class="st-playing label">PLAYING</span>
-				<span style="display: none;" class="st-ended label">ENDED</span>
-			</div>
+
+		<div class="multiview-chooser">
+			<ul>
+				<li><a href="#" class="active" data-app="channel" data-id="12762028">
+					<img src="http://static.ddmcdn.com/gif/apl-tvhighlights-pbpaplthumbnail.png" alt="Animal Planet L!VE"/>
+				</a></li>
+
+				<li><a href="#" data-app="channel" data-id="13628077">
+					<img src="http://static.ddmcdn.com/gif/pacific-reef-270x152.jpg" alt="APL!VE Pacific Reef"/>
+				</a></li>
+
+				<li><a href="#" data-app="channel" data-id="14812707">
+					<img src="http://static.ddmcdn.com/gif/apl_live_sharks_270x152.jpg" alt="APL!VE Reef Sharks"/>
+				</a></li>
+
+				<li><a href="#" data-app="channel" data-id="14225913">
+					<img src="http://static.ddmcdn.com/gif/apl-tanked-clownfish.png" alt="APL!VE Tanked"/>
+				</a></li>
+			</ul>
 		</div>
+		<div class="clear"></div>
+
+		<script>
+			(function(){
+				var _contents = document.querySelectorAll('.multiview-chooser a'),
+					_active = _contents[0],
+					embedApi = UstreamEmbed('MultiviewPlayer');
+
+				Array.prototype.forEach.call(_contents, function (_a){
+					_a.onclick = function(e){
+						e.preventDefault();
+						e.stopPropagation();
+
+						embedApi.callMethod(
+							'load',
+							this.getAttribute('data-app'),
+							this.getAttribute('data-id')
+						);
+
+						_active.classList.remove('active');
+						this.classList.add('active');
+						_active = this;
+
+						return false;
+					};
+				});
+			})();
+		</script>
 	</section>
-	
-	<section>
-		<div style="padding-bottom:56.25%; position:relative; display:block; width: 100%">
-			<iframe src="http://www.ustream.tv/embed/recorded/24364591?html5ui" id="FrameGamma" width="100%" height="100%" allowfullscreen webkitallowfullscreen style="border: 0 transparent none; position:absolute; top:0; left: 0"></iframe>
-		</div>
-		<div class="panel clear">
-			<div id="PlayGamma" class="button button-icon control-play"><i class="glyphicon icon-play-2"></i>Play</div>
-			<div id="PauseGamma" class="button button-icon control-pause"><i class="glyphicon icon-pause-2"></i>Pause</div>
-			<div class="pull-right" id="StatusGamma">
-				<span style="display: none;" class="st-live label status">LIVE</span>
-				<span style="display: none;" class="st-offline status label">OFFLINE</span>
-				<span style="display: none;" class="st-playing label">PLAYING</span>
-				<span style="display: none;" class="st-ended label">ENDED</span>
-			</div>
-		</div>
+
+	<section class="code">
+		<h4>HTML</h4>
+		<pre><code class="xml">&lt;div class="player-container"&gt;
+    &lt;iframe id="MultiviewPlayer" src="//www.ustream.tv/embed/12762028?html5ui" frameborder="0" allowfullscreen webkitallowfullscreen scrolling="no"&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;div class="multiview-chooser"&gt;
+    &lt;ul&gt;
+        &lt;li&gt;&lt;a href="#" class="active" data-app="channel" data-id="12762028"&gt;
+            &lt;img src="http://static.ddmcdn.com/gif/apl-tvhighlights-pbpaplthumbnail.png" alt="Animal Planet L!VE"/&gt;
+        &lt;/a&gt;&lt;/li&gt;
+
+        &lt;li&gt;&lt;a href="#" data-app="channel" data-id="13628077"&gt;
+            &lt;img src="http://static.ddmcdn.com/gif/pacific-reef-270x152.jpg" alt="APL!VE Pacific Reef"/&gt;
+        &lt;/a&gt;&lt;/li&gt;
+
+        &lt;li&gt;&lt;a href="#" data-app="channel" data-id="14812707"&gt;
+            &lt;img src="http://static.ddmcdn.com/gif/apl_live_sharks_270x152.jpg" alt="APL!VE Reef Sharks"/&gt;
+        &lt;/a&gt;&lt;/li&gt;
+
+        &lt;li&gt;&lt;a href="#" data-app="channel" data-id="14225913"&gt;
+            &lt;img src="http://static.ddmcdn.com/gif/apl-tanked-clownfish.png" alt="APL!VE Tanked"/&gt;
+        &lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+&lt;/div&gt;</code></pre>
+
+		<h4>Javascript</h4>
+		<pre><code class="javascript">var _contents = document.querySelectorAll('.multiview-chooser a'),
+    _active = _contents[0],
+    embedApi = UstreamEmbed('MultiviewPlayer');
+
+Array.prototype.forEach.call(_contents, function (_a){
+    _a.onclick = function(e){
+        e.preventDefault();
+        e.stopPropagation();
+
+        embedApi.callMethod(
+            'load',
+            this.getAttribute('data-app'),
+            this.getAttribute('data-id')
+        );
+
+        _active.classList.remove('active');
+        this.classList.add('active');
+        _active = this;
+
+        return false;
+    };
+});</code></pre>
+
+		<h4>CSS</h4>
+		<pre><code class="css">.player-container {
+    padding-bottom: 56.25%;
+    position: relative;
+    width: 100%;
+}
+
+.player-container iframe {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.multiview-chooser {
+    margin-top: 1rem;
+}
+
+.multiview-chooser ul {
+    margin: 0;
+}
+
+.multiview-chooser li {
+    width: 24%;
+    float: left;
+    margin: 0;
+    padding: 0;
+}
+
+.multiview-chooser li:not(:first-of-type) {
+    margin-left: 1.33%;
+}
+
+.multiview-chooser li:before {
+    display: none;
+}
+
+.multiview-chooser a {
+    display: block;
+}
+
+.multiview-chooser a.active:after {
+    display: block;
+    content: ' ';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+    box-sizing: border-box;
+    border: 3px solid #38f;
+}
+
+.multiview-chooser img {
+    margin: 0;
+    padding: 0;
+}</code></pre>
 	</section>
 </article>
-<style>
-	.label[class*="st-"] {
-		padding: 0 .4rem;
-		font-size: 1rem;
-		text-transform: uppercase;
-		font-weight: 700;
-		line-height: 1.7rem;
-		border-radius: 2px;
-		display: inline-block;
-	}
-	.label.st-live {
-		background-color: #ff3d23;
-		color: white;
-	}
-	.label.st-offline {
-		background-color: #9cacbc;
-		color: white;
-	}
-	.label.st-playing {
-		background-color: #539eec;
-		color: white;
-	}
-	.label.st-ended {
-		background-color: #e166b7;
-		color: white;
-	}
-</style>
-<script type="text/javascript">
 
-	$(document).ready(function () {
-
-		/*
-		 create player instances
-		 */
-		var alpha = UstreamEmbed("FrameAlpha"),
-				beta = UstreamEmbed("FrameBeta"),
-				gamma = UstreamEmbed("FrameGamma");
-
-
-		/*
-		 bind controls to buttons
-		 */
-		$('#PlayAlpha').on('click', function (e) { e.preventDefault(); e.stopPropagation(); alpha.callMethod('play'); });
-		$('#PlayBeta').on('click', function (e) { e.preventDefault(); e.stopPropagation(); beta.callMethod('play'); });
-		$('#PlayGamma').on('click', function (e) { e.preventDefault(); e.stopPropagation(); gamma.callMethod('play'); });
-
-		$('#PauseAlpha').on('click', function (e) { e.preventDefault(); e.stopPropagation(); alpha.callMethod('pause'); });
-		$('#PauseBeta').on('click', function (e) { e.preventDefault(); e.stopPropagation(); beta.callMethod('pause'); });
-		$('#PauseGamma').on('click', function (e) { e.preventDefault(); e.stopPropagation(); gamma.callMethod('pause'); });
-
-
-		/*
-		 event handler for events received from the embed iframe
-		 */
-		var onEmbedEvent = function (id, event, data) {
-
-			var parent = $('#' + id);
-
-			switch (event) {
-				case "live":
-					parent.find('.st-live').show();
-					parent.find('.st-offline').hide();
-					break;
-				case "offline":
-					parent.find('.st-offline').show();
-					parent.find('.st-live').hide();
-					break;
-				case "playing":
-					if (data) {
-						parent.find('.st-playing').show()
-					} else {
-						parent.find('.st-playing').hide();
-					}
-					break;
-				case "finished":
-					parent.find('.st-ended').show();
-					break;
-			}
-		}
-
-		/*
-		 adding event handlers, one by one
-		 */
-		alpha.addListener('live', $.proxy(onEmbedEvent, null, 'StatusAlpha'));
-		alpha.addListener('offline', $.proxy(onEmbedEvent, null, 'StatusAlpha'));
-		alpha.addListener('playing', $.proxy(onEmbedEvent, null, 'StatusAlpha'));
-		alpha.addListener('finished', $.proxy(onEmbedEvent, null, 'StatusAlpha'));
-
-		beta.addListener('live', $.proxy(onEmbedEvent, null, 'StatusBeta'));
-		beta.addListener('offline', $.proxy(onEmbedEvent, null, 'StatusBeta'));
-		beta.addListener('playing', $.proxy(onEmbedEvent, null, 'StatusBeta'));
-		beta.addListener('finished', $.proxy(onEmbedEvent, null, 'StatusBeta'));
-
-		gamma.addListener('live', $.proxy(onEmbedEvent, null, 'StatusGamma'));
-		gamma.addListener('offline', $.proxy(onEmbedEvent, null, 'StatusGamma'));
-		gamma.addListener('playing', $.proxy(onEmbedEvent, null, 'StatusGamma'));
-		gamma.addListener('finished', $.proxy(onEmbedEvent, null, 'StatusGamma'));
-
-	});
-</script>
 			</div>
 			<div class="column column-4 sidebar">
 				<div class="stickyContent">
