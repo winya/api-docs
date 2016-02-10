@@ -2,7 +2,6 @@
 <html>
 <head>
 	<title>{% if page.title %} {{ page.title }} - {% endif %} {{ site.name }}</title>
-	<link rel="shortcut icon" href="{{site.baseurl}}/favicon.ico" />
 	<meta charset="utf-8">
 	<meta name="description" content="{{site.description}}"/>
     <meta name="author" content="{{site.author}}"/>
@@ -24,6 +23,7 @@
     <link rel="stylesheet" href="http://static-cdn2.ustream.tv/v5/css/reset.css" type="text/css" media="screen">
     <link rel="stylesheet" href="https://ustvstaticcdn2-a.akamaihd.net/packed/snorky_all.css" type="text/css" media="screen">
     <link rel="stylesheet" href="{{site.baseurl}}/css/apidocs.css" type="text/css" media="screen">
+	<link rel="shortcut icon" href="{{site.baseurl}}/favicon.ico" />
 </head>
 <body {% if page.id %}id="{{ page.id }}"{% endif %}>
 	{% include nav.html category=page.category %}
