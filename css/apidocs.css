@@ -19,13 +19,13 @@ header {
     justify-content: center;
 }
 .hero.large > .row {
-   min-height: 44rem; 
+   min-height: 44rem;
 }
 .hero.medium > .row {
-   min-height: 44rem; 
+   min-height: 44rem;
 }
 .hero.small > .row {
-   min-height: 32rem; 
+   min-height: 32rem;
 }
 .hero a {
 	text-decoration: none;
@@ -83,18 +83,18 @@ header {
     	line-height: 2.4rem;
 	}
 	.hero h1 {
-        font-size: 3.8rem; 
+        font-size: 3.8rem;
     	line-height: 4.8rem;
     }
 	.hero h4 {
-        font-size: 1.5rem; 
+        font-size: 1.5rem;
     	line-height: 2.4rem;
     }
 	.hero.medium > .row {
-		min-height: 32rem; 
+		min-height: 32rem;
 	}
 	.hero.small > .row {
-		min-height: 22rem; 
+		min-height: 22rem;
 	}
 	.hero > .row {
 		padding: 6rem 1rem;
@@ -161,7 +161,7 @@ header {
     color:#38f;
     line-height: 3.6rem;
     margin: 2.2rem 1rem 0 0;
-    float:left; 
+    float:left;
     height:3.6rem;
     background: left center url(//p6.zdassets.com/hc/theme_assets/89884/200029960/ustream-logo-blue.svg) no-repeat;
 }
@@ -484,7 +484,7 @@ header {
         opacity: 1;
 		transition: opacity .2s ease-out;
     }
-    
+
     #Nav .row > ul.nav > li {
         display: block;
         float:none;
@@ -1006,6 +1006,25 @@ header {
 
 
 /* Article pages */
+article pre {
+  overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
+}
+
+article pre::-webkit-scrollbar {
+  -webkit-appearance: none;
+  width: 6px;
+	height: 6px;
+	background-color: #ebf0f3;
+}
+article pre::-webkit-scrollbar-thumb {
+  background-color: #5c6c7c;
+  -webkit-box-shadow: 0 0 0 1px rgba(255, 255, 255, .5);
+}
+
+article {
+  padding-bottom: 6rem;
+}
 article table .verb {
     font-weight: 600;
     color: #2c3c4c;
@@ -1039,16 +1058,16 @@ article table.responsive {
     .column-4.sidebar {
         display:none;
     }
-    
+
     .column-8,  .column-6 {
         width: 100%;
     }
-	
+
 	article table tbody {
 		overflow-x: scroll;
 		width:100%;
 	}
-	
+
 }
 
 
@@ -1066,15 +1085,15 @@ header h1 {
 	background-image: linear-gradient(150deg,#683468,#38447d);
 }
 
-header { 
+header {
 	background-image: url(../images/hero-bg.jpg);
 	background-position: top center;
 	background-size: 2000px 600px;
 	background-repeat: no-repeat;
-	background-color: transparent; 
+	background-color: transparent;
 }
 @media screen and (min-width: 2000px) {
-	header { 
+	header {
 		background-size: cover;
 	}
 }
@@ -1143,5 +1162,3 @@ article p + .note {
     outline: none;
     -webkit-appearance: none;
 }
-
-

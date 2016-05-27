@@ -2366,7 +2366,179 @@ command=stop</code></pre>
 			</tr>
 		</table>
 
-		<h4>Deleting a video</h4>
+		<h3>Uploading videos</h3>
+
+		<p>Videos could be uploaded by FTP. To upload a file you must do the following steps:</p>
+
+		<ol>
+			<li>Initiate an upload process by an API call. In the response you can find the details of the FTP connect.</li>
+			<li>Upload the video.</li>
+			<li>When upload finished, send a "file in place" signal, which tells to our server that it can start process the file.</li>
+			<li>Call API to check the status of the processing.</li>
+		</ol>
+
+		<h4>Initializing an upload</h4>
+
+		<table class="table fill-bg-light1 table-chromeless">
+			<tr>
+				<td class="verb">POST</td>
+				<td><a>https://api.ustream.tv/channels/CHANNEL_ID/uploads.FORMAT?type=videoupload-ftp</a> (format can be json or xml)</td>
+			</tr>
+		</table>
+
+		<h6>Parameters</h6>
+		<table class="table responsive">
+			<tr>
+				<th>parameter</th>
+				<th>type</th>
+				<th>importance</th>
+				<th width="100%">Description</th>
+			</tr>
+			<tr>
+				<td>title</td>
+				<td>string</td>
+				<td>OPTIONAL</td>
+				<td>Video title</td>
+			</tr>
+			<tr>
+				<td>description</td>
+				<td>string</td>
+				<td>OPTIONAL</td>
+				<td>Video description</td>
+			</tr>
+			<tr>
+				<td>protect</td>
+				<td>integer</td>
+				<td>OPTIONAL</td>
+				<td>Level of protection</td>
+			</tr>
+		</table>
+
+		<h6>Response</h6>
+		<p>A key-value structure with details of the ftp access. Example:</p>
+		<pre><code class="json">
+		{
+			"protocol":"ftp",
+			"host":"red44.ustream.tv",
+			"port":21,
+			"path":"/1_12345_12345678901234",
+			"user":"1_12345_1234567890",
+			"password":"ftppw",
+			"videoId":"52177361",
+			"url":"ftp://1_1234_1234567890:ftppw@red44.ustream.tv/1_12345_12345678901234"
+		}
+		</code></pre>
+
+		<h6>Error codes</h6>
+		<table class="table responsive">
+			<tr>
+				<th>error value</th>
+				<th>HTTP response code</th>
+				<th width="100%">Error conditions</th>
+			</tr>
+			<tr>
+				<td>not_found</td>
+				<td>404 Not Found</td>
+				<td>The given channel does not exist.</td>
+			</tr>
+			<tr>
+				<td>protect_level_invalid</td>
+				<td>400 Bad request</td>
+				<td>Invalid protect level has been sent</td>
+			</tr>
+		</table>
+
+		<h4>Sending "file in place" signal</h4>
+
+		<table class="table fill-bg-light1 table-chromeless">
+			<tr>
+				<td class="verb">PUT</td>
+				<td><a>https://api.ustream.tv/channels/CHANNEL_ID/uploads/VIDEO_ID.FORMAT</a> (format can be json or xml)</td>
+			</tr>
+		</table>
+
+		<h6>Parameters</h6>
+		<table class="table responsive">
+			<tr>
+				<th>parameter</th>
+				<th>type</th>
+				<th>importance</th>
+				<th width="100%">Description</th>
+			</tr>
+			<tr>
+				<td>status</td>
+				<td>string</td>
+				<td>REQUIRED</td>
+				<td>Upload status (it should be "ready")</td>
+			</tr>
+		</table>
+
+		<h6>Response</h6>
+
+		<p>On success a response with HTTP status 202 Accepted is returned.</p>
+
+		<h6>Error codes</h6>
+		<table class="table responsive">
+			<tr>
+				<th>error value</th>
+				<th>HTTP response code</th>
+				<th width="100%">Error conditions</th>
+			</tr>
+			<tr>
+				<td>not_found</td>
+				<td>404 Not Found</td>
+				<td>The given channel does not exist.</td>
+			</tr>
+		</table>
+
+		<h4>Check status of processing</h4>
+
+		<table class="table fill-bg-light1 table-chromeless">
+			<tr>
+				<td class="verb">GET</td>
+				<td><a>https://api.ustream.tv/channels/CHANNEL_ID/uploads/VIDEO_ID.FORMAT</a> (format can be json or xml)</td>
+			</tr>
+		</table>
+
+		<h6>Parameters</h6>
+		<p>This request has no parameters.</p>
+
+		<h6>Response</h6>
+
+		<p>A key-value structure with details of the status. Example:</p>
+
+		<pre><code class="json">
+		{
+			"status":"transferred"
+		}
+		</code></pre>
+
+		<h6>Available statuses</h6>
+		<ul>
+			<li>initiated</li>
+			<li>transferred</li>
+			<li>queued</li>
+			<li>pending</li>
+			<li>transcoding</li>
+			<li>complete</li>
+			<li>error</li>
+		</ul>
+
+		<h6>Error codes</h6>
+		<table class="table responsive">
+			<tr>
+				<th>error value</th>
+				<th>HTTP response code</th>
+				<th width="100%">Error conditions</th>
+			</tr>
+			<tr>
+				<td>not_found</td>
+				<td>404 Not Found</td>
+				<td>The given channel does not exist.</td>
+			</tr>
+		</table>
+
+		<h3>Deleting a video</h3>
 		<p>Permanently delete a video from the current account.</p>
 		<table class="table fill-bg-light1 table-chromeless">
 			<tr>
