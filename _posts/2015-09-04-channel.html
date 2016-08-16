@@ -2359,7 +2359,69 @@ command=stop</code></pre>
 		<h4>Example call</h4>
 		<pre><code class="nohighlight">GET /videos/123456/downloadable/mp4.json HTTP/1.1
 Host: api.ustream.tv
-Authorization: Bearer 782f6544405a22636f3d5d3b63c2573673bf3950</code></pre>
+Authorization: Bearer 782f6544405a22636f3d5d3b63c2573673bf3950
+
+{
+    "downloadable": {
+        "download_url":"https://download.domain/example_download_path?download_parameters",
+        "expires_at":1471363639,
+        "status":"available"
+    }
+}</code></pre>
+
+		<h3>Requesting a downloadable version of a video</h3>
+
+		<p>
+			Sometimes the downloadable version of a video is not always available. You
+			have to request us to generate a temporary video file for download. In this case
+			the workflow is the following:
+		</p>
+		<ol>
+			<li>Use this call to request a downloadable file</li>
+			<li>Poll the same API resource for status updates</li>
+			<li>Use the value of the download_url property as soon as it is available</li>
+		</ol>
+		<p>
+			You have about 24 hours to download the video file right after it's available.
+			Please refer the property <strong>expires_at</strong> for the proper timing.
+		</p>
+
+		<p>
+			Requesting a downloadable version is only an emtpy POST on the downloadable
+			video resource.
+		</p>
+
+		<table class="table fill-bg-light1 table-chromeless">
+			<tr>
+				<td class="verb">POST</td>
+				<td><a>https://api.ustream.tv/videos/VIDEO_ID/downloadable/VIDEO_FORMAT.FORMAT</a> (format can be json or xml)</td>
+			</tr>
+		</table>
+
+		<p>
+			The query parameter <strong>VIDEO_FORMAT</strong> could be <dfn>mp4</dfn> or <dfn>flv</dfn>
+		.</p>
+
+		<p>
+			If everything works as expected, you'll instantly get the same response format
+			as the GET version provides, the property <strong>status</strong> will be
+			<dfn>pending</dfn> or <dfn>available</dfn>.
+		</p>
+
+		<h4>Example call</h4>
+		<pre><code class="nohighlight">POST /videos/123456/downloadable/mp4.json HTTP/1.1
+Host: api.ustream.tv
+Authorization: Bearer 782f6544405a22636f3d5d3b63c2573673bf3950
+
+{
+    "downloadable": {
+        "download_url":null,
+        "expires_at":null,
+        "status":"pending"
+    }
+}</code></pre>
+
+
 
 		<h3>Uploading videos</h3>
 
