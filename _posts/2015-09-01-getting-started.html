@@ -31,6 +31,7 @@ categoryItemLabel: Read the documentation
                 <ul>
                     <li><strong>Implicit flow:</strong> Suitable for standalone, native clients (desktop / mobile). The user enters its credentials to a secure login webpage. After logging in, the browser is redirected to a special URL (defined by the client), passing the access token in the URL.</li>
                     <li><strong>Authorization code flow:</strong> Suitable for third-party websites which contain a client and a server component. The user enters its credentials to a secure login webpage. After logging in, the browser is redirected to a special URL (defined by the client), passing an authorization code in the URL. The third-party server obtains the access token with another HTTP request in the background, using the authorization code. This method is more secure than the implicit flow if the third-party client has a client+server model. See the OAuth2 Draft for details.</li>
+                    <li><strong>Client credentials flow:</strong> Best choice for Pro users developing server-side applications to manage their content / settings. <a href="#client_credentials_flow">Read more about this flow</a></li>
                 </ul>
                 
                 
@@ -263,17 +264,13 @@ categoryItemLabel: Read the documentation
                         <td><a>https://www.ustream.tv/oauth2/token</a></td>
                     </tr>
                     <tr>
-                        <td><strong>Supported Flows</strong></td>
-                        <td>Authorization Code</td>
-                    </tr>
-                    <tr>
                         <td><strong>Supported HTTP methods</strong></td>
                         <td>POST</td>
                     </tr>
                 </table>
         
         
-                <h4>Token for Authorization Code</h4>
+                <h3>Authorization Code flow</h3>
                 <p>When the Client receives the Authorization Code, the server-side component of the Client calls this Endpoint to return the Access Token. The parameters below must be set as HTTP POST parameters.</p>
                 <table class="table responsive">
                     <tr>
@@ -334,7 +331,7 @@ categoryItemLabel: Read the documentation
                 </table>
         
         
-                <h4>Token for Resource Owner Password Credentials</h4>
+                <h3>Resource Owner Password Credentials flow</h3>
                 <p>The server-side component of the Client calls this Endpoint to return the Access Token using resource owner's credentials (username and password). The parameters below must be set as HTTP POST parameters.</p>
                 <table class="table responsive">
                     <tr>
@@ -429,8 +426,8 @@ categoryItemLabel: Read the documentation
                 </table>
 
         
-                <h4>Token for Client</h4>
-                <p>There are several API resources which aren't connected to any user. Those are resources implemented for the API client (application). <a href="channel.html#channel_hooks">Hook management</a> is a good example for that. Those resources needs the clients to identify themselves. For that purpose we implemented the Client Credentials OAuth2 Flow which provides your app a client access token. With normal user level tokens these resources dedicated to clients are inaccessible, however a client token can access the application owner user's resources.<br>The parameters below must be set as HTTP POST parameters.</p>
+                <h3>Client credentials flow</h3>
+                <p>There are several API resources which aren't connected to any user. Those are resources implemented for the API client (application). <a href="channel.html#channel_hooks">Hook management</a> is a good example for that. Those resources needs the clients to identify themselves. For that purpose we implemented the Client Credentials OAuth2 Flow which provides your app a client access token. With normal user level tokens these resources dedicated to clients are inaccessible, however a <strong>client token can access the application owner user's resources</strong>.<br>The parameters below must be set as HTTP POST parameters.</p>
                 <table class="table responsive">
                     <tr>
                         <th>parameter</th>
@@ -493,7 +490,7 @@ categoryItemLabel: Read the documentation
                     </tr>
                     <tr>
                         <td><strong>mac_key</strong></td>
-                        <td>MAC secret (40 character length, hexa encoded sha1 hash). Referred as macSecret in the Ustream Broadcaster Library.</td>
+                        <td>MAC tokens only: MAC secret (40 character length, hexa encoded sha1 hash). Referred as macSecret in the Ustream Broadcaster Library.</td>
                     </tr>
                     <tr>
                         <td><strong>created_at</strong></td>
@@ -501,7 +498,7 @@ categoryItemLabel: Read the documentation
                     </tr>
                     <tr>
                         <td><strong>mac_algorithm</strong></td>
-                        <td>Will be "hmac-sha-1"</td>
+                        <td>MAC tokens only: Will be "hmac-sha-1"</td>
                     </tr>
                 </table>
         
@@ -526,7 +523,7 @@ categoryItemLabel: Read the documentation
                     <tr>
                         <td><strong>unsupported_grant_type</strong></td>
                         <td>501 Not implemented</td>
-                        <td>When Client asks for an unsupported grant type, currently only "authorization_code" is supported, "client_credentials", "refresh_token", and "password" types are not.</td>
+                        <td>When Client asks for an unsupported grant type, currently only "authorization_code", "client_credentials" and "password" are supported.</td>
                     </tr>
                     <tr>
                         <td><strong>invalid_grant</strong></td>
