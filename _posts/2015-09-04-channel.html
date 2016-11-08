@@ -2073,7 +2073,9 @@ command=stop</code></pre>
 		</table>
 
 		<h6>Response</h6>
-		<p>A set of a key-value structures under a "videos" element. Example:</p>
+		<p>A set of a key-value structures under a "videos" element.</p>
+		<p>⚠️ The "media_urls" part of the response below is being deprecated soon. For video download URLs please see the <a href="#downloading-videos_28">Downloading videos</a> section.</p>
+		<p>Example:</p>
 		<pre><code class="json">"videos": [
 	{
 		"id": "111",
@@ -2123,7 +2125,7 @@ command=stop</code></pre>
 			</tr>
 		</table>
 
-		<p>The paging information can be found under the "paging" element. Example:</p>
+		<p>The paging information can be found under the "paging" element. Example:</p>	
 		<pre><code class="json">"paging": {
 	"previous": ".../CHANNEL_ID/videos.json?pagesize=PAGE_SIZE&page=PREVIOUS_PAGE",
 	"next": ".../channels/CHANNEL_ID/videos.json?pagesize=PAGE_SIZE&page=NEXT_PAGE"
@@ -2175,7 +2177,9 @@ command=stop</code></pre>
 		</table>
 
 		<h6>Response</h6>
-		<p>A key-value structures under a "video" element. Example:</p>
+		<p>A key-value structures under a "video" element.</p>
+		<p>⚠️ The "media_urls" part of the response below is being deprecated soon. For video download URLs please see the <a href="#downloading-videos_28">Downloading videos</a> section.</p>
+		<p>Example:</p>
 		<pre><code class="json">"video": {
 	"id": "111",
 	"title": "Title of video",
