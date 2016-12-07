@@ -2511,15 +2511,20 @@ Authorization: Bearer 782f6544405a22636f3d5d3b63c2573673bf3950
 		<h4>Uploading the video file</h4>
 
 		<p>
-			Using the credentials you got with the API call above you could
-			upload your video file to our servers. Please add the proper
-			file extension at the end of the target path, supported file extensions
-			are: mkv, mp4, mov, flv, avi, wmv, ogm, mpeg2.
+			Using the credentials you get in the response above you can
+			upload your video file to our servers. Once you log in to the FTP server, 
+			you'll find a folder where the folder name matches with the 'path' value of
+			the response. You should change directory to that folder, and upload your file under the same 
+			name as the folder, followed by the extensions.
 		</p>
 
 		<p>
-			So, for example if you have a mov file, you have to change
-			the path from "/1_12345_12345678901234" to "/1_12345_12345678901234.mov".
+			So, for example if you have a mov file, and the 'path' value is '1_12345_12345678901234', 
+			you have to change to the folder '/1_12345_12345678901234', and upload a file named '1_12345_12345678901234.mov', 
+			so the full route to the file on the FTP will be '/1_12345_12345678901234/1_12345_12345678901234.mov'.
+		</p>
+		<p>
+			 *Supported file extensions are:* mkv, mp4, mov, flv, avi, wmv, ogm, mpeg2.
 		</p>
 
 		<h4>Sending "file in place" signal</h4>
