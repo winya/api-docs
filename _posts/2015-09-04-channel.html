@@ -2513,15 +2513,17 @@ Authorization: Bearer 782f6544405a22636f3d5d3b63c2573673bf3950
 		<p>
 			Using the credentials in the response above, you can
 			upload your video file to our servers. Once you log in to the FTP server, 
-			you'll find a folder where the folder name matches with the <code>path</code> value of
-			the response. You should change directory to that folder, and upload your file under the same 
-			name as the folder, followed by the extension.
+			you should put your file to the root, under a name that matches with the <code>path</code> value of
+			the response, followed by the extension.
 		</p>
 
 		<p>
-			So, for example if you have a mov file, and the <code>path</code> value is <code>1_12345_12345678901234</code>, 
-			you have to change to the folder <code>/1_12345_12345678901234</code>, and upload a file named <code>1_12345_12345678901234.mov</code>.
-			The full route to the file on the FTP will be <code>/1_12345_12345678901234/1_12345_12345678901234.mov</code>.
+			The <code>url</code> part of the response makes it easier to transfer files, 
+			with a single FTP command. For example if you have a file called <code>test.mov</code>,
+			you can use the following FTP command to upload it:
+		</p>
+		<p>
+			<code>ftp -u ftp://1_1234_1234567890:ftppw@red44.ustream.tv/1_12345_12345678901234.mov test.mov</code>.
 		</p>
 		<p>
 			<b>Supported file extensions are:</b> mkv, mp4, mov, flv, avi, wmv, ogm, mpeg2.
