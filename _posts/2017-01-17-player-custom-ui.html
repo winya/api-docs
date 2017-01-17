@@ -363,63 +363,72 @@ function formatTime (sec) {
 </code></pre>
 
 		<h4>CSS</h4>
-		<pre><code class="css">.player-container {
-    padding-bottom: 56.25%;
-    position: relative;
-    width: 100%;
-}
+		<pre><code class="css">
+			
+.player-container {
+		padding-bottom: 56.25%;
+		position: relative;
+		width: 100%;
+		margin: 0 0 20px;
+	}
 
-.player-container iframe {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 100%;
-    height: 100%;
-}
+	.player-container iframe {
+		position: absolute;
+		top: 0;
+		right: 0;
+		width: 100%;
+		height: 100%;
+	}
 
-.multiview-chooser {
-    margin-top: 1rem;
-}
+	.custom-ui-container {
+		margin: 5px 0;
+		color: #fff;
+		font-size: 12px;
+		line-height: 30px;
+	}
 
-.multiview-chooser ul {
-    margin: 0;
-}
+	.custom-ui-container .seekbar {
+		background: rgba(22, 22, 22, 0.8);
+		height: 30px;
+		margin: 5px 0;
+		user-select: none;
+		cursor: pointer;
+	}
 
-.multiview-chooser li {
-    width: 24%;
-    float: left;
-    margin: 0;
-    padding: 0;
-}
+	.custom-ui-container .timeLabel {
+		float: left;
+		padding: 0 10px;
+	}
 
-.multiview-chooser li:not(:first-of-type) {
-    margin-left: 1.33%;
-}
+	.custom-ui-container .timeLabel.duration {
+		float: right;
+	}
 
-.multiview-chooser li:before {
-    display: none;
-}
+	.custom-ui-container .progress {
+		background: #38f;
+		width: 0;
+		height: 100%;
+	}
 
-.multiview-chooser a {
-    display: block;
-}
+	.custom-ui-container .volume-container {
+		color: #2d2d2d;
+		padding-left: 20px;
+		display: inline-block;
+	}
 
-.multiview-chooser a.active:after {
-    display: block;
-    content: ' ';
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    z-index: 100;
-    box-sizing: border-box;
-    border: 3px solid #38f;
-}
+	.custom-ui-container .volume {
+		background: rgba(22, 22, 22, 0.8);
+		width: 80px;
+		height: 20px;
+		display: inline-block;
+		vertical-align: middle;
+		cursor: pointer;
+	}
 
-.multiview-chooser img {
-    margin: 0;
-    padding: 0;
-}</code></pre>
+	.custom-ui-container .volume .slider {
+		width: 50%;
+		height: 100%;
+		background: #38f;
+	}</code></pre>
 	</section>
 </article>
