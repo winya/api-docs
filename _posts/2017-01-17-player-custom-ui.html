@@ -1,0 +1,425 @@
+---
+layout: post
+title: Custom UI example
+weight: 6
+category: player-api
+categoryItemType: example
+categoryItemIsShown: 1
+categoryItemWidth:
+categoryItemDescription:
+categoryItemLabel:
+---
+
+
+<article>
+	<section class="intro">
+		<h3>Custom UI example</h3>
+
+		<p>This example demonstrates how you can build a custom UI based on our API calls.</p>
+		<p>There are some important technical informations about a custom UI implementation:</p>
+
+		<ul>
+			<li>there is no progress event from the player, so you should query the progress periodically (using the
+				playing event can help to increase performance)
+			</li>
+			<li>progress and duration is in seconds, so every percentage related data (like a seekbar) should be
+				calculated from this two data
+			</li>
+			<li>if you would like to build a full custom UI on the player, use the `controls=false&showTitle=false` url
+				param to hide the Ustream UI components
+			</li>
+		</ul>
+	</section>
+
+	<section class="example">
+		<style>
+			.player-container {
+				padding-bottom: 56.25%;
+				position: relative;
+				width: 100%;
+				margin: 0 0 20px;
+			}
+
+			.player-container iframe {
+				position: absolute;
+				top: 0;
+				right: 0;
+				width: 100%;
+				height: 100%;
+			}
+
+			.custom-ui-container {
+				margin: 5px 0;
+				color: #fff;
+				font-size: 12px;
+				line-height: 30px;
+			}
+
+			.custom-ui-container .seekbar {
+				background: rgba(22, 22, 22, 0.8);
+				height: 30px;
+				margin: 5px 0;
+				user-select: none;
+				cursor: pointer;
+			}
+
+			.custom-ui-container .timeLabel {
+				float: left;
+				padding: 0 10px;
+			}
+
+			.custom-ui-container .timeLabel.duration {
+				float: right;
+			}
+
+			.custom-ui-container .progress {
+				background: #38f;
+				width: 0;
+				height: 100%;
+			}
+
+			.custom-ui-container .volume-container {
+				color: #2d2d2d;
+				padding-left: 20px;
+				display: inline-block;
+			}
+
+			.custom-ui-container .volume {
+				background: rgba(22, 22, 22, 0.8);
+				width: 80px;
+				height: 20px;
+				display: inline-block;
+				vertical-align: middle;
+				cursor: pointer;
+			}
+
+			.custom-ui-container .volume .slider {
+				width: 50%;
+				height: 100%;
+				background: #38f;
+			}
+		</style>
+
+		<div class="player-container">
+			<iframe id="UstreamPlayer" src="//www.ustream.tv/embed/recorded/81056340?html5ui" frameborder="0"
+			        allowfullscreen webkitallowfullscreen scrolling="no"></iframe>
+		</div>
+
+		<h5>Custom UI pieces:</h5>
+		<div class="custom-ui-container">
+			<span class="button play">Play</span>
+			<span class="button pause">Pause</span>
+			<div class="volume-container">
+				Volume:
+				<div class="volume">
+					<div class="slider"></div>
+				</div>
+			</div>
+
+			<div class="seekbar">
+				<span class="timeLabel currentTime">00:00</span>
+				<span class="timeLabel duration">--:--</span>
+				<div class="progress"></div>
+			</div>
+		</div>
+
+		<div class="clear"></div>
+
+		<script>
+			//Ustream Embed API instance
+			var embedApi = UstreamEmbed('UstreamPlayer');
+			//video duration will be stored in this variable
+			var videoDuration = 0;
+			//we will query the progress with an interval, we store it to be able to cancel it any time
+			var progressInterval = false;
+
+			var seekbarElement = document.querySelector('.seekbar');
+			var progressElement = document.querySelector('.seekbar .progress');
+			var volumeElement = document.querySelector('.volume');
+			var currentTimeElement = document.querySelector('.currentTime');
+			var durationElement = document.querySelector('.duration');
+
+			/**
+			 * API Methods
+			 */
+
+			// PLAY
+			document.querySelector('.play').addEventListener('click', function () {
+				embedApi.callMethod('play');
+			});
+
+			// PAUSE
+			document.querySelector('.pause').addEventListener('click', function () {
+				embedApi.callMethod('pause');
+			});
+
+			//VOLUME
+			document.querySelector('.volume').addEventListener('click', function (e) {
+				//Calculate the desired volume based on the click event position (this is just an example solution)
+				var volumePercentage = e.offsetX / volumeElement.offsetWidth * 100;
+
+				embedApi.callMethod('volume', volumePercentage);
+				document.querySelector('.volume .slider').style.width = volumePercentage + '%';
+			});
+
+			// SEEK
+			seekbarElement.addEventListener('click', function (e) {
+				//Calculate the desired progress based on the click event position (this is just an example solution)
+				var progressPercentage = e.layerX / seekbarElement.offsetWidth;
+
+				embedApi.callMethod('seek', videoDuration * progressPercentage);
+			});
+
+			/**
+			 * API Events
+			 */
+
+			//duration is needed to calculate % progress
+			embedApi.addListener('duration', function (eventType, duration) {
+				videoDuration = duration;
+
+				durationElement.innerHTML = formatTime(videoDuration);
+			});
+
+			//this is not mandatory, but its unnecessary to query the progress when the playback is stopped.
+			embedApi.addListener('playing', function (eventType, playing) {
+				if (playing) {
+					startProgressInterval();
+				} else {
+					stopProgressInterval();
+				}
+			});
+
+			// Progress is not fired with an event from the player because of performance optimization purposes
+			// you have to query it with the interval you like.
+			function startProgressInterval() {
+				stopProgressInterval();
+
+				progressInterval = setInterval(function () {
+					embedApi.getProperty('progress', function (progress) {
+						updateSeekbar(progress);
+					});
+				}, 200);
+			}
+
+			function stopProgressInterval() {
+				clearInterval(progressInterval);
+			}
+
+			function updateSeekbar(progress) {
+				if (!videoDuration) return;
+
+				progressElement.style.width = (progress / videoDuration) * 100 + '%';
+				currentTimeElement.innerHTML = formatTime(progress);
+			}
+
+			function formatTime(sec) {
+				var time = new Date(sec * 1000),
+						hour = 60 * 60;
+
+				time = time.toISOString();
+				time = time.substr(11, 8);
+				if (+sec < hour) {
+					time = time.substr(3);
+				}
+
+				if (+sec > 24 * hour) {
+					time = Math.floor(sec / hour) + time.substr(2);
+				}
+
+				return time;
+			}
+		</script>
+	</section>
+
+	<section class="code">
+		<h4>HTML</h4>
+		<pre><code class="xml">&lt;div class="player-container"&gt;
+    &lt;iframe id="UstreamPlayer" src="//www.ustream.tv/embed/12762028?html5ui" frameborder="0" allowfullscreen webkitallowfullscreen scrolling="no"&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;div class="custom-ui-container"&gt;
+	&lt;span class="button play"&gt;Play&lt;/span&gt;
+	&lt;span class="button pause"&gt;Pause&lt;/span&gt;
+	&lt;div class="volume-container"&gt;
+		Volume:
+		&lt;div class="volume"&gt;
+			&lt;div class="slider"&gt;&lt;/div&gt;
+		&lt;/div&gt;
+	&lt;/div&gt;
+
+	&lt;div class="seekbar"&gt;
+		&lt;span class="timeLabel currentTime"&gt;00:00&lt;/span&gt;
+		&lt;span class="timeLabel duration"&gt;--:--&lt;/span&gt;
+		&lt;div class="progress"&gt;&lt;/div&gt;
+	&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+
+		<h4>Javascript</h4>
+		<pre><code class="javascript">
+//Ustream Embed API instance
+var embedApi = UstreamEmbed('UstreamPlayer');
+//video duration will be stored in this variable
+var videoDuration = 0;
+//we will query the progress with an interval, we store it to be able to cancel it any time
+var progressInterval = false;
+
+var seekbarElement = document.querySelector('.seekbar');
+var progressElement = document.querySelector('.seekbar .progress');
+var volumeElement = document.querySelector('.volume');
+var currentTimeElement = document.querySelector('.currentTime');
+var durationElement = document.querySelector('.duration');
+
+/**
+ * API Methods
+ */
+
+// PLAY
+document.querySelector('.play').addEventListener('click', function () {
+  embedApi.callMethod('play');
+});
+
+// PAUSE
+document.querySelector('.pause').addEventListener('click', function () {
+  embedApi.callMethod('pause');
+});
+
+//VOLUME
+document.querySelector('.volume').addEventListener('click', function (e) {
+  //Calculate the desired volume based on the click event position (this is just an example solution)
+  var volumePercentage = e.offsetX / volumeElement.offsetWidth * 100;
+
+  embedApi.callMethod('volume', volumePercentage);
+  document.querySelector('.volume .slider').style.width = volumePercentage + '%';
+});
+
+// SEEK
+seekbarElement.addEventListener('click', function (e) {
+  //Calculate the desired progress based on the click event position (this is just an example solution)
+  var progressPercentage = e.layerX / seekbarElement.offsetWidth;
+
+  embedApi.callMethod('seek', videoDuration * progressPercentage);
+});
+
+/**
+ * API Events
+ */
+
+//duration is needed to calculate % progress
+embedApi.addListener('duration', function (eventType, duration) {
+  videoDuration = duration;
+
+  durationElement.innerHTML = formatTime(videoDuration);
+});
+
+//this is not mandatory, but its unnecessary to query the progress when the playback is stopped.
+embedApi.addListener('playing', function (eventType, playing) {
+  if (playing) {
+    startProgressInterval();
+  } else {
+    stopProgressInterval();
+  }
+});
+
+// Progress is not fired with an event from the player because of performance optimization purposes
+// you have to query it with the interval you like.
+function startProgressInterval() {
+  stopProgressInterval();
+
+  progressInterval = setInterval(function () {
+    embedApi.getProperty('progress', function (progress) {
+      updateSeekbar(progress);
+    });
+  }, 200);
+}
+
+function stopProgressInterval () {
+  clearInterval(progressInterval);
+}
+
+function updateSeekbar (progress) {
+  if (!videoDuration) return;
+
+  progressElement.style.width = (progress / videoDuration) * 100 + '%';
+  currentTimeElement.innerHTML = formatTime(progress);
+}
+
+function formatTime (sec) {
+  var time = new Date(sec * 1000),
+      hour = 60*60;
+
+  time = time.toISOString();
+  time = time.substr(11, 8);
+  if (+sec < hour) {
+    time = time.substr(3);
+  }
+
+  if (+sec > 24*hour) {
+    time = Math.floor(sec / hour) + time.substr(2);
+  }
+
+  return time;
+}
+</code></pre>
+
+		<h4>CSS</h4>
+		<pre><code class="css">.player-container {
+    padding-bottom: 56.25%;
+    position: relative;
+    width: 100%;
+}
+
+.player-container iframe {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.multiview-chooser {
+    margin-top: 1rem;
+}
+
+.multiview-chooser ul {
+    margin: 0;
+}
+
+.multiview-chooser li {
+    width: 24%;
+    float: left;
+    margin: 0;
+    padding: 0;
+}
+
+.multiview-chooser li:not(:first-of-type) {
+    margin-left: 1.33%;
+}
+
+.multiview-chooser li:before {
+    display: none;
+}
+
+.multiview-chooser a {
+    display: block;
+}
+
+.multiview-chooser a.active:after {
+    display: block;
+    content: ' ';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+    box-sizing: border-box;
+    border: 3px solid #38f;
+}
+
+.multiview-chooser img {
+    margin: 0;
+    padding: 0;
+}</code></pre>
+	</section>
+</article>
