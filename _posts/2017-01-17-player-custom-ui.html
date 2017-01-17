@@ -265,7 +265,7 @@ var videoDuration = 0;
 var progressInterval = false;
 
 var seekbarElement = document.querySelector('.seekbar');
-var progressElement = document.querySelector('.seekbar .progress');
+var seekProgressElement = document.querySelector('.seekbar .progress');
 var volumeElement = document.querySelector('.volume');
 var currentTimeElement = document.querySelector('.currentTime');
 var durationElement = document.querySelector('.duration');
@@ -340,10 +340,11 @@ function stopProgressInterval () {
 function updateSeekbar (progress) {
   if (!videoDuration) return;
 
-  progressElement.style.width = (progress / videoDuration) * 100 + '%';
+  seekProgressElement.style.width = (progress / videoDuration) * 100 + '%';
   currentTimeElement.innerHTML = formatTime(progress);
 }
 
+//format seconds to hh:mm:ss
 function formatTime (sec) {
   var time = new Date(sec * 1000),
       hour = 60*60;
@@ -364,71 +365,71 @@ function formatTime (sec) {
 
 		<h4>CSS</h4>
 		<pre><code class="css">
-			
 .player-container {
-		padding-bottom: 56.25%;
-		position: relative;
-		width: 100%;
-		margin: 0 0 20px;
-	}
+	//this padding-bottom workaround is the 16:9 (9/16) ratio's value for responsive support
+	padding-bottom: 56.25%;
+	position: relative;
+	width: 100%;
+	margin: 0 0 20px;
+}
 
-	.player-container iframe {
-		position: absolute;
-		top: 0;
-		right: 0;
-		width: 100%;
-		height: 100%;
-	}
+.player-container iframe {
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 100%;
+	height: 100%;
+}
 
-	.custom-ui-container {
-		margin: 5px 0;
-		color: #fff;
-		font-size: 12px;
-		line-height: 30px;
-	}
+.custom-ui-container {
+	margin: 5px 0;
+	color: #fff;
+	font-size: 12px;
+	line-height: 30px;
+}
 
-	.custom-ui-container .seekbar {
-		background: rgba(22, 22, 22, 0.8);
-		height: 30px;
-		margin: 5px 0;
-		user-select: none;
-		cursor: pointer;
-	}
+.custom-ui-container .seekbar {
+	background: rgba(22, 22, 22, 0.8);
+	height: 30px;
+	margin: 5px 0;
+	user-select: none;
+	cursor: pointer;
+}
 
-	.custom-ui-container .timeLabel {
-		float: left;
-		padding: 0 10px;
-	}
+.custom-ui-container .timeLabel {
+	float: left;
+	padding: 0 10px;
+}
 
-	.custom-ui-container .timeLabel.duration {
-		float: right;
-	}
+.custom-ui-container .timeLabel.duration {
+	float: right;
+}
 
-	.custom-ui-container .progress {
-		background: #38f;
-		width: 0;
-		height: 100%;
-	}
+.custom-ui-container .progress {
+	background: #38f;
+	width: 0;
+	height: 100%;
+}
 
-	.custom-ui-container .volume-container {
-		color: #2d2d2d;
-		padding-left: 20px;
-		display: inline-block;
-	}
+.custom-ui-container .volume-container {
+	display: inline-block;
+	padding-left: 20px;
+	color: #2d2d2d;
+}
 
-	.custom-ui-container .volume {
-		background: rgba(22, 22, 22, 0.8);
-		width: 80px;
-		height: 20px;
-		display: inline-block;
-		vertical-align: middle;
-		cursor: pointer;
-	}
+.custom-ui-container .volume {
+	display: inline-block;
+	width: 80px;
+	height: 20px;
+	vertical-align: middle;
+	background: rgba(22, 22, 22, 0.8);
+	cursor: pointer;
+}
 
-	.custom-ui-container .volume .slider {
-		width: 50%;
-		height: 100%;
-		background: #38f;
-	}</code></pre>
+.custom-ui-container .volume .slider {
+	width: 50%;
+	height: 100%;
+	background: #38f;
+}</code></pre>
 	</section>
 </article>
