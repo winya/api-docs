@@ -20,13 +20,13 @@ categoryItemLabel:
 
 		<ul>
 			<li>there is no progress event from the player, so you should query the progress periodically (using the
-				playing event can help to increase performance)
+				`playing` event to decrease query number can increase the performance)
 			</li>
-			<li>progress and duration is in seconds, so every percentage related data (like a seekbar) should be
+			<li>`progress` and `duration` is in seconds, so every percentage related progress data (like a seekbar) should be
 				calculated from this two data
 			</li>
 			<li>if you would like to build a full custom UI on the player, use the `controls=false&showTitle=false` url
-				param to hide the Ustream UI components
+				params to hide the default Ustream UI components
 			</li>
 		</ul>
 	</section>
