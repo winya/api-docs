@@ -2430,13 +2430,13 @@ Authorization: Bearer 782f6544405a22636f3d5d3b63c2573673bf3950
 
 		<h3>Uploading videos</h3>
 
-		<p>Videos could be uploaded by FTP. To upload a file you must do the following steps:</p>
+		<p>Videos can be uploaded by FTP. To upload a file you must do the following steps:</p>
 
 		<ol>
 			<li>Initiate an upload process by an API call. In the response you can find the details of the FTP connect.</li>
 			<li>Upload the video.</li>
-			<li>When upload finished, send a "file in place" signal, which tells to our server that it can start process the file.</li>
-			<li>Call API to check the status of the processing.</li>
+			<li>When the upload is finished, send a "file in place" signal, which tells to our server that it can start process the file.</li>
+			<li>Call the API to check the status of the processing.</li>
 		</ol>
 
 		<h4>Initializing an upload</h4>
@@ -2527,6 +2527,9 @@ Authorization: Bearer 782f6544405a22636f3d5d3b63c2573673bf3950
 		</p>
 		<p>
 			<b>Supported file extensions are:</b> mkv, mp4, mov, flv, avi, wmv, ogm, mpeg2.
+		</p>
+		<p>
+			Don't forget to set your FTP client to binary file tranfer mode, before uploading the video file.
 		</p>
 
 		<h4>Sending "file in place" signal</h4>
