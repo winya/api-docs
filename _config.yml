@@ -37,7 +37,7 @@ permalink: none
 paginate: 0
 
 # Exclude metadata and development time dependencies (like Grunt plugins)
-exclude: [README.md, Gemfile, Gemfile.lock, Overview.md]
+exclude: [README.md, Gemfile, Gemfile.lock, Overview.md, vendor]
 
 # Plugins
 gems:
