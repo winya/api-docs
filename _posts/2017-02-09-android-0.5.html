@@ -1,13 +1,12 @@
 ---
 layout: post
-title: Player SDK for Android (v 0.4.x)
+title: Player SDK for Android
 weight: 3
-permalink: player-sdk/android-0.4.html
 category: player-sdk
 categoryItemType: documentation
-categoryItemIsShown: 0
+categoryItemIsShown: 1
 categoryItemWidth: 6
-categoryItemDescription: API documentation for version 0.4.x
+categoryItemDescription:
 categoryItemLabel: Read the documentation
 ---
 
@@ -32,9 +31,9 @@ categoryItemLabel: Read the documentation
 		</ul>
 		<h3 id="step0-devreq">Development prerequisites</h3>
 		<h4>IDE</h4>
-		<p>We recommend Android Studio version 1.3.1 (or newer) for development.</p>
+		<p>We recommend Android Studio version 2 (or newer) for development.</p>
 		<h4>Build System</h4>
-		<p>The library uses the Gradle build system, and it is deployed as a Maven artifact.
+		<p>The library uses the Gradle build system, and it is deployed as an aar file.
 		The sample application also uses Gradle, you can build it using the provided gradle wrapper: 'gradlew'</p>
 		<h4>Android API level</h4>
 		<p>The supported minimum API level is 16 (Android version 4.1)</p>
@@ -43,8 +42,7 @@ categoryItemLabel: Read the documentation
 	<section>
 		<h2>Step 1: Explore the SDK package</h2>
 		<p>The provided zip archive contains the sample Android application project for the Player Library.
-		There is also a 'maven' folder (a local Maven repository) which contains the library.
-		You can use Gradle (or Maven) to import the dependency from the local repository.</p>
+		The sample application uses the library as an aar file found in the 'libs' folder.</p>
 	</section>
 
 	<section>
@@ -55,17 +53,19 @@ categoryItemLabel: Read the documentation
 	<section>
 		<h2>Step 3: Add the SDK to the project</h2>
 		<h4>Import from local repo</h4>
-		<p>Copy the 'maven' folder to your project.
+		<p>Copy the library 'aar' file to the libs folder of your project.
 		In your project's build.gradle put the Player Library dependency:</p>
 		<pre><code class="groovy">repositories {
-	maven {
-		url new File(project.projectDir, 'maven').toURI()
+	flatDir {
+		dirs 'libs'
 	}
 }
 
 dependencies {
-	compile "tv.ustream.player:ustream-player-android:0.4.3"
+	compile 'joda-time:joda-time:2.5'
+	compile "tv.ustream.player:ustream-player-android:0.5.1@aar"
 }</code></pre>
+		You can find this in the sample application also, just copy those settings.
 	</section>
 
 	<section>
@@ -149,7 +149,7 @@ ContentDescriptor contentDescriptor = new ContentDescriptor(ContentType.LIVE, 12
 	ustreamPlayer.connect();
 }</code></pre>
 
-		<p>SDK version 0.4.0 introduced changes in the user facing interface, see the <a href="#changelog_17">Changelog</a> for details.</p>
+		<p>SDK version 0.5.0 introduced changes in the user facing interface, see the <a href="#changelog_17">Changelog</a> for details.</p>
 
 		<h4>Setting your listeners</h4>
 		<p>To receive state changes and other events from the player you need to set listeners. There are mandatory and optional ones, but all of these listeners have to be set prior to calling <code class="java">ustreamPlayer.attach()</code> on your player instance. This should happen in the <code class="java">onResume()</code> callback of your Activity or Fragment. Calling <code class="java">attach()</code> is an important step, this is where your listeners and the player view is bound to the library. Forgetting to call this will cause the player to not render video on your view, and you will not receive any callback on your listeners.</p>
@@ -340,16 +340,15 @@ public interface BufferingListener {
 }</code></pre>
 
 		<h4>ProgressListener</h4>
-		<p>The ProgressListener provides information about the content's duration and progress. This is an optional listener.</p>
+		<p>The ProgressListener provides information about the content's duration and progress. This is an optional listener.
+		Duration and progress values are in milliseconds.</p>
 		<pre><code class="java">package tv.ustream.player.api;
-
-import org.joda.time.Duration;
 
 public interface ProgressListener {
 
-	void onPositionUpdated(Duration position);
+	void onPositionUpdated(long positionMs);
 
-	void onDurationUpdated(Duration duration);
+	void onDurationUpdated(long durationMs);
 
 	void onDurationDisabled();
 }</code></pre>
@@ -519,12 +518,12 @@ void onUnknownError();</code></pre>
 
 	<section>
 		<h2>Changelog</h2>
-		<p>Changes in version 0.4.x compared to version <a href="android-0.3.html">0.3.x</a>:</p>
+		<p>Changes in version 0.5.x compared to version <a href="android-0.4.html">0.4.x</a>:</p>
 		<ul>
-			<li>Added <code class="java">IUstreamPlayer.isInitialized()</code> method to check whether the player is already initialized. This is most useful on a configuration change event. The information representing the init state of the player does not need to be manually saved anymore.</li>
-			<li>Tweaks around <code class="java">IUstreamPlayer.destroy()</code>. This is not bound to Android lifecycle anymore, can be called anywhere after initialization.</li>
+			<li>Removed joda time dependency from the user facing API for greater flexibility.
+			Though joda-time is still used inside the library for now, therefore it must be included as a dependency.</li>
+			<li>Library deploy moved from local Maven repo to aar file. We are switching to the simple aar file deploy until a proper artifact repository is available.</li>
 			<li>Bugfixes and stability improvements</li>
 		</ul>
 	</section>
 </article>
-
