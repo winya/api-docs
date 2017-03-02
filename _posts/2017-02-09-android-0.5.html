@@ -62,7 +62,8 @@ categoryItemLabel: Read the documentation
 }
 
 dependencies {
-	compile "tv.ustream.player:ustream-player-android:0.5.0@aar"
+	compile 'joda-time:joda-time:2.5'
+	compile "tv.ustream.player:ustream-player-android:0.5.1@aar"
 }</code></pre>
 		You can find this in the sample application also, just copy those settings.
 	</section>
@@ -519,7 +520,8 @@ void onUnknownError();</code></pre>
 		<h2>Changelog</h2>
 		<p>Changes in version 0.5.x compared to version <a href="android-0.4.html">0.4.x</a>:</p>
 		<ul>
-			<li>Removed joda time dependency from the user facing API for greater flexibility.</li>
+			<li>Removed joda time dependency from the user facing API for greater flexibility.
+			Though joda-time is still used inside the library for now, therefore it must be included as a dependency.</li>
 			<li>Library deploy moved from local Maven repo to aar file. We are switching to the simple aar file deploy until a proper artifact repository is available.</li>
 			<li>Bugfixes and stability improvements</li>
 		</ul>
