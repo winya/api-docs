@@ -2002,8 +2002,8 @@ command=stop</code></pre>
 	<section>
 		<h2>Video</h2>
 
-		<h3>Listing the videos of channel</h3>
-		<p>Get a detailed list of the videos of channel</p>
+		<h3>Listing the videos of a channel</h3>
+		<p>Get a detailed list of the videos of a channel</p>
 		<table class="table fill-bg-light1 table-chromeless">
 			<tr>
 				<td class="verb">GET</td>
@@ -2128,6 +2128,19 @@ command=stop</code></pre>
 				<td>The given channel does not exist.</td>
 			</tr>
 		</table>
+		
+		<h3>Listing the videos of a user</h3>
+		<p>Get a detailed list of the videos of channel</p>
+		<table class="table fill-bg-light1 table-chromeless">
+			<tr>
+				<td class="verb">GET</td>
+				<td><a>https://api.ustream.tv/users/self/videos.FORMAT</a> (format can be json or xml)</td>
+			</tr>
+		</table>
+
+		<h6>Parameters</h6>
+		<p>For parameters and example response, please see the previous section, "Listing the videos of a channel", as it is the same in this case.</p>
+
 
 		<h3>Video details</h3>
 
