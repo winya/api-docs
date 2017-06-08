@@ -272,6 +272,9 @@ This diagram represents the state flow of the library, the nodes are the states 
 are events that can be sent to the player. There is a decision in the flow that happens automatically based on the content 
 selected (live or recorded).
 
+![State flow diagram](/images/android-state-flow-diagram-0.5.png "State flow diagram")
+
+
 #### Catching callbacks
 
 There are seven different listeners that you can add to the Player Library instance to receive callbacks. Some of these 
