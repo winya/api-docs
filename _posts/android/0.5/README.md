@@ -40,7 +40,7 @@ The SDK requires the use of a **Ustream Player SDK key**, which is validated whe
 streaming servers. The sample application contains a sample SDK key which you can use for testing. The sample SDK key 
 can only be used to play content on the test channel(s) also used in the sample app.
 
-Before you can start using the _Ustream Player SDK for Android_ for playing content from your own channel(s), you will need 
+Before you can download and start using the _Ustream Player SDK for Android_ for playing content from your own channel(s), you will need 
 to register the **Key Hash** of every app in which you will integrate the _Ustream Player SDK for Android_ at Ustream. 
 Every registered application will have its own _Ustream Player SDK key_. Although there is a provided SDK key for the sample 
 app's sample content, you still need to register your **Key Hash** at Ustream. This will ensure that you can build the sample 
@@ -118,7 +118,7 @@ Open the project that you would like to integrate the Ustream Player SDK in.
 
 ### Step 5: Add the SDK to the project
 
-Import from local repo: copy the AAR file to the `libs` folder of your project. In your project's _build.gradle_ put the Player SDK
+Import from local repo: copy the AAR file to the `libs` folder of your project. In your project's `build.gradle` put the Player SDK
 dependency:
 
 ```
