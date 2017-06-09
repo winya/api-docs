@@ -13,7 +13,7 @@ This document describes the basic steps to make a mobile app using the Ustream P
 
 Before going into details, please note that document assumes the following:
 *   You have a registered user at [ustream.tv](http://www.ustream.tv/).
-*   Your Ustream user is entitled to use the Ustream Player SDK specifically. Log-in to [Dashboard](https://www.ustream.tv/dashboard), 
+*   Your Ustream user is entitled to use the Ustream Player SDK specifically. Log-in to [Dashboard], 
 and check ["API/SDK access"](https://www.ustream.tv/dashboard/account/api-access) under the "Account" section. 
 If you have questions, please [contact us](https://www.ustream.tv/enterprise-video/contact).
 
@@ -25,7 +25,7 @@ We recommend using Android Studio v2.0.0 (or newer) for development.
 
 #### Build system
 
-The library uses the Gradle build system, and it is deployed as an AAR file. The sample application also uses Gradle, 
+The Player SDK uses the Gradle build system, and it is deployed as an AAR file. The sample application also uses Gradle, 
 you can build it using the provided gradle wrapper: `gradlew`
 
 #### Android API level
@@ -36,43 +36,89 @@ The supported minimum API level is 16 (Android version 4.1)
 
 ### Step 1: Create credentials for your mobile app
 
-Log-in into your account, navigate to the Dashboard and select ["API/SDK access"](https://www.ustream.tv/dashboard/account/api-access) 
-under the Account menu.
+The SDK requires the use of a **Ustream Player SDK key**, which is validated whenever the SDK communicates with Ustream 
+streaming servers. The sample application contains a sample SDK key which you can use for testing. The sample SDK key 
+can only be used to play content on the test channel(s) also used in the sample app.
 
-Click on "Create new credentials" and provide a name for your application in the "Application name" field. Your credentials 
-will be listed under the "API/SDK access" page based on this name.
+Before you can start using the _Ustream Player SDK for Android_ for playing content from your own channel(s), you will need 
+to register the **Key Hash** of every app in which you will integrate the _Ustream Player SDK for Android_ at Ustream. 
+Every registered application will have its own _Ustream Player SDK key_. Although there is a provided SDK key for the sample 
+app's sample content, you still need to register your **Key Hash** at Ustream. This will ensure that you can build the sample 
+project using your own certificates.
+Every time you initialize an instance of the Ustream Player SDK you have to use your **Ustream Player SDK key**.
 
-Select Android in the "Platform" drop-down. Enter the "Key Hash" and the "Google Play Package Name" in the respective fields.
+#### Generate your Key Hash
 
-TODO:
-1.  here we have to insert and adapt the "Obtaining your identifiers" part from below to guide users how they can obtain 
-their "Key Hash".
-2.  Similarly, we have to guide the user, how they can obtain their Google Play Package name
+There are two types of certificates that your application can be signed with. 
+Each certificate generates a different **Key Hash**.
 
-After you completed all fields, hit "Save" to generate your SDK credentials. Make sure that the "Key Hash" and 
-"Google Play Package Name" are introduced correctly, as you will have no possibility to update them later. If you 
-accidentally saved wrong values, start the process from the beginning and create new credentials with the correct values.
+*   The **debug key** is used for development and testing (debug build).
+*   The **release key** is used to sign your app when you release it to the Google Play Store (release build). 
+
+
+There are two ways to generate your **Key Hash**:
+* In your Android app:
+
+    Execute this in a debug build **and** a in a release build too:
+
+    ```java
+    String packageName = context.getPackageName();
+    PackageInfo packageInfo = context.getPackageManager().getPackageInfo(packageName, PackageManager.GET_SIGNATURES);
+    byte[] signature = packageInfo.signatures[0].toByteArray();
+    MessageDigest messageDigest = MessageDigest.getInstance("SHA");
+    String keyHash = Base64.encodeToString(messageDigest.digest(signature), Base64.NO_WRAP);
+    System.out.println("Key Hash is: "+keyHash);
+    ```
+
+* Using the command line:
+ 
+    - Install OpenSSL for your development platform.
+    
+    - Locate your `keystore_file` and replace `CERTIFICATION_ALIAS` with your alias below and execute the commands:
+ 
+        ```
+        keytool -exportcert -alias CERTIFICATION_ALIAS -keystore /path/to/keystore_file >your_company-debug.key
+        openssl dgst -sha1 -binary your_company-debug.key | base64
+        ```
+        The output of the last command is your **Key Hash**. 
+        
+        Remember to generate the identifier for your release certificate's public key **and** every other debug certificates 
+        that your developers will use.
+
+#### Enter credentials
+
+* Log-in into your account, navigate to the [Dashboard] and select ["API/SDK access"](https://www.ustream.tv/dashboard/account/api-access) 
+under the "Account" menu.
+
+* In the "Mobile Player SDK" section, click on "Create new credentials" and provide a name for your application in the 
+"Application name" field. Your credentials will be listed under the "API/SDK access" page based on this name.
+
+* Select Android in the "Platform" drop-down. Enter your **Key Hash** and **Google Play Package Name** in the respective fields.
+
+* After you completed all fields, hit "Save" to generate your Ustream Player SDK for Android credentials. Make sure that 
+the "Key Hash" and "Google Play Package Name" are introduced correctly, as you will have no possibility to update them later. 
+If you accidentally saved wrong values, start the process from the beginning and create new credentials with the correct 
+values.
 
 ### Step 2: Download SDK package
 
-After hitting "Save" in the "Create new credentials" step, you will see your credentials listed.
+After hitting "Save" in the "Create new credentials" step, you will see your credentials listed with the newly generated
+**Ustream Player SDK key**.
 
 Click to the "Android Player SDK" link near the "Download" to download the zip archive containing the SDK package.
 
 ### Step 3: Explore the SDK package
 
-The provided zip archive contains the sample Android application project for the Player Library. The sample application 
-uses the library as an AAR file found in the _libs_ folder.
+The provided zip archive contains the sample Android application project for Ustream Player SDK for Android. The sample 
+application uses the Player SDK as an AAR file found in the `/libs` folder in the archive.
 
 ### Step 4: Create (or open) your project
 
-Open the project that you would like to integrate the SDK in.
+Open the project that you would like to integrate the Ustream Player SDK in.
 
 ### Step 5: Add the SDK to the project
 
-#### Import from local repo
-
-Copy the library AAR file to the _libs_ folder of your project. In your project's _build.gradle_ put the Player Library 
+Import from local repo: copy the AAR file to the `libs` folder of your project. In your project's _build.gradle_ put the Player SDK
 dependency:
 
 ```
@@ -83,79 +129,18 @@ repositories {
 }
 
 dependencies {
-    compile 'joda-time:joda-time:2.5'
+    compile "joda-time:joda-time:2.5"
     compile "tv.ustream.player:ustream-player-android:0.5.1@aar"
 }
 ```
 
 You can find this in the sample application also, just copy those settings.
 
-### Step 6: Register your app at Ustream
-
-The SDK requires the use of a Ustream Player SDK key, which is validated whenever the SDK communicates with Ustream streaming 
-servers. The sample application contains a sample SDK key which you can use for testing. The sample SDK key can only be 
-used to play content on the test channel(s) also used in the sample app.
-
-TODO: Although there is a provided SDK key for the sample app's sample content, you still need to register your 
-identifier at Ustream. This will ensure that you can build the sample project using your own certificates.
-
-Before you can start using the Player SDK for playing content from your own channel(s), you will need to:
-
-*   Get a valid **Ustream Player SDK key** owned by the Ustream user that owns the content you would like to play.
-
-*   Register the **application identifier(s)** – of every app in which you will integrate the Ustream Player SDK in – at Ustream.
-
-The application identifier uses:
-
-*   Your Android application's **package name**: typically _com.your_company.your_project_
-
-*   The **public key** of your signing certificates
-
-To register your identifiers, you will need to:
-
-*   Obtain the public key of your certificate.
-
-*   Encode your keys using SHA1, then Base64 algorithm.
-
-*   Send the **encoded string** and the **package name** of your application to Ustream.
-
-#### Obtaining your identifiers
-
-There are two types of certificates that your application can be signed with.
-
-*   The **debug key** is used for development and testing.
-
-*   The **release key** is used to sign your app when you release it to the Play Store.
-
-Generating your identifier in your Android app:
-
-```java
-String packageName = context.getPackageName();
-PackageInfo packageInfo = context.getPackageManager().getPackageInfo(packageName,
-PackageManager.GET_SIGNATURES);
-byte[] signature = packageInfo.signatures[0].toByteArray();
-MessageDigest messageDigest = MessageDigest.getInstance("SHA");
-String appIdentifier = Base64.encodeToString(messageDigest.digest(signature), Base64.NO_WRAP);
-```
-
-Alternatively, you can get the public key of your certificates with the following shell command:
-```
-keytool -exportcert -alias my_cert_alias -keystore /path/to/keystore_file > your_company-(debug/release).key
-```
-Let’s call the generated file _example-debug.key_. Now you can encode it using the following command:
-```
-openssl dgst -sha1 -binary example-debug.key | base64
-```
-Generate the identifier for your release certificate's public key, and every other debug certificates that your 
-developers will use.
-
-Every time you initialize an instance of the Ustream Player SDK you have to configure it with your **Ustream Player SDK key**.
-
-### Step 7: Create a Player
+### Step 6: Create a Player
 
 #### In your layout .xml
 
-Place a PlayerView in your layout:
+Place a `PlayerView` in your layout:
 
 ```xml
 <tv.ustream.player.android.PlayerView
@@ -173,11 +158,11 @@ final PlayerView playerView = (PlayerView)findViewById(R.id.playerview);
 IUstreamPlayer ustreamPlayer = playerView.getUstreamPlayer();
 ```
 
-The `tv.ustream.player.api.IUstreamPlayer` class is the point where you can interface with the player library. 
-Its methods send events to the player, and its states are observed through the listeners (see below). 
-The `IUstreamPlayer`'s methods are explained further in its _Javadoc_.
+The `tv.ustream.player.api.IUstreamPlayer` class is the point where you can interface with the Player SDK. Its methods send 
+events to the player, and its states are observed through the listeners (see below). The `IUstreamPlayer`'s methods are 
+explained further in its _Javadoc_.
 
-### Step 8: Play live or recorded content
+### Step 7: Play live or recorded content
 
 After the `ustreamPlayer` is created, initialize it with a content. This will most likely be in your 
 Activity's `onCreate()` (Fragment's `onCreateView()`). A player instance can be initialized more than once with different 
@@ -210,16 +195,16 @@ if (!ustreamPlayer.isInitialized()) {
 }
 ```
 
-Remember to define a string constant `USTREAM_PLAYER_SDK_KEY` with your actual Ustream Player SDK key.
+Remember to define a string constant `USTREAM_PLAYER_SDK_KEY` with your actual **Ustream Player SDK key**.
 
-SDK version 0.5.0 introduced changes in the user facing interface, see the [Changelog](#_Changelog) for details.
+Ustream Player SDK version 0.5.0 introduced changes in the user facing interface, see the [Changelog](#_Changelog) for details.
 
 #### Setting your listeners
 
 To receive state changes and other events from the player you need to set listeners. There are mandatory and optional ones, 
 but all of these listeners have to be set prior to calling `ustreamPlayer.attach()` on your player instance. This should 
 happen in the `onResume()` callback of your Activity or Fragment. Calling `attach()` is an important step, this is where 
-your listeners and the player view is bound to the library. Forgetting to call this will cause the player to not render 
+your listeners and the player view is bound to the Player SDK. Forgetting to call this will cause the player to not render 
 video on your view, and you will not receive any callback on your listeners.
 
 ```java
@@ -264,11 +249,11 @@ private void changeContent(ContentDescriptor nextContent) {
 }
 ```
 
-### Step 9: Handle Player callbacks
+### Step 8: Handle Player callbacks
 
-#### State flow of the Player Library
+#### State flow of the Player SDK
 
-This diagram represents the state flow of the library, the nodes are the states reported by the player, the named edges 
+This diagram represents the state flow of the Player SDK, the nodes are the states reported by the player, the named edges 
 are events that can be sent to the player. There is a decision in the flow that happens automatically based on the content 
 selected (live or recorded).
 
@@ -277,8 +262,8 @@ selected (live or recorded).
 
 #### Catching callbacks
 
-There are seven different listeners that you can add to the Player Library instance to receive callbacks. Some of these 
-listeners are mandatory, others are optional, but each listener represents a group of functionality of the library.
+There are seven different listeners that you can add to the Player SDK instance to receive callbacks. Some of these 
+listeners are mandatory, others are optional, but each listener represents a group of functionality of the Player SDK.
 
 The seven listeners are:
 
@@ -293,7 +278,7 @@ The seven listeners are:
 ##### PlayerListener
 
 The `PlayerListener` is the most important listener, this is also a mandatory one, you must provide it, or you will receive 
-an exception. The library's state is observed through this interface.
+an exception. The Player SDK's state is observed through this interface.
 
 ```java
 package tv.ustream.player.api;
@@ -309,14 +294,14 @@ public interface PlayerListener {
     * Called when the player is initialized.
     * This is the initial state, and this is the state the player
     * returns to after re-initialized with a new content.
-    * The library is not connected to the internet in this state.
+    * The Player SDK is not connected to the internet in this state.
     */
     void onInitialized();
 
     /**
     * Called when the player is stopped.
     * This is the state the player returns to after a stop() or disconnect() call.
-    * The library is not connected to the internet in this state.
+    * The Player SDK is not connected to the internet in this state.
     */
     void onStopped();
     
@@ -348,8 +333,8 @@ public interface PlayerListener {
 
 ##### ErrorListener
 
-This is also a mandatory listener; the library reports all playback errors here. When an error occurs the lib will call 
-the corresponding callback, then the library will return to the Stopped state, notifying the application using 
+This is also a mandatory listener; the Player SDK reports all playback errors here. When an error occurs the SDK will call 
+the corresponding callback, then it will return to the Stopped state, notifying the application using 
 `PlayerListener.onStopped()`.
 
 ```
@@ -549,7 +534,7 @@ public interface MetaDataListener {
 
 #### Interactive callbacks
 
-There are certain callbacks in PlayerListener that indicate a disconnect from Ustream's servers. These callback methods 
+There are certain callbacks in `PlayerListener` that indicate a disconnect from Ustream's servers. These callback methods 
 represent the reason for the disconnect. Some of these errors can be resolved by you or the user of your application.
 
 These callbacks are found in `tv.ustream.player.api.ErrorListener`:
@@ -623,7 +608,7 @@ Transient errors:
 *   `onConnectionError()` – There is a problem with the internet connection,  
 (most likely temporary) try again later by calling: `ustreamPlayer.play();`
 
-*   `onUnknownError()` – This indicates a problem that the library can't determine, 
+*   `onUnknownError()` – This indicates a problem that the Player SDK can't determine, 
 (most likely temporary) try again by calling: `ustreamPlayer.play();`
 
 *   `onViewerHourLimitLock()` – The broadcaster's viewer hours are spent. This user can not watch the stream at the moment, 
@@ -632,37 +617,37 @@ try again by calling: `ustreamPlayer.play();`
 Other errors:
 
 *   `onInvalidApiKey()` – The provided Ustream Player SDK key is not authorized to play this content. You need to create a 
-new Player library instance to provide the correct key. The key needs to be set upon init: 
+new Player SDK instance to provide the correct key. The key needs to be set upon init: 
 `ustreamPlayer.initWithContent(USTREAM_PLAYER_SDK_KEY, contentDescriptor);`
 
 *   `onNoSuchContent()` – The requested live channel or recorded video does not exist.
 
 *   `onContentNotPlayable()` – The requested recorded video is not available in a playable format.
 
-*   `onRestricted()` – There are security restrictions set for the channel, that does not enable the library to play this 
-content, or your channel has reached its maximum concurrent viewer number. The latter can be resolved by retrying later, 
-to resolve the former the channel's settings have to be modified.
+*   `onRestricted()` – There are security restrictions set for the channel, that does not enable the Player SDK to play 
+this content, or your channel has reached its maximum concurrent viewer number. The latter can be resolved by retrying 
+later, to resolve the former the channel's settings have to be modified.
 
 ## Customizing the Player UI
 
 #### The appearance of the Player is fully customizable. The provided sample application contains an example appearance with resources.
 
-See _src/main/res/layout/layout_video.xml_ in the sample app.
+See `/src/main/res/layout/layout_video.xml` in the sample app.
 
 ## Localization
 
-Localization is totally up to you, but there is an example in the _strings.xml_ file of the sample application, 
+Localization is totally up to you, but there is an example in the `strings.xml` file of the sample application, 
 containing the most likely needed strings.
 
 ## Changelog
 
 **Changes in version 0.5.x compared to version [0.4.x]**:
 
-*   Removed Joda-Time dependency from the user facing interface for greater flexibility. Though Joda-Time is still used inside 
-the library for now, therefore it must be included as a dependency.
+*   Removed Joda-Time dependency from the user facing interface for greater flexibility. Though Joda-Time is still used 
+inside the Player SDK for now, therefore it must be included as a dependency.
 
-*   Library deploy moved from local Maven repo to AAR file. We are switching to the simple AAR file deploy until a proper 
-artifact repository is available.
+*   Player SDK deployment moved from local Maven repo to AAR file. We are switching to the simple AAR file deploy until 
+a proper artifact repository is available.
 
 *   Bug fixes and stability improvements
 
@@ -677,5 +662,6 @@ after initialization.
 
 *   Bugfixes and stability improvements
 
+[Dashboard]: https://www.ustream.tv/dashboard
 [0.4.x]: ../0.4/
 [0.3.x]: ../0.3/
