@@ -3193,6 +3193,14 @@ Authorization: Bearer 782f6544405a22636f3d5d3b63c2573673bf3950
 				<td>channel.status.offair</td>
 				<td>A channel goes offair</td>
 			</tr>
+			<tr>
+				<td>video.create</td>
+				<td>A video created (uploaded, recorded) on a channel</td>
+			</tr>
+			<tr>
+				<td>video.deleted</td>
+				<td>A video deleted from a channel</td>
+			</tr>
 		</table>
 
 		<h3>Handshake method</h3>
@@ -3234,15 +3242,20 @@ X-Hook-Secret: open-sesame!</code></pre>
 Host: your-app.url
 Content-Type: application/json
 Content-Length: 76
-X-Hook-Signature: 61f34d324ac51dde1288825dab2111</code>
+X-Hook-Signature: 61f34d324ac51dde1288825dab2111</code></pre>
 
-<code class="json">{
+			<h5>Channel event example</h5>
+<pre><code class="json">{
 	"event": "channel.status.live",
-	"channelId": 123,
-	"when": 1234567890
+	"channelId": 123
 }</code></pre>
 
-		<p>The property "when" will contain the exact time of the event occurred. Its provided as a unix timestamp.</p>
+			<h5>Video event example</h5>
+<pre><code class="json">{
+	"event": "video.create",
+	"videoId": 456
+}</code></pre>
+
 		<p>Your receiver should verify the signature provided in the request <strong>X-Hook-Signature</strong> header, using <strong>HMAC-SHA1</strong> algorithm with the the previously exchanged secret and the full request body as-is.</p>
 	</section>
 </article>
