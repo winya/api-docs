@@ -4,11 +4,10 @@ title: Player SDK for Android (v 0.5.x)
 weight: 3
 category: player-sdk
 categoryItemType: documentation
-categoryItemIsShown: 1
+categoryItemIsShown: 0
 categoryItemWidth: 6
 categoryItemDescription:
 categoryItemLabel: Read the documentation
-permalink: /player-sdk/android/latest/
+permalink: /player-sdk/android/0.5/CHANGELOG
 ---
-{% include_relative 0.5/README.md  %}
-
+{% include_relative CHANGELOG.md  %}

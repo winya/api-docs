@@ -14,7 +14,7 @@ This document describes the basic steps to make a mobile app using the Ustream P
 Before going into details, please note that document assumes the following:
 *   You have a registered user at [ustream.tv](http://www.ustream.tv/).
 *   Your Ustream user is entitled to use the Ustream Player SDK specifically. Log-in to [Dashboard], 
-and check ["API/SDK access"](https://www.ustream.tv/dashboard/account/api-access) under the "Account" section. 
+and check ["API/SDK access"] under the "Account" section. 
 If you have questions, please [contact us](https://www.ustream.tv/enterprise-video/contact).
 
 ### Development prerequisites
@@ -87,11 +87,11 @@ There are two ways to generate your **Key Hash**:
 
 #### Enter credentials
 
-* Log-in into your account, navigate to the [Dashboard] and select ["API/SDK access"](https://www.ustream.tv/dashboard/account/api-access) 
+* Log-in into your account, navigate to the [Dashboard] and select ["API/SDK access"] 
 under the "Account" menu.
 
 * In the "Mobile Player SDK" section, click on "Create new credentials" and provide a name for your application in the 
-"Application name" field. Your credentials will be listed under the "API/SDK access" page based on this name.
+"Application name" field. Your credentials will be listed under the ["API/SDK access"] page based on this name.
 
 * Select Android in the "Platform" drop-down. Enter your **Key Hash** and **Google Play Package Name** in the respective fields.
 
@@ -197,7 +197,7 @@ if (!ustreamPlayer.isInitialized()) {
 
 Remember to define a string constant `USTREAM_PLAYER_SDK_KEY` with your actual **Ustream Player SDK key**.
 
-Ustream Player SDK version 0.5.0 introduced changes in the user facing interface, see the [Changelog](#_Changelog) for details.
+Ustream Player SDK version 0.5.0 introduced changes in the user facing interface, see the [CHANGELOG.md] for details.
 
 #### Setting your listeners
 
@@ -639,29 +639,10 @@ See `/src/main/res/layout/layout_video.xml` in the sample app.
 Localization is totally up to you, but there is an example in the `strings.xml` file of the sample application, 
 containing the most likely needed strings.
 
-## Changelog
+## Resources 
 
-**Changes in version 0.5.x compared to version [0.4.x]**:
-
-*   Removed Joda-Time dependency from the user facing interface for greater flexibility. Though Joda-Time is still used 
-inside the Player SDK for now, therefore it must be included as a dependency.
-
-*   Player SDK deployment moved from local Maven repo to AAR file. We are switching to the simple AAR file deploy until 
-a proper artifact repository is available.
-
-*   Bug fixes and stability improvements
-
-**Changes in version 0.4.x compared to version [0.3.x]**:
-
-*   Added `IUstreamPlayer.isInitialized()` method to check whether the player is already initialized. This is most useful 
-on a configuration change event. The information representing the init state of the player does not need to be manually 
-saved anymore.
-
-*   Tweaks around `IUstreamPlayer.destroy()`. This is not bound to Android lifecycle anymore, can be called anywhere 
-after initialization.
-
-*   Bugfixes and stability improvements
+See the [CHANGELOG.md] for changes.
 
 [Dashboard]: https://www.ustream.tv/dashboard
-[0.4.x]: ../0.4/
-[0.3.x]: ../0.3/
+["API/SDK access"]: https://www.ustream.tv/dashboard/account/api-access
+[CHANGELOG.md]: CHANGELOG
