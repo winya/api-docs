@@ -1006,6 +1006,11 @@ header {
 
 
 /* Article pages */
+
+article > section h1:first-child {
+    display: none;
+}
+
 article pre {
   overflow-x: auto;
 	-webkit-overflow-scrolling: touch;
