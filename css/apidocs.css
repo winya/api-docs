@@ -1007,6 +1007,14 @@ header {
 
 /* Article pages */
 
+article > section h1 {
+    font-size: 3.6rem;
+    line-height: 4.8rem;
+    font-weight: 500;
+    color: #6c7884;
+    margin-bottom: 30px;
+}
+
 article > section h1:first-child {
     display: none;
 }
