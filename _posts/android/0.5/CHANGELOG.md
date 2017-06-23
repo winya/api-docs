@@ -1,6 +1,6 @@
 # Changelog
 
-## [0.5.x] - 2017-02-09
+## [0.5.0] - 2017-02-09
 ### Changed
 - Player SDK deployment moved from local Maven repo to AAR file. We are switching to the simple AAR file deploy until 
 a proper artifact repository is available.
@@ -11,7 +11,7 @@ a proper artifact repository is available.
 inside the Player SDK for now, therefore it must be included as a dependency.
 
 
-## [0.4.x] - 2016-05-31
+## [0.4.0] - 2016-05-31
 ### Added
 - Added `IUstreamPlayer.isInitialized()` method to check whether the player is already initialized. This is most useful 
 on a configuration change event. The information representing the init state of the player does not need to be manually 
@@ -22,9 +22,5 @@ saved anymore.
 after initialization.
 - Bugfixes and stability improvements
 
-## [0.3.x] - 2015-09-01
-
-
-[0.5.x]: ../0.5/
-[0.4.x]: ../0.4/
-[0.3.x]: ../0.3/
+[0.5.0]: ../0.5/
+[0.4.0]: ../0.4/

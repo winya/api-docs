@@ -1,6 +1,6 @@
 ---
 layout: markdown
-title: Player SDK for Android (v0.5.x)
+title: Player SDK for Android - Changelog
 weight: 3
 category: player-sdk
 categoryItemType: documentation
