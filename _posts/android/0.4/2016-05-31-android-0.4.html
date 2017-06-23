@@ -1,13 +1,13 @@
 ---
 layout: post
-title: Player SDK for Android (v 0.4.x)
+title: Player SDK for Android (v0.4)
 weight: 3
 permalink: player-sdk/android-0.4.html
 category: player-sdk
 categoryItemType: documentation
 categoryItemIsShown: 0
 categoryItemWidth: 6
-categoryItemDescription: API documentation for version 0.4.x
+categoryItemDescription: API documentation for version 0.4
 categoryItemLabel: Read the documentation
 permalink: /player-sdk/android/0.4/
 ---
@@ -150,7 +150,7 @@ ContentDescriptor contentDescriptor = new ContentDescriptor(ContentType.LIVE, 12
 	ustreamPlayer.connect();
 }</code></pre>
 
-		<p>SDK version 0.4.0 introduced changes in the user facing interface, see the <a href="#changelog_17">Changelog</a> for details.</p>
+		<p>Player SDK v0.4.0 introduced changes in the user facing interface, see the <a href="#changelog_17">Changelog</a> for details.</p>
 
 		<h4>Setting your listeners</h4>
 		<p>To receive state changes and other events from the player you need to set listeners. There are mandatory and optional ones, but all of these listeners have to be set prior to calling <code class="java">ustreamPlayer.attach()</code> on your player instance. This should happen in the <code class="java">onResume()</code> callback of your Activity or Fragment. Calling <code class="java">attach()</code> is an important step, this is where your listeners and the player view is bound to the library. Forgetting to call this will cause the player to not render video on your view, and you will not receive any callback on your listeners.</p>
@@ -520,7 +520,7 @@ void onUnknownError();</code></pre>
 
 	<section>
 		<h2>Changelog</h2>
-		<p>Changes in version 0.4.x compared to version <a href="../0.3/">0.3.x</a>:</p>
+		<p>Changes in version 0.4.0 compared to version <a href="../0.3/">0.3.0</a>:</p>
 		<ul>
 			<li>Added <code class="java">IUstreamPlayer.isInitialized()</code> method to check whether the player is already initialized. This is most useful on a configuration change event. The information representing the init state of the player does not need to be manually saved anymore.</li>
 			<li>Tweaks around <code class="java">IUstreamPlayer.destroy()</code>. This is not bound to Android lifecycle anymore, can be called anywhere after initialization.</li>
