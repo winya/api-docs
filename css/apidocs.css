@@ -261,6 +261,10 @@ nav label {
 }
 
 /* mainly from northstar */
+nav.no-search form {
+	display: none;
+}
+
 nav input[type="search"] {
 	-webkit-appearance: textfield;
 	-moz-appearance: textfield;
