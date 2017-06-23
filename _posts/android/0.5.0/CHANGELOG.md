@@ -22,5 +22,5 @@ saved anymore.
 after initialization.
 - Bugfixes and stability improvements
 
-[0.5.0]: ../0.5/
-[0.4.0]: ../0.4/
+[0.5.0]: ../0.5.0/
+[0.4.0]: ../0.4.0/
