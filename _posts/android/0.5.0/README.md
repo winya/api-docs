@@ -1,4 +1,4 @@
-# Ustream Player SDK for Android v0.6
+# Ustream Player SDK for Android v0.5
 
 ## Introduction
 
