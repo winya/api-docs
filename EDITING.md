@@ -21,7 +21,7 @@ and rename it to include the release's date e.g. `2017-06-15`:
     
     ...
     layout: markdown
-    title: Player SDK for Android (v0.6.x)
+    title: Player SDK for Android (v0.6.0)
     categoryItemIsShown: 0
     permalink: /player-sdk/android/0.6/
     ...

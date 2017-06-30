@@ -1,13 +1,13 @@
 ---
 layout: markdown
-title: Player SDK for Roku (v1.4)
-weight: 60
+title: Player SDK for Android - Changelog
+weight: 3
 category: player-sdk
 categoryItemType: documentation
-categoryItemIsShown: 1
+categoryItemIsShown: 0
 categoryItemWidth: 6
 categoryItemDescription:
 categoryItemLabel: Read the documentation
-permalink: /player-sdk/roku/latest/
+permalink: /player-sdk/android/0.6.0/CHANGELOG
 ---
-{% include_relative 1.4/README.md %}
+{% include_relative CHANGELOG.md  %}

@@ -1,4 +1,4 @@
-# Ustream Player SDK for Android v0.5.x
+# Ustream Player SDK for Android v0.5
 
 ## Introduction
 
@@ -274,6 +274,7 @@ The seven listeners are:
 *   ViewerCountListener
 *   LogoClickListener
 *   MetaDataListener
+*   MediaTrackChangeListener
 
 ##### PlayerListener
 
@@ -531,6 +532,33 @@ public interface MetaDataListener {
     void onChatAndSocialStreamData(ChatAndSocialStreamData data);
 }
 ```
+
+##### MediaTrackChangeListener
+
+An optional listener to observe track changes in the player (audio, video, ).
+
+* `onMediaTracksChanged(MediaTrackGroupHolder mediaTrackGroups)`
+        - called when the tracks become available or change during playback.
+* `onVideoTrackSelectionChanged(@Nullable MediaTrackSelection trackSelection)`
+        - called when the selected video track is changed
+* `onAudioTrackSelectionChanged(@Nullable MediaTrackSelection trackSelection)`
+        - called when the selected audio track is changed
+* `onTextTrackSelectionChanged(@Nullable MediaTrackSelection trackSelection)`
+        - called when the selected subtitle (closed caption) track is changed
+* `onVideoFormatChanged(MediaFormat videoFormat)`
+        - called when the video format of the selected video track is changed
+
+The track selection can be controlled with following methods of `IUstreamPlayer`:
+* `selectTrackForRenderer(MediaTrack mediaTrack, @Nullable int[] selectedFormatIndices)`
+        - selects the supplied media track on the appropriate renderer.
+        The Formats identified with the `selectedFormatIndices`'s values will take part in the selection.
+        The latter parameter can be used to filter specific format for the selection, e.g. HD only.
+* `selectDefaultTrack(MediaTrack.TrackType trackType)`
+        - Commands the appropriate renderer for the provided TrackType to switch to the default mediaTrack.
+* `disableRenderer(MediaTrack.TrackType trackType)`
+        - Commands the appropriate renderer for the provided TrackType to disable rendering.
+
+For more details see javadoc in `MediaTrackChangeListener` and `IUstreamPlayer` classes.
 
 #### Interactive callbacks
 
