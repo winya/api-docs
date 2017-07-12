@@ -1,4 +1,4 @@
-# Ustream Player SDK for iOS
+# Ustream Player SDK for iOS v1.2
 
 ## Introduction
 
@@ -113,7 +113,6 @@ By now you have configured your player and it is ready to play live and recorded
 `USUstreamPlayer` can play different kinds of media:
 - Live streams using the `-[USUstreamPlayer playChannel:]` API call.
 - Recorded videos using the `-[USUstreamPlayer playRecorded:]` API call.
-- Highlights using the `-[USUstreamPlayer playHighlight:]` API call.
 
 For example, you can play the live video streamed right now on your channel:
 ```objc
