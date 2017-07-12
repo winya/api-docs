@@ -4,8 +4,6 @@
 
 The Ustream Player SDK lets you play Ustream live and recorded videos in your native applications. Using the native SDK gives you full control over the Player, including a customizable native user interface, callbacks on status changes, and many more.
 
-Note: if you need none of the above, you may use the HTML-based Player API instead.
-
 This document describes the basic steps to make an Apple TV app using the Player SDK for tvOS.
 
 ## Before you begin
