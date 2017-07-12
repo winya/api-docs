@@ -680,7 +680,7 @@ See `/src/main/res/layout/layout_video.xml` in the sample app.
 Localization is totally up to you, but there is an example in the `strings.xml` file of the sample application, 
 containing the most likely needed strings.
 
-## Resources 
+## Changelog
 
 See the [CHANGELOG.md] for changes.
 
