@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.2] - 2017-07-20
+### Changed
+- MetaData class' `mediaDate` field's value is now always in UTC timezone. Previously it was PST for *RECORDED* and UTC for *LIVE*.
+- In a scenario when the client is connected to an offline channel (the SDK is in the `WaitingForContent` state) and the channel goes live.
+    The `mediaDate` is now updated with the new value.
+- Disabled eCDN support for now.
+
 ## [0.9.0] - 2017-07-04
 ### Added
 - Support for multiple players on the same Activity. In order for this to work the API had to be changed.
@@ -72,6 +79,7 @@ saved anymore.
 after initialization.
 - Bugfixes and stability improvements
 
+[0.9.2]: ../0.9.0/
 [0.9.0]: ../0.9.0/
 [0.7.0]: ../0.7.0/
 [0.6.0]: ../0.6.0/
