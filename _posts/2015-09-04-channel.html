@@ -433,7 +433,7 @@ title=API+Testing+Channel</code></pre>
   }
 }</code></pre>
 
-		<h3>Get a custom metadata field display option</h3>
+		<h3>Get the display settings of the custom metadata fields</h3>
 		<table class="table fill-bg-light1 table-chromeless">
 			<tr>
 				<td class="verb">GET</td>
@@ -441,7 +441,7 @@ title=API+Testing+Channel</code></pre>
 			</tr>
 		</table>
 		<h6>Response</h6>
-		<p>On success save a response with HTTP status 200 is returned.</p>
+		<p>On success a response with HTTP status 200 is returned.</p>
 		<table class="table responsive">
 			<tr>
 				<th>key</th>
@@ -451,7 +451,7 @@ title=API+Testing+Channel</code></pre>
 			<tr>
 				<td>metadata_displays</td>
 				<td>array</td>
-				<td>Metada display options
+				<td>Metada display settings
 					<table class="table responsive">
 						<tr>
 							<th>key</th>
@@ -471,14 +471,14 @@ title=API+Testing+Channel</code></pre>
 						<tr>
 							<td>is_link</td>
 							<td>boolean</td>
-							<td>Is field link</td>
+							<td>True, if the field is a link</td>
 						</tr>
 					</table>
 				</td>
 			</tr>
 		</table>
 
-		<h3>Set custom metadata fields display options</h3>
+		<h3>Set the display setting of a custom metadata field</h3>
 		<table class="table fill-bg-light1 table-chromeless">
 			<tr>
 				<td class="verb">PUT</td>
@@ -486,7 +486,6 @@ title=API+Testing+Channel</code></pre>
 			</tr>
 		</table>
 		<h6>Parameters</h6>
-		<p>On success save a response with HTTP status 200 is returned.</p>
 		<table class="table responsive">
 			<tr>
 				<th>parameter</th>
@@ -501,6 +500,8 @@ title=API+Testing+Channel</code></pre>
 				<td>The metadata value is link to a similar content list</td>
 			</tr>
 		</table>
+		<h6>Response</h6>
+		<p>On success a response with HTTP status 200 is returned.</p>
 		<h6>Error codes</h6>
 		<table class="table responsive">
 			<tr>
@@ -520,7 +521,7 @@ title=API+Testing+Channel</code></pre>
 			</tr>
 		</table>
 
-		<h3>Delete a custom metadata field display option</h3>
+		<h3>Delete the display setting of a custom metadata field</h3>
 		<table class="table fill-bg-light1 table-chromeless">
 			<tr>
 				<td class="verb">DELETE</td>
@@ -2882,7 +2883,7 @@ Authorization: Bearer 782f6544405a22636f3d5d3b63c2573673bf3950
 			</tr>
 		</table>
 
-		<h3>List all video meta data value</h3>
+		<h3>List all video meta data values</h3>
 
 		<table class="table fill-bg-light1 table-chromeless">
 			<tr>
@@ -2907,27 +2908,27 @@ Authorization: Bearer 782f6544405a22636f3d5d3b63c2573673bf3950
 			<tr>
 				<td>display_name</td>
 				<td>string</td>
-				<td>Displayed value</td>
+				<td>Display name</td>
 			</tr>
 			<tr>
 				<td>content_type</td>
 				<td>string</td>
-				<td>It will be a channel or video</td>
+				<td>It can be channel or video</td>
 			</tr>
 			<tr>
 				<td>type</td>
 				<td>mixed</td>
-				<td>Type of the field</td>
+				<td>The type of the field</td>
 			</tr>
 			<tr>
 				<td>description</td>
 				<td>text</td>
-				<td>Description of the field</td>
+				<td>The description of the field</td>
 			</tr>
 			<tr>
 				<td>required</td>
 				<td>bool</td>
-				<td>Field is required</td>
+				<td>True, if the field is required</td>
 			</tr>
 			<tr>
 				<td>enum_items</td>
@@ -2967,12 +2968,12 @@ Authorization: Bearer 782f6544405a22636f3d5d3b63c2573673bf3950
 						<tr>
 							<td>display_name</td>
 							<td>string</td>
-							<td>Displayed value</td>
+							<td>Displaye name</td>
 						</tr>
 						<tr>
 							<td>content_type</td>
 							<td>string</td>
-							<td>It will be a channel or video</td>
+							<td>It can be channel or video</td>
 						</tr>
 						<tr>
 							<td>type</td>
@@ -2982,12 +2983,12 @@ Authorization: Bearer 782f6544405a22636f3d5d3b63c2573673bf3950
 						<tr>
 							<td>description</td>
 							<td>text</td>
-							<td>Description of the field</td>
+							<td>The description of the field</td>
 						</tr>
 						<tr>
 							<td>required</td>
 							<td>bool</td>
-							<td>Field is required</td>
+							<td>True, if the field is required</td>
 						</tr>
 					</table>
 				</td>
