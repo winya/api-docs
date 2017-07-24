@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.9.3] - 2017-07-24
+### Changed
+- Correctly display CEA-608 type closed caption names. In some previous versions this displayed a generated name instead of the desired one.
+- When opening a *RECORDED* content `ContentNotPlayable` is no longer reported if the requested content is not available immediately only after our servers prepare the content.
+- When connected to a *LIVE* content that is Offline at the moment, `ContentNotPlayable` is not reported right away when the channel goes online. 
+We wait for the content to be available in the requested format. (This only affected the first viewer of the broadcast, 
+because the server might need time to prepare a supported format.)
+
 ## [0.9.2] - 2017-07-20
 ### Changed
 - MetaData class' `mediaDate` field's value is now always in UTC timezone. Previously it was PST for *RECORDED* and UTC for *LIVE*.
@@ -79,6 +87,7 @@ saved anymore.
 after initialization.
 - Bugfixes and stability improvements
 
+[0.9.3]: ../0.9.0/
 [0.9.2]: ../0.9.0/
 [0.9.0]: ../0.9.0/
 [0.7.0]: ../0.7.0/
