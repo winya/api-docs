@@ -283,6 +283,23 @@ viewer.getProperty('playingContent', function (content) {
     "2":{"label":"480p","active":false},
     "16":{"label":"BEST","active":true}
 }</code></pre>
+			
+		    <h4>cc (closed caption)</h4>
+                    <p>Fired when there are closed captions available on the stream.</p>
+                    <p>Returns an array containing closed captions as objects.</p>
+                    <ul>
+			<li><code>index</code> (integer) unique index of the closed caption</li>
+			<li><code>label</code> (string) label of the closed caption</li>
+                        <li><code>language</code> (string) language code of the closed caption (en, etc.)</li>
+                        <li><code>active</code> (booelan) if this closed caption is shown</li>
+                    </ul>
+
+                    <h6>Example</h6>
+                    <pre><code class="javascript">viewer.addListener('cc', callBack);</code></pre>
+                    <pre><code class="javascript">// example cc object
+[
+    {"index": 0, "label":"English", "language": "en", "active":false}
+]</code></pre>
                     
                     <h4>content</h4>
                     <p>Called when a the player content changes for some reason. Same data as received in <code>getProperty('content')</code></p>
