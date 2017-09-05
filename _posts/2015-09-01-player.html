@@ -150,8 +150,18 @@ viewer.callMethod('load', 'channel', 1524);</code></pre>
 
                     <h6>Example</h6>
                     <pre><code class="javascript">viewer.callMethod('quality', 16); //set to high</code></pre>
-                    
-                    
+			
+		    <h4>cc (closed caption)</h4>
+                    <p>Enables the selected closed caption if available. Requires one argument:</p>
+                    <ul>
+                        <li>a <code>ccIndex</code> key from the received closed caption array in <code>cc</code> event</li>
+                    </ul>
+
+                    <h6>Example</h6>
+                    <pre>
+		    <code class="javascript">viewer.callMethod('cc', 1); //set to the closed caption with index 1</code>
+		    <code class="javascript">viewer.callMethod('cc', -1); //disables the closed caption</code>
+		    </pre>
                     
                     <h3>getProperty</h3>
                     <p>Read a property of the embed player. This method is <strong>asynchronous</strong>, the data will be passed to a callback function, given as argument.<br/></p>
@@ -298,7 +308,7 @@ viewer.getProperty('playingContent', function (content) {
                     <pre><code class="javascript">viewer.addListener('cc', callBack);</code></pre>
                     <pre><code class="javascript">// example cc object
 [
-    {"index": 0, "label":"English", "language": "en", "active":false}
+    {"index":0, "label":"English", "language":"en", "active":false}
 ]</code></pre>
                     
                     <h4>content</h4>
