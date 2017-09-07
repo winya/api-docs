@@ -82,13 +82,15 @@ categoryItemLabel: Read the documentation
 
         <pre><code class="json">
 [
-    {
-        "userName": "testuser",
-        "someString": "someValue"
-    },
-    {
-        "hash": "56a8835175d33c368955dac6bdaf00de"
-    }
+   {
+      "userName": "testuser"
+   },
+   {
+      "someString": "someValue"
+   },
+   {
+      "hash": "56a8835175d33c368955dac6bdaf00de"
+   }
 ]
         </code></pre>
 
@@ -108,24 +110,32 @@ $SHARED_SECRET_KEY = "testMyHash";
 
 // The script has to validate if provided user credentials are correct.
 // For simplicity in this example we only check if user name is “testuser”.
-// You should implement a more advanced validation, eg. checking the user name and the password against a database.   
-if (!isset($_GET["user"]) || $_GET["user"] != "testuser") {
+// You should implement a more advanced validation,
+// eg. checking the user name and the password against a database.
+if (isset($_GET["user"]) && $_GET["user"] == "testuser") {
+	// On success the response has to be an array of parameters
+	// and a hash.
 
-    // On failure the response has to be false.
-    $response = false;
-}
-else {
+	// We create the array of paramters.
+	// The parameters can be anything.
+	$userData = [
+		"username" => $_GET["user"],
+		"someString" => "someValue"
+	];
 
-    // On success the response has to be an array of parameters and a hash.
+	// We create the hash by hashing the array contents
+	// and the secret key concatenated together with a pipe character.
+	$hash = md5(implode('|', $userData) . '|' . $SHARED_SECRET_KEY);
 
-    // We create the array of paramters. The parameters can be anything.  
-    $userData = array("username" => $_GET["user"], "someString" => "someValue");
-
-    // We create the hash by hashing the array contents and the secret key concatenated together with a pipe character.
-    $hash = md5(implode('|', $userData).'|'.$SHARED_SECRET_KEY);
-
-    // We put the array of parameters and the hash into the response.
-    $response = array($userData, array("hash" => $hash));
+	// We put the array of parameters and the hash into the response.
+	$response = array_chunk(
+		array_merge($userData, ["hash" => $hash]),
+		1,
+		true
+	);
+} else {
+	// On failure the response has to be false.
+	$response = false;
 }
 
 // We encode the output into JSON format.
@@ -133,10 +143,8 @@ $json = json_encode($response);
 
 // We create the JSONP callback.
 echo isset($_GET['jsoncallback'])
-    ? "{$_GET['jsoncallback']}($json)"
-    : $json;
-
-?&gt;
+	? "{$_GET['jsoncallback']}($json)"
+	: $json;
         </code></pre>
 
         <h3>Setting up basic viewer authentication</h3>
@@ -242,6 +250,8 @@ echo isset($_GET['jsoncallback'])
 [
     {
         "userName": "testuser",
+    },
+    {
         "someString": "someValue"
     },
     {
@@ -434,6 +444,8 @@ echo isset($_GET['jsoncallback'])
 [
     {
         "userName": "testuser",
+    },
+    {
         "someString": "someValue"
     },
     {
@@ -463,22 +475,6 @@ $expiration = time()+3600;
 // We concatenate it to the params, and generate the hash.
 $hash = md5(implode('|', $userData).'|'.$expiration.'|'.$SHARED_SECRET_KEY);
         </code></pre>
-
-    </section>
-
-    <section>
-
-        <h2>Using viewer authentication in embeds</h2>
-
-        <p>You can pass the hash to the IBM Cloud Video player embedded in your website. This allows you to skip the log in screen and let the viewer watch the video or display the entry point of your authentication flow in a popup window.</p>
-
-        <p>You need to pass the hash to the embedded player in a “hashdata” GET parameter. The hash has to be in JSON format and the JSON data has to be URL encoded.</p>
-
-        <p>Example of passing hash to the video player embed:</p>
-
-        <pre><code>http://ustream.tv/embed/4895773?hashdata=%5B%7B"userName"%3A"asd"%7D%2C%7B"hash"%3A"db67451349eb910e5cecb4bb8cbadeef"%7D%2C%7B"hashExpire"%3A1352808757%7D%5D</code></pre>
-
-        <p>The embedded player will only use this information when it loads. You have to make sure that the viewer is authenticated and the hash is generated before you display the page with the embedded player. Alternatively, you can inject the embed iframe into the page DOM after the hash has been generated.</p>
 
     </section>
 
