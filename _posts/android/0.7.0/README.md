@@ -59,7 +59,7 @@ Each certificate generates a different **Key Hash**.
 There are two ways to generate your **Key Hash**:
 * In your Android app:
 
-    Execute this in a debug build **and** a in a release build too:
+    Execute this in a debug build **and** in a release build too:
 
     ```java
     String packageName = context.getPackageName();
