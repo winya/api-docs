@@ -44,6 +44,10 @@ categoryItemLabel: Read the documentation
     <section>
 
         <h2>Basic viewer authentication flow</h2>
+        <p>To implement the basic viewer authentication flow you need to create an application that includes the following:</p>
+        <ul>
+          <li>Authentication service endpoint that can be called by the IBM Cloud Video player to validate authentication requests</li>
+        </ul>
 
         <img class="no-border" src="/images/hashlock-simple.png">
 
@@ -58,7 +62,7 @@ categoryItemLabel: Read the documentation
 
         <h3>Creating an authentication service endpoint</h3>
 
-        <p>To implement the basic viewer authentication flow you need to create an authentication service endpoint for validating authentication requests.</p>
+        <p>The authentication service endpoint validates the authentication requests.</p>
 
         <p>The IBM Cloud Video player calls the URL of the endpoint to pass the authentication request to your service. It is called in the background by passing the username and password in GET parameters. The parameters are called "user" and "pw".</p>
 
@@ -223,6 +227,12 @@ echo isset($_GET['jsoncallback'])
     <section>
 
         <h2>Advanced viewer authentication flow</h2>
+        <p>To implement the advanced viewer authentication flow you need to create an application that includes the following:</p>
+        <ul>
+          <li>Screens your viewers need to go through to authenticate</li>
+          <li>Backend code that validates these authentication requests</li>
+          <li>Process to pass the authentication response to the IBM Cloud Video player</li>
+        </ul>
 
         <img class="no-border" src="/images/hashlock-advanced.png">
 
