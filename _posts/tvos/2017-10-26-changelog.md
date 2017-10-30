@@ -10,4 +10,4 @@ categoryItemDescription:
 categoryItemLabel: Read the documentation
 permalink: /player-sdk/tvos/latest/CHANGELOG
 ---
-{% include_relative 1.3/CHANGELOG.md  %}
+{% include_relative 1.4/CHANGELOG.md  %}

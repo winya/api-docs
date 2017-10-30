@@ -1,13 +1,13 @@
 ---
 layout: markdown
-title: Player SDK for tvOS (v1.3)
-weight: 50
+title: Player SDK for tvOS - Changelog
+weight: 3
 category: player-sdk
 categoryItemType: documentation
-categoryItemIsShown: 1
+categoryItemIsShown: 0
 categoryItemWidth: 6
 categoryItemDescription:
 categoryItemLabel: Read the documentation
-permalink: /player-sdk/tvos/latest/
+permalink: /player-sdk/tvos/1.4/CHANGELOG
 ---
-{% include_relative 1.3/README.md  %}
+{% include_relative CHANGELOG.md  %}
