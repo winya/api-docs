@@ -18,7 +18,11 @@ layout: default
 				<div class="panel-wrapper">
 					<h4>{{post.title}}</h4>
 					<p>{{post.categoryItemDescription}}</p>
+					{% if post.externalLink %}
+					<div class="panel-buttons"><a href="{{post.externalLink}}">{{post.categoryItemLabel}}</a></div>
+					{% else %}
 					<div class="panel-buttons"><a href="{{site.baseurl}}{{post.url}}">{{post.categoryItemLabel}}</a></div>
+					{% endif %}
 				</div>
 			</div>
 		</div>
