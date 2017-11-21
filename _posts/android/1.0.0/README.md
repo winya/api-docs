@@ -15,7 +15,7 @@ This document describes the basic steps to make a mobile app using the Ustream P
 Before going into details, please note that document assumes the following:
 *   You have a registered user at [ustream.tv](http://www.ustream.tv/).
 *   Your Ustream user is entitled to use the Ustream Player SDK specifically. Log-in to [Dashboard], 
-and check ["API/SDK access"] under the "Account" section. 
+and check ["API/SDK access"] under the "Integrations & Apps" section.
 If you have questions, please [contact us](https://www.ustream.tv/enterprise-video/contact).
 
 ### Development prerequisites
@@ -89,7 +89,7 @@ There are two ways to generate your **Key Hash**:
 #### Enter credentials
 
 * Log-in into your account, navigate to the [Dashboard] and select ["API/SDK access"] 
-under the "Account" menu.
+under the "Integrations & Apps" menu.
 
 * In the "Mobile Player SDK" section, click on "Create new credentials" and provide a name for your application in the 
 "Application name" field. Your credentials will be listed under the ["API/SDK access"] page based on this name.
@@ -689,5 +689,5 @@ containing the most likely needed strings.
 See the [CHANGELOG.md] for changes.
 
 [Dashboard]: https://www.ustream.tv/dashboard
-["API/SDK access"]: https://www.ustream.tv/dashboard/account/api-access
+["API/SDK access"]: https://www.ustream.tv/dashboard/integrations/api-access
 [CHANGELOG.md]: CHANGELOG
