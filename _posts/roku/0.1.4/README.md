@@ -13,7 +13,9 @@ This document describes the basic steps to make a Roku app using the Player SDK.
 Before going into details, please note that document assumes the following:
 
 *   you have a registered user at [IBM Cloud Video](http://www.ustream.tv)
-*   your IBM Cloud Video user is entitled to use the Player SDK specifically (if you have questions, please [contact us](https://www.ustream.tv/enterprise-video/contact))
+*   your IBM Cloud Video user is entitled to use the Player SDK specifically. Log-in to [Dashboard],
+and check ["API/SDK access"] under the "Integrations & Apps" section.
+If you have questions, please [contact us](https://www.ustream.tv/enterprise-video/contact).
 
 ### Development prerequisites
 
@@ -128,3 +130,5 @@ The following locks notify the app that playback has stopped due to a server-sid
 Sample code is located for each of these callbacks in the **Utils.brs**, **PasswordScreen.brs** and **AgeScreen.brs** files of the **sampleapplication** folder.
 
 Empty strings ("") returned from `getPassword` or `getBirthDay` do not get verified, the app returns to the `Main()` function instead.
+
+["API/SDK access"]: https://www.ustream.tv/dashboard/integrations/api-access
