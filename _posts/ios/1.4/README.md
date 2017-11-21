@@ -38,8 +38,9 @@ Click on "Create new credentials" and provide a name for your application in the
 
 Select iOS in the "Platform" drop-down. Enter the "bundle id" in its respective field.
 
-After you completed all fields, hit "Save" to generate your SDK credentials. Make sure that the "bundle id" is introduced correctly, as you will have no possibility to update them later. If you
-accidentally saved wrong values, start the process from the beginning and create new credentials with the correct values.
+After you completed all fields, hit "Save" to generate your SDK credentials. Make sure that the "bundle id" is introduced correctly.
+If you accidentally saved wrong values, you can edit or delete your credentials,
+but beware as this will break any existing applications relying on those credentials.
 
 ### Step 2: Download SDK package
 

@@ -98,9 +98,9 @@ under the "Integrations & Apps" menu.
 * Select Android in the "Platform" drop-down. Enter your **Key Hash** and **Google Play Package Name** in the respective fields.
 
 * After you completed all fields, hit "Save" to generate your Ustream Player SDK for Android credentials. Make sure that 
-the "Key Hash" and "Google Play Package Name" are introduced correctly, as you will have no possibility to update them later. 
-If you accidentally saved wrong values, start the process from the beginning and create new credentials with the correct 
-values.
+the "Key Hash" and "Google Play Package Name" are introduced correctly.
+If you accidentally saved wrong values, you can edit or delete your credentials,
+but beware as this will break any existing applications relying on those credentials.
 
 ### Step 2: Download SDK package
 
