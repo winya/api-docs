@@ -12,8 +12,8 @@ This document describes the basic steps to make a mobile app using the Player SD
 
 Before going into details, please note that document assumes the following:
 *   You have a registered user at [ustream.tv](http://www.ustream.tv/).
-*   Your Ustream user is entitled to use the Ustream Player SDK specifically. Log-in to [Dashboard](https://www.ustream.tv/dashboard), 
-and check ["API/SDK access"](https://www.ustream.tv/dashboard/account/api-access) under the "Account" section.
+*   Your Ustream user is entitled to use the Ustream Player SDK specifically. Log-in to [Dashboard],
+and check ["API/SDK access"] under the "Integrations & Apps" section.
 
 If you have questions, please [contact us](https://www.ustream.tv/enterprise-video/contact).
 
@@ -31,8 +31,8 @@ The Player SDK requires iOS 8.0 or above.
 
 ### Step 1: Create credentials for your mobile app
 
-Log-in into your account, navigate to the Dashboard and select ["API/SDK access"](https://www.ustream.tv/dashboard/account/api-access)
-under the Account menu.
+Log-in into your account, navigate to the [Dashboard] and select ["API/SDK access"]
+under the "Integrations & Apps" menu.
 
 Click on "Create new credentials" and provide a name for your application in the "Application name" field. Your credentials will be listed under the "API/SDK access" page based on this name.
 
@@ -235,4 +235,6 @@ If you want to provide more languages and/or redefine texts, include the keys li
 
 See the [CHANGELOG.md] for changes.
 
+[Dashboard]: https://www.ustream.tv/dashboard
+["API/SDK access"]: https://www.ustream.tv/dashboard/integrations/api-access
 [CHANGELOG.md]: CHANGELOG
