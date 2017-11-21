@@ -51,11 +51,15 @@ Every time you create an instance of the `UstreamPlayerFactory` you have to use 
 
 #### Generate your Key Hash
 
-There are two types of certificates that your application can be signed with. 
+There are three types of certificates that your application can be signed with.
 Each certificate generates a different **Key Hash**.
 
 *   The **debug key** is used for development and testing (debug build).
-*   The **release key** is used to sign your app when you release it to the Google Play Store (release build). 
+*   The **release key** (or App Signing key) is used to sign your app when you release it to the Google Play Store (release build).
+*   (Optional) The third type has been recently introduced with **Google Play App Signing**.
+Using this feature when you upload your release build to the Play Store Google will sign it again with your true release key.
+Therefore you will have to generate key hashes for all three of your keys (Debug key, Upload key, App Signing key - managed by Google).
+For more information visit: [Google Play App Signing](https://support.google.com/googleplay/android-developer/answer/7384423)
 
 
 There are two ways to generate your **Key Hash**:
