@@ -15,7 +15,8 @@ This document describes the basic steps to make a mobile app using the Ustream P
 Before going into details, please note that document assumes the following:
 *   You have a registered user at [ustream.tv](http://www.ustream.tv/).
 *   Your Ustream user is entitled to use the Ustream Player SDK specifically. Log-in to [Dashboard], 
-and check ["API/SDK access"] under the "Account" section. 
+and check ["API/SDK access"] under the "Integrations & Apps" section.
+
 If you have questions, please [contact us](https://www.ustream.tv/enterprise-video/contact).
 
 ### Development prerequisites
@@ -50,11 +51,15 @@ Every time you create an instance of the `UstreamPlayerFactory` you have to use 
 
 #### Generate your Key Hash
 
-There are two types of certificates that your application can be signed with. 
+There are three types of certificates that your application can be signed with.
 Each certificate generates a different **Key Hash**.
 
 *   The **debug key** is used for development and testing (debug build).
-*   The **release key** is used to sign your app when you release it to the Google Play Store (release build). 
+*   The **release key** (or App Signing key) is used to sign your app when you release it to the Google Play Store (release build).
+*   (Optional) The third type has been recently introduced with **Google Play App Signing**.
+Using this feature when you upload your release build to the Play Store Google will sign it again with your true release key.
+Therefore you will have to generate key hashes for all three of your keys (Debug key, Upload key, App Signing key - managed by Google).
+For more information visit: [Google Play App Signing](https://support.google.com/googleplay/android-developer/answer/7384423)
 
 
 There are two ways to generate your **Key Hash**:
@@ -89,7 +94,7 @@ There are two ways to generate your **Key Hash**:
 #### Enter credentials
 
 * Log-in into your account, navigate to the [Dashboard] and select ["API/SDK access"] 
-under the "Account" menu.
+under the "Integrations & Apps" menu.
 
 * In the "Mobile Player SDK" section, click on "Create new credentials" and provide a name for your application in the 
 "Application name" field. Your credentials will be listed under the ["API/SDK access"] page based on this name.
@@ -97,9 +102,9 @@ under the "Account" menu.
 * Select Android in the "Platform" drop-down. Enter your **Key Hash** and **Google Play Package Name** in the respective fields.
 
 * After you completed all fields, hit "Save" to generate your Ustream Player SDK for Android credentials. Make sure that 
-the "Key Hash" and "Google Play Package Name" are introduced correctly, as you will have no possibility to update them later. 
-If you accidentally saved wrong values, start the process from the beginning and create new credentials with the correct 
-values.
+the "Key Hash" and "Google Play Package Name" are introduced correctly.
+If you accidentally saved wrong values, you can edit or delete your credentials,
+but beware as this will break any existing applications relying on those credentials.
 
 ### Step 2: Download SDK package
 
@@ -689,5 +694,5 @@ containing the most likely needed strings.
 See the [CHANGELOG.md] for changes.
 
 [Dashboard]: https://www.ustream.tv/dashboard
-["API/SDK access"]: https://www.ustream.tv/dashboard/account/api-access
+["API/SDK access"]: https://www.ustream.tv/dashboard/integrations/api-access
 [CHANGELOG.md]: CHANGELOG

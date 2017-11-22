@@ -12,8 +12,8 @@ This document describes the basic steps to make a mobile app using the Player SD
 
 Before going into details, please note that document assumes the following:
 *   You have a registered user at [ustream.tv](http://www.ustream.tv/).
-*   Your Ustream user is entitled to use the Ustream Player SDK specifically. Log-in to [Dashboard](https://www.ustream.tv/dashboard), 
-and check ["API/SDK access"](https://www.ustream.tv/dashboard/account/api-access) under the "Account" section.
+*   Your Ustream user is entitled to use the Ustream Player SDK specifically. Log-in to [Dashboard],
+and check ["API/SDK access"] under the "Integrations & Apps" section.
 
 If you have questions, please [contact us](https://www.ustream.tv/enterprise-video/contact).
 
@@ -31,15 +31,16 @@ The Player SDK requires tvOS 9.0 or above.
 
 ### Step 1: Create credentials for your mobile app
 
-Log-in into your account, navigate to the Dashboard and select ["API/SDK access"](https://www.ustream.tv/dashboard/account/api-access)
-under the Account menu.
+Log-in into your account, navigate to the [Dashboard] and select ["API/SDK access"]
+under the "Integrations & Apps" menu.
 
 Click on "Create new credentials" and provide a name for your application in the "Application name" field. Your credentials will be listed under the "API/SDK access" page based on this name.
 
 Select tvOS in the "Platform" drop-down. Enter the "bundle id" in its respective field.
 
-After you completed all fields, hit "Save" to generate your SDK credentials. Make sure that the "bundle id" is introduced correctly, as you will have no possibility to update them later. If you
-accidentally saved wrong values, start the process from the beginning and create new credentials with the correct values.
+After you completed all fields, hit "Save" to generate your SDK credentials. Make sure that the "bundle id" is introduced correctly.
+If you accidentally saved wrong values, you can edit or delete your credentials,
+but beware as this will break any existing applications relying on those credentials.
 
 ### Step 2: Download SDK package
 
@@ -235,4 +236,6 @@ If you want to provide more languages and/or redefine texts, include the keys li
 
 See the [CHANGELOG.md] for changes.
 
+[Dashboard]: https://www.ustream.tv/dashboard
+["API/SDK access"]: https://www.ustream.tv/dashboard/integrations/api-access
 [CHANGELOG.md]: CHANGELOG
