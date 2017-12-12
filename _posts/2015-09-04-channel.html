@@ -34,7 +34,12 @@ categoryItemLabel: Read the documentation
 				<td>detail_level</td>
 				<td>string</td>
 				<td>OPTIONAL</td>
-				<td>Verbosity level. Possible value: "minimal". In case of minimal verbosity level the result set is limited to id, title, picture, owner and locks data. If the channel is protected (see <a href="#security_10">security</a> section), only minimal data can be retrieved without a valid access token.</td>
+				<td>
+					Verbosity level. Possible values: "minimal", "owner". In case of the minimal verbosity level, the result set is limited to the
+					"id", "title", "picture", "owner" and "locks" fields. If the channel is protected (see <a href="#security_10">security</a> section),
+					only minimal data can be retrieved without a valid access token. The "owner" detail level always requires a valid access token,
+					and it will also return more sensitive information about the channel (for example the DHLS link if this feature is available for you).
+				</td>
 			</tr>
 		</table>
 
@@ -53,6 +58,10 @@ categoryItemLabel: Read the documentation
 		"status": "offair",
 		"last_broadcast_at": 1400000000,
 		"tinyurl": "http://ustre.am/asdasd1",
+		"stream": {
+			"hls": "http://iphone-streaming.ustream.tv/uhls/1111/streams/live/iphone/playlist.m3u8",
+			"dhls": "http://1111-channel-hls.ums.ustream.tv/playlist/directhls/channel/1111/playlist.m3u8?sgn=123",
+		},
 		"stats": {
 			"viewer_total": 10000000,
 			"viewer": 1000
@@ -123,6 +132,11 @@ categoryItemLabel: Read the documentation
 				<td>stats.viewer</td>
 				<td>int</td>
 				<td>Current viewer number when channel is live</td>
+			</tr>
+			<tr>
+				<td>stream.dhls</td>
+				<td>string</td>
+				<td>A direct HTTP link to the HLS stream if this feature is available for you and the "owner" detail_level was specified.</td>
 			</tr>
 			<tr>
 				<td>locks</td>
@@ -3067,7 +3081,13 @@ command=stop</code></pre>
 				<td>detail_level</td>
 				<td>string</td>
 				<td>OPTIONAL</td>
-				<td>Verbosity level. Possible value: "minimal". In case of minimal verbosity level the result set is limited to id, and links data. If the channel is protected (see <a href="#security_10">security</a> section), only minimal data can be retrieved without a valid access token.</td>
+				<td>
+					Verbosity level. Possible values: "minimal", "owner". In case of the minimal verbosity level, the result
+					set is limited to the "id", and "links" fields. If the channel is protected (see <a href="#security_10">security</a> section),
+					only minimal data can be retrieved without a valid access token. By default (by omitting or leaving the parameter empty)
+					all insensitive information will be retrieved. The "owner" detail level always requires a valid access token,
+					and it will also return more sensitive information about the video (for example the DHLS link if this feature is available for you).
+				</td>
 			</tr>
 		</table>
 
@@ -3091,6 +3111,9 @@ command=stop</code></pre>
 		},
 		"media_urls": {
 			"flv": "http://tcdn.ustream.tv/video/111"
+		},
+		"stream": {
+			"dhls": "http://111-recorded-hls.ums.ustream.tv/playlist/directhls/recorded/111/playlist.m3u8?sgn=123",
 		},
 		"links": {
 			"channel": {
@@ -3144,6 +3167,11 @@ command=stop</code></pre>
 				<td>file_size</td>
 				<td>string</td>
 				<td>Video file size in bytes</td>
+			</tr>
+			<tr>
+				<td>stream.dhls</td>
+				<td>string</td>
+				<td>A direct HTTP link to the HLS stream if this feature is available for you and the "owner" detail_level was specified.</td>
 			</tr>
 		</table>
 
