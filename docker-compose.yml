@@ -1,0 +1,12 @@
+version: '2'
+
+services:
+    api-docs:
+        image: jekyll/jekyll
+        container_name: api-docs
+        ports:
+          - 4000:4000
+        volumes:
+          - .:/srv/jekyll
+        working_dir: /srv/jekyll
+        command: jekyll serve
