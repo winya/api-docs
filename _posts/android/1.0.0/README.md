@@ -568,7 +568,7 @@ public interface MetaDataListener {
 
 ##### MediaTrackChangeListener
 
-An optional listener to observe track changes in the player (audio, video, ).
+An optional listener to observe track changes in the player (audio, video, text).
 
 * `onMediaTracksChanged(MediaTrackGroupHolder mediaTrackGroups)`
         - called when the tracks become available or change during playback.
@@ -577,7 +577,7 @@ An optional listener to observe track changes in the player (audio, video, ).
 * `onAudioTrackSelectionChanged(@Nullable MediaTrackSelection trackSelection)`
         - called when the selected audio track is changed
 * `onTextTrackSelectionChanged(@Nullable MediaTrackSelection trackSelection)`
-        - called when the selected subtitle (closed caption) track is changed
+        - called when the selected text (subtitle / closed caption) track is changed
 * `onVideoFormatChanged(MediaFormat videoFormat)`
         - called when the video format of the selected video track is changed
 
@@ -635,6 +635,42 @@ this content, or your channel has reached its maximum concurrent viewer number. 
 later, to resolve the former the channel's settings have to be modified.
 
 These callbacks are found in `tv.ustream.player.api.ErrorListener`.
+
+## Changing tracks
+
+Video streams can contain multiple tracks of different types (usually Video, Audio, Text). The player SDK lets you control which of these
+tracks are selected and presented to the user. See this document's `MediaTrackChangeListener` section or the corresponding javadoc for
+API reference.
+
+### Usage
+
+- Set a `MediaTrackChangeListener` on an initialized player, call `attach()` when appropriate.
+- When the player determines the available track groups
+it will report it through the listener's `void onMediaTracksChanged(MediaTrackGroupHolder mediaTrackGroups)` callback.
+- The `mediaTrackGroups` object holds the available media tracks for each track type. Use these to instruct the player's specific renderers to
+play a certain media track. A renderer can also be disabled.
+
+**Example**: Selecting a subtitle / closed captions track
+```java
+UstreamPlayerFactory ustreamPlayerFactory = new UstreamPlayerFactory(API_KEY, activity);
+ContentDescriptor contentDescriptor = new ContentDescriptor(ContentType.RECORDED, 123456L);
+UstreamPlayer player = ustreamPlayerFactory.createUstreamPlayer(contentDescriptor.toString());
+player.initWithContent(contentDescriptor);
+player.setMediaTracksChangeListener(mediaTrackChangeListener);
+player.attach();
+
+//... Inside the MediaTrackChangeListener
+public void onMediaTracksChanged(MediaTrackGroupHolder mediaTrackGroups) {
+    availableTextTracks = trackGroupHolder.textTracks;
+    // Update the subtitle selector with the available subtitles
+}
+
+//... When the user selects a subtitle track from the selector:
+void selectTrack(MediaTrack mediaTrack) {
+    ustreamPlayer.selectTrackForRenderer(mediaTracks, null);
+}
+```
+For more detailed and general examples please consult the provided sample app.
 
 ## Pre-buffering
 
