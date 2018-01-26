@@ -111,7 +111,7 @@ categoryItemLabel: Read the documentation
 			<tr>
 				<td>url</td>
 				<td>string</td>
-				<td>Channel url name</td>
+				<td>Channel URL name</td>
 			</tr>
 			<tr>
 				<td>status</td>
@@ -247,7 +247,7 @@ title=API+Testing+Channel</code></pre>
 		<h6>Possible negative responses</h6>
 		<ul>
 			<li><strong>401 Unauthorized</strong>: The provided Access Token is missing, revoked, expired or malformed</li>
-			<li><strong>409 Conflict</strong>: The channel title or the channel url is already in use</li>
+			<li><strong>409 Conflict</strong>: The channel title or the channel URL is already in use</li>
 			<li><strong>400 Bad Request</strong>: The channel title is invalid</li>
 			<li><strong>503 Service Unavailable</strong>: There is a temporary error on the server which makes it impossible to serve the request</li>
 		</ul>
@@ -356,7 +356,7 @@ title=API+Testing+Channel</code></pre>
 		</table>
 
 		<h3>Listing the user's channels</h3>
-		<p>Get a detailed list of the user's channels, including live status, thumbnail, and mobile and broadcast urls</p>
+		<p>Get a detailed list of the user's channels, including live status, thumbnail, and mobile and broadcast URLs</p>
 		<table class="table fill-bg-light1 table-chromeless">
 			<tr>
 				<td class="verb">GET</td>
@@ -1318,7 +1318,7 @@ title=API+Testing+Channel</code></pre>
 			</tr>
 		</table>
 
-		<h4>Get embed lock url whitelist</h4>
+		<h4>Get embed lock URL whitelist</h4>
 		<table class="table fill-bg-light1 table-chromeless">
 			<tr>
 				<td class="verb">GET</td>
@@ -1340,7 +1340,7 @@ title=API+Testing+Channel</code></pre>
 			<tr>
 				<td>allowed_urls</td>
 				<td>array</td>
-				<td>Return the url list from the allowed urls embed lock list no matter where it was set. Return empty array if the lock is FALSE.</td>
+				<td>Return the URL list from the allowed URLs embed lock list no matter where it was set. Return empty array if the lock is FALSE.</td>
 			</tr>
 		</table>
 
@@ -1358,7 +1358,7 @@ title=API+Testing+Channel</code></pre>
 			</tr>
 		</table>
 
-		<h4>Add url to embed lock url whitelist</h4>
+		<h4>Add URL to embed lock URL whitelist</h4>
 		<table class="table fill-bg-light1 table-chromeless">
 			<tr>
 				<td class="verb">POST</td>
@@ -1379,7 +1379,7 @@ title=API+Testing+Channel</code></pre>
 				<td><strong>url</strong></td>
 				<td>string</td>
 				<td>REQUIRED</td>
-				<td>Add the url to the url whitelist</td>
+				<td>Add the url to the URL whitelist</td>
 			</tr>
 		</table>
 		<p>You can only add one URL per API call.</p>
@@ -1406,7 +1406,7 @@ title=API+Testing+Channel</code></pre>
 			</tr>
 		</table>
 
-		<h4>Empty the embed lock url whitelist</h4>
+		<h4>Empty the embed lock URL whitelist</h4>
 		<table class="table fill-bg-light1 table-chromeless">
 			<tr>
 				<td class="verb">DELETE</td>
@@ -1603,7 +1603,7 @@ title=API+Testing+Channel</code></pre>
 				<td><strong>link</strong></td>
 				<td>string</td>
 				<td>REQUIRED</td>
-				<td>Logo click url (valid url, or empty string)</td>
+				<td>Logo click URL (valid URL or empty string)</td>
 			</tr>
 		</table>
 		<p class="note">The type parameter must be passed in the HTTP body, not in the URL.</p>
@@ -3281,7 +3281,7 @@ command=stop</code></pre>
     }
 }</code></pre>
 
-		<p>The property called <strong>download_url</strong> holds the download url could be
+		<p>The property called <strong>download_url</strong> holds the download URL could be
 		used to download the video file.
 		It could be null if the downloadable version is not available.</p>
 
@@ -6696,9 +6696,9 @@ X-Hook-Signature: 61f34d324ac51dde1288825dab2111</code></pre>
 				<th width="100%">Description</th>
 			</tr>
 			<tr>
-				<td>rtmp_urls</td>
-				<td>array of string</td>
-				<td>List of RTMP ingest urls to the channels</td>
+				<td>rtmp_url</td>
+				<td>string</td>
+				<td>Ingest URL of the channel</td>
 			</tr>
 			<tr>
 				<td>channel_key</td>
