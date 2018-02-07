@@ -1,13 +1,13 @@
 ---
 layout: markdown
-title: Player SDK for Android (v1.0)
-weight: 30
+title: Player SDK for Android - Changelog
+weight: 3
 category: player-sdk
 categoryItemType: documentation
-categoryItemIsShown: 1
+categoryItemIsShown: 0
 categoryItemWidth: 6
 categoryItemDescription:
 categoryItemLabel: Read the documentation
-permalink: /player-sdk/android/latest/
+permalink: /player-sdk/android/latest/CHANGELOG
 ---
-{% include_relative 1.0.0/README.md  %}
+{% include_relative 1.1.0/CHANGELOG.md  %}
