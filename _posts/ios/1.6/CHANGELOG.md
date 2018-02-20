@@ -2,9 +2,9 @@
 
 ## [1.6] - 2018-02-12
 ### Added
-- Added Doubleclick For Publishers support.
+- Added DoubleClick for Publishers support.
 - Added background playback support controlled by the `continuePlaybackInBackground` property.
-- Added a 'defaultSubtitle' property in order to expose the stream's default subtitle.
+- Added a `defaultSubtitle` property in order to expose the stream's default subtitle.
 
 ### Removed
 - Removed localization from the framework. Application developer can still localize the SDK texts based on the keys documented in readme.

@@ -183,10 +183,10 @@ Remarks:
 - If `playerForMedia:` is called multiple times with the same `USMediaDescriptor` it will return the same player instance. You should create a different `USMediaDescriptor` object for each occurrences in order to get different players for them.
 
 ## DFP Integration
-The SDK supports serving ads with Google's DoubleCklick for Publishers (DFP) service.
+The SDK supports serving ads with Google's DoubleClick for Publishers (DFP) service.
 
 Usage:
-1. Add Google IMA SDK for iOS to the project either by Cocoapods or manually as it is described in [IMA SDK's developer documentation](https://developers.google.com/interactive-media-ads/docs/sdks/ios/).
+1. Add Google IMA SDK for iOS to the project either by CocoaPods or manually as it is described in [IMA SDK's developer documentation](https://developers.google.com/interactive-media-ads/docs/sdks/ios/).
 2. Generate Google IMA tag on [DFP Dashboard](https://www.google.com/dfp) under Inventory/units.
 3. Create a USUstreamPlayer instance.
 4. Configure ad serving using `configureAdServiceWithGoogleIMATag:customMetadata:minAdFreeTimeInterval:allowPreroll:` or `configureAdServiceWithGoogleIMATag:customMetadata:cuePoints:allowPreroll:`.
@@ -194,7 +194,7 @@ Usage:
 
 ## Localization
 
-The SDK by default provides all texts in enlish-only.
+The SDK by default provides all texts in Enlish-only.
 If you want to support other languages and/or redefine texts, include the keys listed below into the localization files of your application. If you don’t redefine these keys, then the SDK will fall back to the localizations included in the resource bundle of the SDK.
 
 | Keys                                  | English values                                                                       |
