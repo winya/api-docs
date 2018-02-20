@@ -199,7 +199,7 @@ Usage:
 
 ## Localization
 
-The SDK by default provides all texts in English-only.
+The SDK by default provides all texts in English only.
 If you want to support other languages and/or redefine texts, include the keys listed below into the localization files of your application. If you don’t redefine these keys, then the SDK will fall back to the localizations included in the resource bundle of the SDK.
 
 | Keys                                  | English values                                                                       |
