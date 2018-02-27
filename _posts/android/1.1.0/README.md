@@ -121,6 +121,10 @@ application uses the Player SDK as an AAR file found in the `/libs` folder in th
 ### Step 4: Create (or open) your project
 
 Open the project that you would like to integrate the Ustream Player SDK in.
+Update the `AndroidManifest.xml` of your application with the following permission:
+```xml
+<uses-permission android:name="android.permission.INTERNET" />
+```
 
 ### Step 5: Add the SDK to the project
 
@@ -135,9 +139,13 @@ repositories {
 }
 
 dependencies {
-    compile 'com.google.code.findbugs:jsr305:3.0.1'
+    compile 'com.google.code.findbugs:jsr305:3.0.2'
     compile 'org.slf4j:slf4j-api:1.7.7'
-    compile 'tv.ustream.player:ibm-player-sdk-android:1.1.0@aar'
+    compile 'tv.ustream.player:ibm-player-sdk-android:1.1.1@aar'
+    // ExoPlayer dependencies
+    compile 'com.google.android.exoplayer:exoplayer-core:2.6.1'
+    compile 'com.google.android.exoplayer:exoplayer-ui:2.6.1'
+    compile 'com.google.android.exoplayer:exoplayer-hls:2.6.1'
 }
 ```
 
@@ -766,7 +774,7 @@ Additionally any time after creation the user can set:
 #### Example usage
 Add the Ads Plugin to you build put the *aar* file in your libs folder and add these lines to your gradle file (Google IMA SDK is a dependency of the Ads Plugin):
 ```gradle
-compile 'tv.ustream.player:ibm-player-sdk-android-plugin-ads:1.1.0@aar'
+compile 'tv.ustream.player:ibm-player-sdk-android-plugin-ads:1.1.1@aar'
 compile 'com.google.ads.interactivemedia.v3:interactivemedia:3.7.4'
 compile 'com.google.android.gms:play-services-ads:11.8.0'
 ```
@@ -786,6 +794,22 @@ if (!ustreamPlayer.isInitialized()) {
     final AdScheduleRule scheduleRule = new FixedIntervalRule(true, 60000); // Schedules a pre-roll and inserts mid-rolls after 60 seconds of playback time
     ustreamPlayer.initWithContent(contentDescriptor, new AdsMediaPlayerModuleAndroid(/* AdsStateListener */this, DFP_TAG_URL, scheduleRule));
 }
+```
+
+In your application's layout file use `tv.ustream.player.android.plugin.ads.AdsPlayerView` (instead of regular `tv.ustream.player.android.PlayerView`).
+```xml
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black">
+
+    <tv.ustream.player.android.plugin.ads.AdsPlayerView
+        android:id="@+id/playerview"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_gravity="center"/>
+
+</FrameLayout>
 ```
 
 Retrieve the plugin after init:
@@ -831,6 +855,7 @@ Everything else works just like it did before, no other code modification is req
 - Ads Plugin does not support configuration changes, use `android:configChanges="orientation|screenSize|keyboardHidden"` in your player activity.
 This limitations is imposed by Google IMA SDK on which we depend to show ads.
 - Ads Plugin uses it's own PlayerView: `tv.ustream.player.android.plugin.ads.AdsPlayerView`
+- Seeking while an ad is playing will seek the original content, as ad seeking is not possible
 
 ## Changelog
 

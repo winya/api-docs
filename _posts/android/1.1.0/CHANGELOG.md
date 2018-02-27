@@ -1,4 +1,18 @@
 # Changelog
+
+## [1.1.1] - 2018-02-27
+### Changed
+- Updated external dependency: ExoPlayer to version 2.6.1. Please update your `build.gradle` files with:
+```gradle
+    compile 'com.google.android.exoplayer:exoplayer-core:2.6.1'
+    compile 'com.google.android.exoplayer:exoplayer-ui:2.6.1'
+    compile 'com.google.android.exoplayer:exoplayer-hls:2.6.1'
+```
+- Updated external dependency: JSR-305 library (`com.google.code.findbugs:jsr305`) to version 3.0.2. Please update your `build.gradle` files.
+- Fixed a bug where calling `UstreamPlayer.play()` after `UstreamPlayer.disconnect()` on the player while an ad is playing would start
+the video from the beginning instead of the last known position.
+- Seeking the player while an ad is playing seeks the original content.
+
 ## [1.1.0] - 2018-02-07
 ### Added
 - Plugin support for the SDK, through replaceable `MediaPlayerModule`s for custom player behaviour.
@@ -10,8 +24,8 @@ To use the plugin put: the *aar* file in your libs folder and add these lines to
     compile 'com.google.ads.interactivemedia.v3:interactivemedia:3.7.4'
     compile 'com.google.android.gms:play-services-ads:11.8.0'
 ```
-- `UstreamPlayer`'s `initWithContent` can now be provided with a custom `MediaPlayerModule` via an optional parameter.
-- `getMediaPlayerPlugin` to `UstreamPlayer` to query the current `MediaPlayerModule`. You will need to cast this instance
+- `UstreamPlayer`'s `initWithContent(...)` can now be provided with a custom `MediaPlayerModule` via an optional parameter.
+- Introduced `getMediaPlayerPlugin()` to `UstreamPlayer` to query the current `MediaPlayerModule`. You will need to cast this instance
 to the actual type that was set in `initWithContent(ContentDescriptor, MediaPlayerModule)` before use.
 - `MediaPlayerModule` interface to encapsulate media player plugins. It's only method is `getSupportedPlayerViewType()`
 which describes the `PlayerView` that the plugin is compatible with.
@@ -28,7 +42,7 @@ to your build.gradle file:
 ## [1.0.2] - 2017-11-16
 ### Changed
 - Moved `ContentDescriptor.java` and `ContentType.java` to package `tv.ustream.content`. Please re-import these classes.
-- Interface `tv.ustream.player.android.api.UstreamPlayerAndroid` to `tv.ustream.player.api.UstreamPlayer.java`. Just rename where used, and import.
+- Renamed interface `tv.ustream.player.android.api.UstreamPlayerAndroid` to `tv.ustream.player.api.UstreamPlayer`. Just rename where used, and import.
 - `UstreamPlayer.setPlayerView(playerView)` now accepts `tv.ustream.player.api.PlayerView` interface.
 However `tv.ustream.player.android.PlayerView` should still be used in the XML layout. This is just cosmetics, no change is required on your end.
 - Fixed occasional connection errors when reconnecting after a reject.
@@ -146,6 +160,7 @@ saved anymore.
 after initialization.
 - Bugfixes and stability improvements
 
+[1.1.1]: ../1.1.0/
 [1.1.0]: ../1.1.0/
 [1.0.2]: ../1.0.0/
 [0.11.0]: ../0.11.0/
