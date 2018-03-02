@@ -1,4 +1,4 @@
-# Ustream Player SDK for iOS v1.5.1
+# Ustream Player SDK for iOS v1.6
 
 ## Introduction
 
