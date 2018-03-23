@@ -15,7 +15,7 @@ Before going into details, please note that document assumes the following:
 *   You have a registered user at [ustream.tv](http://www.ustream.tv/).
 *   Your Ustream user is entitled to use the Ustream Player SDK specifically. Log-in to [Dashboard], 
 and check ["API/SDK access"] under the "Account" section. 
-If you have questions, please [contact us](https://www.ustream.tv/enterprise-video/contact).
+If you have questions, please [contact us](https://video.ibm.com/enterprise-video/contact).
 
 ### Development prerequisites
 

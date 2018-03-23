@@ -15,7 +15,7 @@ Before going into details, please note that document assumes the following:
 *   you have a registered user at [IBM Cloud Video](http://www.ustream.tv)
 *   your IBM Cloud Video user is entitled to use the Player SDK specifically. Log-in to [Dashboard],
 and check ["API/SDK access"] under the "Integrations & Apps" section.
-If you have questions, please [contact us](https://www.ustream.tv/enterprise-video/contact).
+If you have questions, please [contact us](https://video.ibm.com/enterprise-video/contact).
 
 ### Development prerequisites
 

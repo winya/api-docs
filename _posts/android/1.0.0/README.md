@@ -17,7 +17,7 @@ Before going into details, please note that document assumes the following:
 *   Your Ustream user is entitled to use the Ustream Player SDK specifically. Log-in to [Dashboard], 
 and check ["API/SDK access"] under the "Integrations & Apps" section.
 
-If you have questions, please [contact us](https://www.ustream.tv/enterprise-video/contact).
+If you have questions, please [contact us](https://video.ibm.com/enterprise-video/contact).
 
 ### Development prerequisites
 
