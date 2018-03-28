@@ -1649,22 +1649,7 @@ title=API+Testing+Channel</code></pre>
 		<p class="note">Only 0 is supported as LOGO_ID currently.</p>
 
 		<h6>Request</h6>
-		<p>The logo must be passed in the HTTP body.</p>
-
-		<table class="table responsive">
-			<tr>
-				<td class="verb">Supported image types</td>
-				<td width="100%">image/jpeg, image/png, image/gif</td>
-			</tr>
-			<tr>
-				<td class="verb">Maximum width</td>
-				<td>170px</td>
-			</tr>
-			<tr>
-				<td class="verb">Maximum height</td>
-				<td>170px</td>
-			</tr>
-		</table>
+		<p>The logo must be passed in the HTTP body. Supported image types are image/jpeg, image/png, image/gif, recommended size is maximum 288 x 96 pixels. Maximum file size is 10MB</p>
 
 		<h6>Response</h6>
 		<p>On success a response with HTTP status 200 OK is returned.</p>
