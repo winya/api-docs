@@ -4993,6 +4993,98 @@ We are in New York City
 	<section>
 		<h2>Playlists</h2>
 
+		<h3>Playlist settings</h3>
+
+		<p>You can check whether playlists are enabled or disabled on the channel page.</p>
+
+		<table class="table fill-bg-light1 table-chromeless">
+			<tr>
+				<td class="verb">GET</td>
+				<td><a>https://api.ustream.tv/channels/CHANNEL_ID/settings/playlists.FORMAT</a> (format can be json or xml)</td>
+			</tr>
+		</table>
+
+		<h6>Response</h6>
+		<p>A successful response contains the "is_enabled" key.</p>
+		<p>Example:</p>
+		<pre><code class="json">{
+    "success": true,
+    "is_enabled": true
+}</code></pre>
+
+		<h6>Error codes</h6>
+		<table class="table responsive">
+			<tr>
+				<th>error value</th>
+				<th>HTTP response code</th>
+				<th width="100%">Error conditions</th>
+			</tr>
+			<tr>
+				<td>invalid_token</td>
+				<td>401 Unauthorized</td>
+				<td>The provided Access Token is missing, revoked, expired or malformed</td>
+			</tr>
+			<tr>
+				<td>permission_denied</td>
+				<td>403 Permission denied</td>
+				<td>The authenticated user does not have access to the channel.</td>
+			</tr>
+		</table>
+
+		<h3>Enabling or disabling playlists on a channel</h3>
+
+		<p>By turning this feature on, playlists will be visible on your channel page.</p>
+
+		<table class="table fill-bg-light1 table-chromeless">
+			<tr>
+				<td class="verb">PUT</td>
+				<td><a>https://api.ustream.tv/channels/CHANNEL_ID/settings/playlists.FORMAT</a> (format can be json or xml)</td>
+			</tr>
+		</table>
+
+		<h6>Parameters</h6>
+		<table class="table responsive">
+			<tr>
+				<th>parameter</th>
+				<th>type</th>
+				<th>importance</th>
+				<th width="100%">Description</th>
+			</tr>
+			<tr>
+				<td><strong>value</strong></td>
+				<td>boolean</td>
+				<td>REQUIRED</td>
+				<td>Enable or disable playlists on the given channel.</td>
+			</tr>
+		</table>
+
+		<h6>Response</h6>
+		<p>On success a response with HTTP status 200 OK is returned.</p>
+
+		<h6>Error codes</h6>
+		<table class="table responsive">
+			<tr>
+				<th>error value</th>
+				<th>HTTP response code</th>
+				<th width="100%">Error conditions</th>
+			</tr>
+			<tr>
+				<td>bad_request</td>
+				<td>400 Bad request</td>
+				<td>Invalid value was supplied: it can be either 'true' or 'false'.</td>
+			</tr>
+			<tr>
+				<td>invalid_token</td>
+				<td>401 Unauthorized</td>
+				<td>The provided Access Token is missing, revoked, expired or malformed</td>
+			</tr>
+			<tr>
+				<td>permission_denied</td>
+				<td>403 Permission denied</td>
+				<td>The authenticated user does not have access to the channel.</td>
+			</tr>
+		</table>
+
 		<h3>Listing the playlists of a channel</h3>
 		<table class="table fill-bg-light1 table-chromeless">
 			<tr>
@@ -5030,7 +5122,7 @@ We are in New York City
 		</table>
 
 		<h6>Response</h6>
-		<p>Key-value pairs under a "playlists" key. Example:</p>
+		<p>A list of key-value pairs under a "playlists" key. Example:</p>
 		<pre><code class="json">{
 	"playlists": [
 		{
