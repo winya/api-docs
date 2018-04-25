@@ -2929,7 +2929,14 @@ command=stop</code></pre>
 			"file_size": "120000",
 			"views": 0,
 			"thumbnail": {
-				"default": "https://ustvstaticcdn1-a.akamaihd.net/111.jpg"
+				"default": "https://ustvstaticcdn1-a.akamaihd.net/111.jpg",
+				"image_192x108": "https://ustvstaticcdn1-a.akamaihd.net/111.jpg",
+				"image_112x63": "https://ustvstaticcdn1-a.akamaihd.net/111.jpg",
+				"image_128x72": "https://ustvstaticcdn1-a.akamaihd.net/111.jpg",
+				"image_256x144": "https://ustvstaticcdn1-a.akamaihd.net/111.jpg",
+				"image_320x180": "https://ustvstaticcdn1-a.akamaihd.net/111.jpg",
+				"image_640x360": "https://ustvstaticcdn1-a.akamaihd.net/111.jpg",
+				"image_1920x1080": "https://ustvstaticcdn1-a.akamaihd.net/111.jpg"
 			},
 			"media_urls": {
 				"flv": "http://tcdn.ustream.tv/video/111"
@@ -4986,12 +4993,11 @@ We are in New York City
 	<section>
 		<h2>Playlists</h2>
 
-		<h3>List the user's playlists</h3>
-		<p>Get the playlists of the authenticated user.</p>
+		<h3>Listing the playlists of a channel</h3>
 		<table class="table fill-bg-light1 table-chromeless">
 			<tr>
 				<td class="verb">GET</td>
-				<td><a>https://api.ustream.tv/playlists.FORMAT</a> (format can be json or xml)</td>
+				<td><a>https://api.ustream.tv/channels/CHANNEL_ID/playlists.FORMAT</a> (format can be json or xml)</td>
 			</tr>
 		</table>
 
@@ -5031,6 +5037,16 @@ We are in New York City
 			"id": "111",
 			"title": "Title of a playlist",
 			"total_duration": "176.256",
+			"thumbnail": {
+				"default": "https://ustvstaticcdn1-a.akamaihd.net/111.jpg",
+				"image_192x108": "https://ustvstaticcdn1-a.akamaihd.net/111.jpg",
+				"image_112x63": "https://ustvstaticcdn1-a.akamaihd.net/111.jpg",
+				"image_128x72": "https://ustvstaticcdn1-a.akamaihd.net/111.jpg",
+				"image_256x144": "https://ustvstaticcdn1-a.akamaihd.net/111.jpg",
+				"image_320x180": "https://ustvstaticcdn1-a.akamaihd.net/111.jpg",
+				"image_640x360": "https://ustvstaticcdn1-a.akamaihd.net/111.jpg",
+				"image_1920x1080": "https://ustvstaticcdn1-a.akamaihd.net/111.jpg"
+			},
 			"created_at": 1484127917,
 			"updated_at": 1486569501,
 			"channel_id": 11223344
@@ -5055,8 +5071,8 @@ We are in New York City
 
 		<p>The paging information can be found under the "paging" key. Example:</p>
 		<pre><code class="json">"paging": {
-	"previous": "https://api.ustream.tv/playlists.json?pagesize=PAGE_SIZE&page=PREVIOUS_PAGE",
-	"next": "https://api.ustream.tv/playlists.json?pagesize=PAGE_SIZE&page=NEXT_PAGE",
+	"previous": "https://api.ustream.tv/channels/CHANNEL_ID/playlists.json?pagesize=PAGE_SIZE&page=PREVIOUS_PAGE",
+	"next": "https://api.ustream.tv/channels/CHANNEL_ID/playlists.json?pagesize=PAGE_SIZE&page=NEXT_PAGE",
 	"page_count": 8,
 	"item_count": 38
 }</code></pre>
@@ -5069,18 +5085,17 @@ We are in New York City
 				<th width="100%">Error conditions</th>
 			</tr>
 			<tr>
-				<td>invalid_token</td>
-				<td>401 Authorization required</td>
-				<td>The provided Access Token is missing, revoked, expired or malformed</td>
+				<td>not_found</td>
+				<td>404 Not found</td>
+				<td>The channel does not exists or the playlists are not shown on the channel page.</td>
 			</tr>
 		</table>
 
-		<h3>Create a playlist</h3>
-		<p>Create a new playlist for the authenticated user.</p>
+		<h3>Creating a playlist</h3>
 		<table class="table fill-bg-light1 table-chromeless">
 			<tr>
 				<td class="verb">POST</td>
-				<td><a>https://api.ustream.tv/playlists.FORMAT</a> (format can be json or xml)</td>
+				<td><a>https://api.ustream.tv/channels/CHANNEL_ID/playlists.FORMAT</a> (format can be json or xml)</td>
 			</tr>
 		</table>
 
@@ -5098,16 +5113,21 @@ We are in New York City
 				<td>REQUIRED</td>
 				<td>The title of the playlist.</td>
 			</tr>
+			<tr>
+				<td>is_enabled</td>
+				<td>int</td>
+				<td>OPTIONAL</td>
+				<td>Whether the playlist is enabled or not. Values: 1 (enabled), 0 (disabled). (1 by default)</td>
+			</tr>
 		</table>
 
-		<p>The request body must contain the playlist title ("title" field).</p>
 		<p>Example:</p>
 		<pre><code class="nohighlight">POST playlists.json HTTP/1.1
 Host: api.ustream.tv
 Authorization: Bearer 3c2573673b782f6544405a22636f3d5d3b6f3950
 Content-Type: application/x-www-form-urlencoded
 
-title=API+Testing+Playlist</code></pre>
+title=API+Testing+Playlist&is_enabled=1</code></pre>
 		<p class="note">The token in the request above is only an example.</p>
 
 		<h6>Successful response</h6>
@@ -5126,17 +5146,6 @@ title=API+Testing+Playlist</code></pre>
 			</tr>
 		</table>
 
-		<pre><code class="json">{
-	"playlist": {
-		"id": "111",
-		"title": "API Testing Playlist",
-		"total_duration": "176.256",
-		"created_at": 1484127917,
-		"updated_at": 1486569501,
-		"channel_id": 11223344
-	}
-}</code></pre>
-
 		<h6>Error codes</h6>
 		<table class="table responsive">
 			<tr>
@@ -5154,10 +5163,20 @@ title=API+Testing+Playlist</code></pre>
 				<td>400 Bad request</td>
 				<td>The playlist title is missing</td>
 			</tr>
+			<tr>
+				<td>permission_denied</td>
+				<td>403 Permission denied</td>
+				<td>The authenticated user does not have access to the channel.</td>
+			</tr>
+			<tr>
+				<td>not_found</td>
+				<td>404 Not found</td>
+				<td>The channel could not be found.</td>
+			</tr>
 		</table>
 
 		<h3>Playlist details</h3>
-		<p>Get the details of a playlist</p>
+		<p>Getting the details of a playlist.</p>
 		<table class="table fill-bg-light1 table-chromeless">
 			<tr>
 				<td class="verb">GET</td>
@@ -5172,6 +5191,16 @@ title=API+Testing+Playlist</code></pre>
 		"id": "111",
 		"title": "Title of a playlist",
 		"total_duration": "176.256",
+		"thumbnail": {
+			"default": "https://ustvstaticcdn1-a.akamaihd.net/111.jpg",
+			"image_192x108": "https://ustvstaticcdn1-a.akamaihd.net/111.jpg",
+			"image_112x63": "https://ustvstaticcdn1-a.akamaihd.net/111.jpg",
+			"image_128x72": "https://ustvstaticcdn1-a.akamaihd.net/111.jpg",
+			"image_256x144": "https://ustvstaticcdn1-a.akamaihd.net/111.jpg",
+			"image_320x180": "https://ustvstaticcdn1-a.akamaihd.net/111.jpg",
+			"image_640x360": "https://ustvstaticcdn1-a.akamaihd.net/111.jpg",
+			"image_1920x1080": "https://ustvstaticcdn1-a.akamaihd.net/111.jpg"
+		},
 		"created_at": 1484127917,
 		"updated_at": 1486569501,
 		"channel_id": 11223344
@@ -5222,7 +5251,7 @@ title=API+Testing+Playlist</code></pre>
 			</tr>
 		</table>
 
-		<h3>Modify a playlist</h3>
+		<h3>Modifying a playlist</h3>
 		<p>Modify an existing playlist.</p>
 		<table class="table fill-bg-light1 table-chromeless">
 			<tr>
@@ -5300,7 +5329,7 @@ title=API+Testing+Playlist+edited</code></pre>
 			</tr>
 		</table>
 
-		<h3>Delete a playlist</h3>
+		<h3>Deleting a playlist</h3>
 		<p>Delete an existing playlist.</p>
 		<table class="table fill-bg-light1 table-chromeless">
 			<tr>
@@ -5355,7 +5384,7 @@ Content-Type: application/x-www-form-urlencoded</code></pre>
 		</table>
 
 		<h3>Playlist videos</h3>
-		<h4>List playlist videos</h4>
+		<h4>List the videos of a playlist</h4>
 		<table class="table fill-bg-light1 table-chromeless">
 			<tr>
 				<td class="verb">GET</td>
@@ -5782,185 +5811,6 @@ position=3</code></pre>
 				<td>The playlist does not exist or the video is not on the playlist</td>
 			</tr>
 		</table>
-
-		<h3>Channel playlists</h3>
-
-		<p>
-			Channel playlists do not directly belong to a user but to a channel and can be shown on the channel page.
-		</p>
-
-		<h4>List the playlists of a channel</h4>
-		<table class="table fill-bg-light1 table-chromeless">
-			<tr>
-				<td class="verb">GET</td>
-				<td><a>https://api.ustream.tv/channels/CHANNEL_ID/playlists.FORMAT</a> (format can be json or xml)</td>
-			</tr>
-		</table>
-
-		<h6>Parameters</h6>
-		<table class="table responsive">
-			<tr>
-				<th>parameter</th>
-				<th>type</th>
-				<th>importance</th>
-				<th width="100%">Description</th>
-			</tr>
-			<tr>
-				<td>page</td>
-				<td>integer</td>
-				<td>OPTIONAL</td>
-				<td>Requested page number (1 by default)</td>
-			</tr>
-			<tr>
-				<td>pagesize</td>
-				<td>integer</td>
-				<td>OPTIONAL</td>
-				<td>Requested page size (50 by default, max 50)</td>
-			</tr>
-			<tr>
-				<td>filter[include_empty]</td>
-				<td>integer</td>
-				<td>OPTIONAL</td>
-				<td>If the value is true then empty playlists will be returned (false by default)</td>
-			</tr>
-		</table>
-
-		<h6>Response</h6>
-		<p>Key-value pairs under a "playlists" key. Example:</p>
-		<pre><code class="json">{
-"playlists": [
-		{
-			"id": "111",
-			"title": "Title of a playlist",
-			"total_duration": "176.256",
-			"created_at": 1484127917,
-			"updated_at": 1486569501,
-			"channel_id": 11223344
-		},
-		...
-	]
-}</code></pre>
-
-		<p>Explanation of some values:</p>
-		<table class="table responsive">
-			<tr>
-				<th>key</th>
-				<th>type</th>
-				<th width="100%">Description</th>
-			</tr>
-			<tr>
-				<td>total_duration</td>
-				<td>string</td>
-				<td>The sum of the duration of the videos added to the playlist in seconds.</td>
-			</tr>
-		</table>
-
-		<p>The paging information can be found under the "paging" key. Example:</p>
-		<pre><code class="json">"paging": {
-	"previous": "https://api.ustream.tv/channels/CHANNEL_ID/playlists.json?pagesize=PAGE_SIZE&page=PREVIOUS_PAGE",
-	"next": "https://api.ustream.tv/channels/CHANNEL_ID/playlists.json?pagesize=PAGE_SIZE&page=NEXT_PAGE",
-	"page_count": 8,
-	"item_count": 38
-}</code></pre>
-
-		<h6>Error codes</h6>
-		<table class="table responsive">
-			<tr>
-				<th>error value</th>
-				<th>HTTP response code</th>
-				<th width="100%">Error conditions</th>
-			</tr>
-			<tr>
-				<td>not_found</td>
-				<td>404 Not found</td>
-				<td>The channel does not exists or the playlists are not shown on the channel page.</td>
-			</tr>
-		</table>
-
-		<h4>Create a channel playlist</h4>
-		<table class="table fill-bg-light1 table-chromeless">
-			<tr>
-				<td class="verb">POST</td>
-				<td><a>https://api.ustream.tv/channels/CHANNEL_ID/playlists.FORMAT</a> (format can be json or xml)</td>
-			</tr>
-		</table>
-
-		<h6>Parameters</h6>
-		<table class="table responsive">
-			<tr>
-				<th>parameter</th>
-				<th>type</th>
-				<th>importance</th>
-				<th width="100%">Description</th>
-			</tr>
-			<tr>
-				<td><strong>title</strong></td>
-				<td>string</td>
-				<td>REQUIRED</td>
-				<td>The title of the playlist.</td>
-			</tr>
-			<tr>
-				<td>is_enabled</td>
-				<td>int</td>
-				<td>OPTIONAL</td>
-				<td>Whether the playlist is enabled or not. Values: 1 (enabled), 0 (disabled). (1 by default)</td>
-			</tr>
-		</table>
-
-		<p>Example:</p>
-		<pre><code class="nohighlight">POST playlists.json HTTP/1.1
-Host: api.ustream.tv
-Authorization: Bearer 3c2573673b782f6544405a22636f3d5d3b6f3950
-Content-Type: application/x-www-form-urlencoded
-
-title=API+Testing+Playlist&is_enabled=1</code></pre>
-		<p class="note">The token in the request above is only an example.</p>
-
-		<h6>Successful response</h6>
-
-		<p>The response will contain the following headers:</p>
-		<table class="table responsive">
-			<tr>
-				<th>Header</th>
-				<th>Type</th>
-				<th width="100%">Meaning</th>
-			</tr>
-			<tr>
-				<td>Location</td>
-				<td>string</td>
-				<td>The URL of the new playlist.</td>
-			</tr>
-		</table>
-
-		<h6>Error codes</h6>
-		<table class="table responsive">
-			<tr>
-				<th>error value</th>
-				<th>HTTP response code</th>
-				<th width="100%">Error conditions</th>
-			</tr>
-			<tr>
-				<td>invalid_token</td>
-				<td>401 Unauthorized</td>
-				<td>The provided Access Token is missing, revoked, expired or malformed</td>
-			</tr>
-			<tr>
-				<td>bad_request</td>
-				<td>400 Bad request</td>
-				<td>The playlist title is missing</td>
-			</tr>
-			<tr>
-				<td>permission_denied</td>
-				<td>403 Permission denied</td>
-				<td>The authenticated user does not have access to the channel.</td>
-			</tr>
-			<tr>
-				<td>not_found</td>
-				<td>404 Not found</td>
-				<td>The channel could not be found.</td>
-			</tr>
-		</table>
-
 	</section>
 
 	<section>
