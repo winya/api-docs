@@ -1094,3 +1094,23 @@ article p + .note {
 	outline: none;
 	-webkit-appearance: none;
 }
+
+/* Cookie button and overlay */
+
+#teconsent {
+	visibility: hidden !important;
+	height: 30px !important;
+	padding: 0 10px !important;
+	line-height: 30px !important;
+	box-shadow: none !important;
+	border-top: 1px solid #e5e5e5;
+	border-left: 1px solid #e5e5e5;
+}
+
+#teconsent > a {
+	font-size: 14px !important;
+}
+
+.truste_box_overlay {
+	box-shadow: none !important;
+}
