@@ -434,7 +434,7 @@ only screen and (min-resolution: 120dpi) {
 	bottom: 0;
 }
 .sidebar .recent-articles a, .sidebar .related a {
-	color: #3388ff;
+	color: #2669bb;
 	text-decoration: none;
 	font-size: 1.3rem;
 	line-height: 1.8rem;
@@ -552,7 +552,7 @@ only screen and (min-resolution: 120dpi) {
 	transition: color .15s ease-out;
 }
 #Footer .footer-nav > li a:hover {
-	color: #38f;
+	color: #2669bb;
 	text-decoration: none;
 }
 #Footer .footer-copy {
@@ -570,7 +570,7 @@ only screen and (min-resolution: 120dpi) {
 	transition: color .15s ease-out;
 }
 #Footer .footer-copy li a:hover {
-	color: #38f;
+	color: #2669bb;
 	text-decoration: none;
 }
 #Footer .footer-copy li a:before {
@@ -611,8 +611,8 @@ only screen and (min-resolution: 120dpi) {
 	line-height: 3.6rem;
 }
 #Footer .social a:hover {
-	border-color:#38f;
-	color: #38f;
+	border-color:#2669bb;
+	color: #2669bb;
 	text-decoration: none;
 }
 /* simple footer */
@@ -701,7 +701,7 @@ only screen and (min-resolution: 120dpi) {
 }
 
 #Footer .footer__secondary li > a {
-	color: #5a5a5a;
+	color: #7c8c9c;
 	text-decoration: none;
 	transition: color .15s ease-out;
 }
