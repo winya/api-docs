@@ -10,4 +10,4 @@ categoryItemDescription:
 categoryItemLabel: Read the documentation
 permalink: /player-sdk/ios/latest/CHANGELOG
 ---
-{% include_relative 1.6.1/CHANGELOG.md  %}
+{% include_relative 1.7.0/CHANGELOG.md  %}

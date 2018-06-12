@@ -1,0 +1,67 @@
+# Changelog
+
+## [1.7.0] - 2018-05-02
+### Added
+- Added multi-audio support with the new `audibleMediaSelectionOptions` property.
+
+### Changed
+- `USSubtitle` got deprecated in favor of `USMediaSelectionOption`.
+- `subtitles` in `USUstreamPlayer` got deprecated in favor of `legibleMediaSelectionOptions`.
+- `defaultSubtitle` in `USUstreamPlayer` got deprecated in favor of `defaultLegibleMediaSelectionOption`.
+- `- (void)selectSubtitle:(USSubtitle *)subtitle` in `USUstreamPlayer` got deprecated in favor of `- (void)selectLegibleMediaSelectionOption:(USMediaSelectionOption *)legibleMediaSelectionOption`.
+- `selectedSubtitle` in `USUstreamPlayer` got deprecated in favor of `selectedLegibleMediaSelectionOption`.
+
+## [1.6.1] - 2018-03-27
+### Changed
+Fixed a bug in access handling which made some videos unavailable in certain conditions.
+
+## [1.6] - 2018-02-12
+### Added
+- Added DoubleClick for Publishers support.
+- Added background playback support controlled by the `continuePlaybackInBackground` property.
+- Added a `defaultSubtitle` property in order to expose the stream's default subtitle.
+
+### Removed
+- Removed localization from the framework. Application developer can still localize the SDK texts based on the keys documented in readme.
+
+## [1.5.1] - 2018-01-16
+### Changed
+- Improved handling of low network bandwidth related player stall events.
+
+## [1.5] - 2017-12-05
+### Added
+- Added new property `isLive` and delegate method `- (void)playerLiveStateDidChange:(USUstreamPlayer *)player` for reporting if the player is playing a channel with live content in it.
+
+### Changed
+- `isPlayingLiveStream` deprecated in `USUstreamPlayer` in favor of `mediaDescriptor.isChannel`.
+- `isLive` deprecated in `USMediaDescriptor` in favor of `isChannel`.
+- `+ (instancetype)liveDescriptorWithID:(NSString *)channelID` deprecated in `USMediaDescriptor` in favor of `+ (instancetype)channelDescriptorWithID:(NSString *)channelID`.
+
+## [1.4] - 2017-10-02
+### Added
+- `USPrebufferingController` to support faster playback start.
+- `USMediaDescriptor` to represent a playable content.
+- `- (void)playMedia:(USMediaDescriptor *)mediaDescriptor` added to `USUstreamPlayer`.
+
+### Changed
+- `- (void)playChannel:(NSString *)channelId` deprecated in `USUstreamPlayer` in favor of `- (void)playMedia:(USMediaDescriptor *)mediaDescriptor`.
+- `- (void)playRecorded:(NSString *)recordedId` deprecated in `USUstreamPlayer` in favor of `- (void)playMedia:(USMediaDescriptor *)mediaDescriptor`.
+- New sample (Newsfeed Sample) added to demonstrate the usage of `USPrebufferingController`.
+
+## [1.3.2] - 2017-09-12
+### Changed
+- Improved the quality of stream versions targeted for low bandwidth networks.
+- Starting playback with a stream version that fits better to network conditions.
+- We fixed a bug related to subtitle handling.
+
+## [1.3] - 2017-07-20
+### Added
+- Added new property `broadcastStartDate` and delegate method `playerBroadcastStartDateDidChange:` for reporting the start date of live broadcasts.
+
+[1.3]: ../1.3/
+[1.3.2]: ../1.3/
+[1.4]: ../1.4/
+[1.5]: ../1.5/
+[1.5.1]: ../1.5.1/
+[1.6]: ../1.6/
+[1.6.1]: ../1.6.1/
