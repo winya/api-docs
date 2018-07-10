@@ -170,7 +170,7 @@ categoryItemLabel: Read the documentation
         <p>Example script in PHP for creating the authentication response when the authentication was successful</p>
 
         <pre><code class="php">
-// We create the array of paramters.
+// We create the array of parameters.
 // The parameters can be anything.
 $userData = [
     "username" => $_GET["user"],
@@ -324,11 +324,15 @@ $json = json_encode($response);
 // which is valid for one hour.
 $expiration = time()+3600;
 
-// We concatenate it to the rest of the paramteres when creating the hash.
+// We concatenate it to the rest of the parameters when creating the hash.
 $hash = md5(implode('|', $userData).'|'.$expiration.'|'.$SHARED_SECRET_KEY);
 
-// We inculde it in the response.
-$response = array_merge($userData, ["hashExpire" => $expiration, "hash" => $hash]);
+// We include it in the response.
+$response = array_chunk(
+    array_merge($userData, ["hashExpire" => $expiration, "hash" => $hash]),
+    1,
+    true
+);
 
 // We encode the output into JSON format.
 $json = json_encode($response);
