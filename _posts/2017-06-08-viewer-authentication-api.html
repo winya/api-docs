@@ -352,9 +352,13 @@ $json = json_encode($response);
 
         <h2>Using viewer authentication with other services</h2>
 
-        <p>Besides the player there are some services (such as chat, QnA) that may also require viewer authentication. In order to make the authentication work, additional steps need to be taken at the end of the authentication flow.</p>
+        <p>Besides the player there are some services (such as Chat, Q&A and Combined Embed) that may also require viewer authentication. In order to make the authentication work, additional steps need to be taken at the end of the authentication flow.</p>
 
-        <p>These services provide an url, that has to be used instead of the default pass url. This url is sent in the hashConsumer query parameter.</p>
+        <p>These services provide an url, that has to be used instead of the default pass url. This url is sent in the hashConsumer query parameter by the service to the application.</p>
+
+        <p>Example url in the hashConsumer in case of Chat:</p>
+
+        <pre><code>https://www.ustream.tv/chat/authorize/12345678?resource=%2Fchat%2F12345678</code></pre>
 
         <p>Example script in native PHP that can authenticate the player and the services as well</p>
 
