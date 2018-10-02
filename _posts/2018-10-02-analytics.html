@@ -1,0 +1,2602 @@
+---
+layout: post
+title: Analytics API Documentation
+weight: 0
+category: analytics-api
+categoryItemType: documentation
+categoryItemIsShown: 1
+categoryItemWidth: 6
+categoryItemDescription: Analytics API docs
+categoryItemLabel: Read the documentation
+---
+<article data-sidenav="sidenav">
+    <script>
+      (function () {
+        var lightboxCssTag = document.createElement('link');
+        lightboxCssTag.href = '/css/lightbox.css';
+        lightboxCssTag.type = 'text/css';
+        lightboxCssTag.rel = 'stylesheet';
+        var lightboxScriptTag = document.createElement('script');
+        lightboxScriptTag.src = '/js/lightbox.min.js';
+        lightboxScriptTag.defer = true;
+        lightboxScriptTag.addEventListener('load', function () {
+          var lightbox = new Lightbox();
+          lightbox.load();
+        });
+        document.head.appendChild(lightboxCssTag);
+        document.head.appendChild(lightboxScriptTag);
+      })();
+    </script>
+    <section>
+
+        <h2>Introduction</h2>
+
+        <h3>Base URL</h3>
+
+        <p>
+            Version: <span class="sw-info-version">1.0.0</span>
+        </p>
+
+		<table class="table fill-bg-light1 table-chromeless">
+			<tr>
+				<td><a href="http://analytics-api.ustream.tv/v1/">http://analytics-api.ustream.tv/v1/</a></td>
+			</tr>
+        </table>
+
+
+        <h3>Authentication</h3>
+
+        <p>
+            The API uses JWT token for authentication. The API accepts the token in the <code>Authorization</code> header,
+            in the following format: <code>Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6Ik...0RMHrHDcEfxjoYZgeFONFh7HgQ</code>
+            This header must be included with every request.
+        </p>
+
+        <h4>Obtaining the Access token</h4>
+
+        <p>
+            You can get JWT token from the OAuth2 token endpoint by setting the <code>token_type</code> parameter to <code>jwt</code>.
+            The OAuth2 flows are described here:
+            <a href="/channel-api/getting-started.html#client-credentials-flow_11">http://developers.video.ibm.com/channel-api/getting-started.html</a>
+        </p>
+
+        <p>
+            The recommended authentication flow is <em>Client credentials</em>.
+        </p>
+
+
+        <h3>Time format</h3>
+
+        <p>
+            Every time field provided by the API is formatted by ISO8601 format (eg. <code>2018-07-16T19:20:30+01:00</code>).
+            The API also accepts parameters in this format only.
+        </p>
+
+
+        <h3>Terminology</h3>
+
+        <ul>
+            <li>
+                <strong>media</strong>: Media is a common word for both live broadcasts and videos
+            </li>
+            <li>
+                <strong>content type</strong>: The API has knowledge of two types of content: live broadcast and videos
+            </li>
+            <li>
+                <strong>content id</strong>: A numeric identifier of the media. For Live it means channel id, for video it means video id
+            </li>
+            <li>
+                <strong>segment</strong>: A part of the media watched by the user
+            </li>
+        </ul>
+
+
+        <h3>Response times</h3>
+
+        <p>
+            Depending on your query and the underlying data size the response might take a minute.
+        </p>
+
+
+        <h3>Content types</h3>
+
+        <p>
+            Default request content-types: <code>application/json</code>
+        </p>
+        <p>
+            Default response content-types: <code>application/json</code>
+        </p>
+        <p>
+            Schemes: <code>https</code>
+        </p>
+
+
+        <h3>API Summary</h3>
+
+
+            <table class="table responsive">
+                <tbody>
+                    <tr>
+                        <th width="30%">path</th>
+                        <th>operation</th>
+                        <th width="60%">description</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href="#path--viewers">/viewers</a>
+                        </td>
+                        <td>
+                            <a href="#operation--viewers-get">GET</a>
+                        </td>
+                        <td>
+                            List of the unique viewers for all contents
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href="#path--viewers--content_type">/viewers/{content_type}</a>
+                        </td>
+                        <td>
+                            <a href="#operation--viewers--content_type--get">GET</a>
+                        </td>
+                        <td>
+                            List of the unique viewers for a specific content type
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href="#path--views">/views</a>
+                        </td>
+                        <td>
+                            <a href="#operation--views-get">GET</a>
+                        </td>
+                        <td>
+                            Raw view export for a given time period.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href="#path--views--content_type">/views/{content_type}</a>
+                        </td>
+                        <td>
+                            <a href="#operation--views--content_type--get">GET</a>
+                        </td>
+                        <td>
+                            Raw view export for a given time period
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+
+            <h3>Security</h3>
+
+            <table class="table responsive">
+                <tbody>
+                    <tr>
+                        <td colspan="2">
+                            <strong>JWTHeader</strong><br />
+                            Type: apiKey
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Name</strong></td>
+                        <td>Authorization</td>
+                    </tr>
+                    <tr>
+                        <td><strong>In</strong></td>
+                        <td>header</td>
+                    </tr>
+                </tbody>
+            </table>
+
+    </section>
+
+    <section>
+
+        <h2 id="path--viewers">List of the unique viewers for all contents</h2>
+
+        <table id="operation--viewers-get" class="table fill-bg-light1 table-chromeless">
+            <tr>
+                <td width="10%" class="verb">GET</td>
+                <td><a href="http://analytics-api.ustream.tv/v1/viewers">/viewers</a></td>
+            </tr>
+        </table>
+
+        <p>
+            You can get every individual viewer appeared on all of your channels by calling this endpoint.
+            If you look for a specific viewer you can use the <code>viewer_identifier</code> parameter for matching
+            an identifier or part of an identifier.
+        </p>
+
+        <h3>Request Parameters</h3>
+
+        <table class="table responsive">
+            <tbody>
+                <tr>
+                    <th>name</th>
+                    <th>description</th>
+                    <th>type</th>
+                    <th>data type</th>
+                    <th>required</th>
+                    <th>annotation</th>
+                </tr>
+
+                        <tr>
+                            <td>
+                                Authorization
+                            </td>
+                            <td>
+                                JWT token
+                            </td>
+                            <td>header</td>
+                            <td>
+                                string
+                            </td>
+                            <td>
+                                yes
+                            </td>
+                            <td>
+                                <a href="#/parameters/authParameter">#/parameters/authParameter</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                viewer_identifier
+                            </td>
+                            <td>
+                                Filter for viewer identifiers containing this string
+                            </td>
+                            <td>query</td>
+                            <td>
+                                string
+                            </td>
+                            <td></td>
+                            <td>
+                                <a href="#/parameters/viewerIdSearchStringQueryParameter">#/parameters/viewerIdSearchStringQueryParameter</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                list_unfinished_segments
+                            </td>
+                            <td>
+                                Flag for receiving unfinished segments in the result
+                            </td>
+                            <td>query</td>
+                            <td>
+                                boolean,<br />
+                                default value: false
+                            </td>
+                            <td></td>
+                            <td>
+                                <a href="#/parameters/unfinishedParameter">#/parameters/unfinishedParameter</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                _page
+                            </td>
+                            <td>
+                                Defines the page to get
+                            </td>
+                            <td>query</td>
+                            <td>
+                                number,<br />
+                                <span title="Value limits"> { x ∈ ℝ | x ≥ 1 }</span><br />
+                                default value: 1
+                            </td>
+                            <td></td>
+                            <td>
+                                <a href="#/parameters/offestParameter">#/parameters/offestParameter</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                _limit
+                            </td>
+                            <td>
+                                Defines how many resources to get
+                            </td>
+                            <td>query</td>
+                            <td>
+                                number,<br />
+                                <span title="Value limits">{ x ∈ ℝ | 1 ≤ x ≤ 1000 }</span>
+                            </td>
+                            <td></td>
+                            <td>
+                                <a href="#/parameters/limitParameter">#/parameters/limitParameter</a>
+                            </td>
+                        </tr>
+                </tbody>
+            </table>
+
+            <h3>Responses</h3>
+
+            <table class="table fill-bg-light1 table-chromeless">
+                <tr>
+                    <td width="10%" class="verb">200</td>
+                    <td><a href="#/responses/ViewerTrackingViewerList">#/responses/ViewerTrackingViewerList</a></td>
+                </tr>
+            </table>
+
+            <p>
+                Uses default content-types: <code>application/json</code>
+            </p>
+
+            <table class="table responsive">
+                    <tr>
+                        <th>property</th>
+                        <th>type</th>
+                        <th>value(s)</th>
+                    </tr>
+                    <tr>
+                        <td>resources</td>
+                        <td>[object]</td>
+                        <td><a href="#/definitions/Viewer">Viewer</a></td>
+                    </tr>
+                    <tr>
+                        <td>pagination</td>
+                        <td>object</td>
+                        <td>
+                            <table class="table">
+                                <tr>
+                                    <th>property</th>
+                                    <th>type</th>
+                                    <th>value(s)</th>
+                                </tr>
+                                <tr>
+                                    <td>count</td>
+                                    <td colspan="2">number</td>
+                                </tr>
+                                <tr>
+                                    <td>self</td>
+                                    <td>object</td>
+                                    <td>
+                                        <table class="table ">
+                                            <tr>
+                                                <th>property</th>
+                                                <th>type</th>
+                                            </tr>
+                                            <tr>
+                                                <td>href</td>
+                                                <td>string</td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>first</td>
+                                    <td>object</td>
+                                    <td>
+                                        <table class="table ">
+                                            <tr>
+                                                <th>property</th>
+                                                <th>type</th>
+                                            </tr>
+                                            <tr>
+                                                <td>href</td>
+                                                <td>string</td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>prev</td>
+                                    <td>object</td>
+                                    <td>
+                                        <table class="table ">
+                                            <tr>
+                                                <th>property</th>
+                                                <th>type</th>
+                                            </tr>
+                                            <tr>
+                                                <td>href</td>
+                                                <td>string</td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>next</td>
+                                    <td>object</td>
+                                    <td>
+                                        <table class="table ">
+                                            <tr>
+                                                <th>property</th>
+                                                <th>type</th>
+                                            </tr>
+                                            <tr>
+                                                <td>href</td>
+                                                <td>string</td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>last</td>
+                                    <td>object</td>
+                                    <td>
+                                        <table class="table ">
+                                            <tr>
+                                                <th>property</th>
+                                                <th>type</th>
+                                            </tr>
+                                            <tr>
+                                                <td>href</td>
+                                                <td>string</td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+
+            <p>Example for <code>application/json</code></p>
+            <pre><code class="json">{
+    "pagination": {
+        "count": 10,
+        "first": {
+            "href": "/views?_page=1&_limit=1"
+        },
+        "last": {
+            "href": "/views?_page=10&_limit=1"
+        },
+        "next": {
+            "href": "/views?_page=2&_limit=1"
+        },
+        "prev": null,
+        "self": {
+            "href": "/views?_page=1&_limit=1"
+        }
+    },
+    "resources": [
+        {
+            "attributes": {
+                "last_activity": "2018-07-16T19:20:30+01:00",
+                "segments": [
+                    {
+                        "city": "Budapest",
+                        "client_id": "8776986273576598258658",
+                        "content_id": 77569623,
+                        "content_type": "live",
+                        "country": "HU",
+                        "finished_at": "2018-07-16T19:20:40+01:00",
+                        "from": 0,
+                        "id": "4bfc69b5-1320-4a44-a8d6-1fe1f397fb94",
+                        "is_mobile_view": false,
+                        "started_at": "2018-07-16T19:20:30+01:00",
+                        "to": 0,
+                        "view_session_id": "7f66d911:8b7aa82c",
+                        "view_type": "onsite"
+                    }
+                ],
+                "videos_watched": 10,
+                "viewer_identifier": "some.viewer@example.com"
+            },
+            "type": "Viewer"
+        }
+    ]
+}</code></pre>
+
+
+        <table class="table fill-bg-light1 table-chromeless">
+            <tr>
+                <td width="10%" class="verb">400</td>
+                <td><a href="#/responses/BadRequest">#/responses/BadRequest</a></td>
+            </tr>
+        </table>
+
+        <p>
+            Uses default content-types: <code>application/json</code>
+        </p>
+
+
+        <table class="table responsive">
+                <tr>
+                    <th>property</th>
+                    <th>type</th>
+                    <th>value(s)</th>
+                </tr>
+                <tr>
+                    <td>errors</td>
+                    <td>[object]</td>
+                    <td>
+                        <table class="table">
+                            <tr>
+                                <th>property</th>
+                                <th>type</th>
+                                <th>value(s)</th>
+                            </tr>
+                            <tr>
+                                <td>status</td>
+                                <td colspan="2">number</td>
+                            </tr>
+                            <tr>
+                                <td>title</td>
+                                <td colspan="2">string</td>
+                            </tr>
+                            <tr>
+                                <td>detail</td>
+                                <td colspan="2">string</td>
+                            </tr>
+                            <tr>
+                                <td>source</td>
+                                <td>object</td>
+                                <td>
+                                    <table class="table ">
+                                        <tr>
+                                            <th>property</th>
+                                            <th>type</th>
+                                        </tr>
+                                        <tr>
+                                            <td>pointer</td>
+                                            <td>string</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+
+    </section>
+
+    <section>
+
+        <h2 id="path--viewers--content_type">List of the unique viewers for a specific content type</h2>
+
+        <table id="operation--viewers--content_type--get" class="table fill-bg-light1 table-chromeless">
+            <tr>
+                <td width="10%" class="verb">GET</td>
+                <td><a href="http://analytics-api.ustream.tv/v1/viewers/{content_type}">/viewers/{content_type}</a></td>
+            </tr>
+        </table>
+
+        <h3>Request Parameters</h3>
+
+        <table class="table responsive">
+            <tbody>
+                <tr>
+                    <th>name</th>
+                    <th>description</th>
+                    <th>type</th>
+                    <th>data type</th>
+                    <th>required</th>
+                    <th>annotation</th>
+                </tr>
+
+                <tr>
+                    <td>
+                        Authorization
+                    </td>
+                    <td>
+                        JWT token
+                    </td>
+                    <td>header</td>
+                    <td>
+                        string
+                    </td>
+                    <td>
+                        yes
+                    </td>
+                    <td>
+                        <a href="#/parameters/authParameter">#/parameters/authParameter</a>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        content_type
+                    </td>
+                    <td>
+                        Type of the content eg. Recorded
+                    </td>
+                    <td>path</td>
+                    <td>
+                        string, <br />
+                        x ∈ { live , recorded }
+                    </td>
+                    <td>
+                        yes
+                    </td>
+                    <td>
+                        <a href="#/parameters/contentTypeParameter">#/parameters/contentTypeParameter</a>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        content_id
+                    </td>
+                    <td>
+                        A list of comma separated IDs
+                    </td>
+                    <td>query</td>
+                    <td>
+                        integer
+                    </td>
+                    <td>
+
+                    </td>
+                    <td>
+                        <a href="#/parameters/contentTypeParameter">#/parameters/contentTypeParameter</a>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        viewer_identifier
+                    </td>
+                    <td>
+                        Filter for viewer identifiers containing this string
+                    </td>
+                    <td>query</td>
+                    <td>
+                        string
+                    </td>
+                    <td></td>
+                    <td>
+                        <a href="#/parameters/viewerIdSearchStringQueryParameter">#/parameters/viewerIdSearchStringQueryParameter</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        list_unfinished_segments
+                    </td>
+                    <td>
+                        Flag for receiving unfinished segments in the result
+                    </td>
+                    <td>query</td>
+                    <td>
+                        boolean,<br />
+                        default value: false
+                    </td>
+                    <td></td>
+                    <td>
+                        <a href="#/parameters/unfinishedParameter">#/parameters/unfinishedParameter</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        _page
+                    </td>
+                    <td>
+                        Defines the page to get
+                    </td>
+                    <td>query</td>
+                    <td>
+                        number,<br />
+                        <span title="Value limits"> { x ∈ ℝ | x ≥ 1 }</span><br />
+                        default value: 1
+                    </td>
+                    <td></td>
+                    <td>
+                        <a href="#/parameters/offestParameter">#/parameters/offestParameter</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        _limit
+                    </td>
+                    <td>
+                        Defines how many resources to get
+                    </td>
+                    <td>query</td>
+                    <td>
+                        number,<br />
+                        <span title="Value limits">{ x ∈ ℝ | 1 ≤ x ≤ 1000 }</span>
+                    </td>
+                    <td></td>
+                    <td>
+                        <a href="#/parameters/limitParameter">#/parameters/limitParameter</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+
+        <h3>Responses</h3>
+
+        <table class="table fill-bg-light1 table-chromeless">
+            <tr>
+                <td width="10%" class="verb">200</td>
+                <td><a href="#/responses/ViewerTrackingViewerList">#/responses/ViewerTrackingViewerList</a></td>
+            </tr>
+        </table>
+
+        <p>
+            Uses default content-types: <code>application/json</code>
+        </p>
+
+        <table class="table responsive">
+                <tr>
+                    <th>property</th>
+                    <th>type</th>
+                    <th>value(s)</th>
+                </tr>
+                <tr>
+                    <td>resources</td>
+                    <td>[object]</td>
+                    <td><a href="#/definitions/Viewer">Viewer</a></td>
+                </tr>
+                <tr>
+                    <td>pagination</td>
+                    <td>object</td>
+                    <td>
+                        <table class="table">
+                            <tr>
+                                <th>property</th>
+                                <th>type</th>
+                                <th>value(s)</th>
+                            </tr>
+                            <tr>
+                                <td>count</td>
+                                <td colspan="2">number</td>
+                            </tr>
+                            <tr>
+                                <td>self</td>
+                                <td>object</td>
+                                <td>
+                                    <table class="table ">
+                                        <tr>
+                                            <th>property</th>
+                                            <th>type</th>
+                                        </tr>
+                                        <tr>
+                                            <td>href</td>
+                                            <td>string</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>first</td>
+                                <td>object</td>
+                                <td>
+                                    <table class="table ">
+                                        <tr>
+                                            <th>property</th>
+                                            <th>type</th>
+                                        </tr>
+                                        <tr>
+                                            <td>href</td>
+                                            <td>string</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>prev</td>
+                                <td>object</td>
+                                <td>
+                                    <table class="table ">
+                                        <tr>
+                                            <th>property</th>
+                                            <th>type</th>
+                                        </tr>
+                                        <tr>
+                                            <td>href</td>
+                                            <td>string</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>next</td>
+                                <td>object</td>
+                                <td>
+                                    <table class="table ">
+                                        <tr>
+                                            <th>property</th>
+                                            <th>type</th>
+                                        </tr>
+                                        <tr>
+                                            <td>href</td>
+                                            <td>string</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>last</td>
+                                <td>object</td>
+                                <td>
+                                    <table class="table ">
+                                        <tr>
+                                            <th>property</th>
+                                            <th>type</th>
+                                        </tr>
+                                        <tr>
+                                            <td>href</td>
+                                            <td>string</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+
+        <p>Example for <code>application/json</code></p>
+        <pre><code class="json">{
+"pagination": {
+    "count": 10,
+    "first": {
+        "href": "/views?_page=1&_limit=1"
+    },
+    "last": {
+        "href": "/views?_page=10&_limit=1"
+    },
+    "next": {
+        "href": "/views?_page=2&_limit=1"
+    },
+    "prev": null,
+    "self": {
+        "href": "/views?_page=1&_limit=1"
+    }
+},
+"resources": [
+    {
+        "attributes": {
+            "last_activity": "2018-07-16T19:20:30+01:00",
+            "segments": [
+                {
+                    "city": "Budapest",
+                    "client_id": "8776986273576598258658",
+                    "content_id": 77569623,
+                    "content_type": "live",
+                    "country": "HU",
+                    "finished_at": "2018-07-16T19:20:40+01:00",
+                    "from": 0,
+                    "id": "4bfc69b5-1320-4a44-a8d6-1fe1f397fb94",
+                    "is_mobile_view": false,
+                    "started_at": "2018-07-16T19:20:30+01:00",
+                    "to": 0,
+                    "view_session_id": "7f66d911:8b7aa82c",
+                    "view_type": "onsite"
+                }
+            ],
+            "videos_watched": 10,
+            "viewer_identifier": "some.viewer@example.com"
+        },
+        "type": "Viewer"
+    }
+]
+}</code></pre>
+
+
+    <table class="table fill-bg-light1 table-chromeless">
+        <tr>
+            <td width="10%" class="verb">400</td>
+            <td><a href="#/responses/BadRequest">#/responses/BadRequest</a></td>
+        </tr>
+    </table>
+
+    <p>
+        Uses default content-types: <code>application/json</code>
+    </p>
+
+
+    <table class="table responsive">
+            <tr>
+                <th>property</th>
+                <th>type</th>
+                <th>value(s)</th>
+            </tr>
+            <tr>
+                <td>errors</td>
+                <td>[object]</td>
+                <td>
+                    <table class="table">
+                        <tr>
+                            <th>property</th>
+                            <th>type</th>
+                            <th>value(s)</th>
+                        </tr>
+                        <tr>
+                            <td>status</td>
+                            <td colspan="2">number</td>
+                        </tr>
+                        <tr>
+                            <td>title</td>
+                            <td colspan="2">string</td>
+                        </tr>
+                        <tr>
+                            <td>detail</td>
+                            <td colspan="2">string</td>
+                        </tr>
+                        <tr>
+                            <td>source</td>
+                            <td>object</td>
+                            <td>
+                                <table class="table ">
+                                    <tr>
+                                        <th>property</th>
+                                        <th>type</th>
+                                    </tr>
+                                    <tr>
+                                        <td>pointer</td>
+                                        <td>string</td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+
+    </section>
+
+    <section>
+
+        <h2 id="path--views">Raw view export for a given time period</h2>
+
+        <table id="operation--views-get" class="table fill-bg-light1 table-chromeless">
+            <tr>
+                <td width="10%" class="verb">GET</td>
+                <td><a href="http://analytics-api.ustream.tv/v1/views">/views</a></td>
+            </tr>
+        </table>
+    
+        <p>
+            This endpoint lists every view segments in the requested time period.
+            Segments are generated by events from the users, like play, pause, seek.
+        </p>
+
+        <h3>Request Parameters</h3>
+
+        <table class="table responsive">
+            <tbody>
+                <tr>
+                    <th>name</th>
+                    <th>description</th>
+                    <th>type</th>
+                    <th>data type</th>
+                    <th>required</th>
+                    <th>annotation</th>
+                </tr>
+
+                <tr>
+                    <td>
+                        Authorization
+                    </td>
+                    <td>
+                        JWT token
+                    </td>
+                    <td>header</td>
+                    <td>
+                        string
+                    </td>
+                    <td>
+                        yes
+                    </td>
+                    <td>
+                        <a href="#/parameters/authParameter">#/parameters/authParameter</a>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        date_time_from
+                    </td>
+                    <td>
+                        Start date and time for a period in ISO8601 format
+                    </td>
+                    <td>query</td>
+                    <td>
+                        string,
+                        default value: 3 months before the actual server date
+                    </td>
+                    <td></td>
+                    <td>
+                        <a href="#/parameters/dateTimeFromQueryParameter">#/parameters/dateTimeFromQueryParameter</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        date_time_to
+                    </td>
+                    <td>
+                        End date and time for a period in ISO8601 format
+                    </td>
+                    <td>query</td>
+                    <td>
+                        string,
+                        default value: current date
+                    </td>
+                    <td></td>
+                    <td>
+                        <a href="#/parameters/dateTimeToQueryParameter">#/parameters/dateTimeToQueryParameter</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        list_unfinished_segments
+                    </td>
+                    <td>
+                        Flag for receiving unfinished segments in the result
+                    </td>
+                    <td>query</td>
+                    <td>
+                        boolean,<br />
+                        default value: false
+                    </td>
+                    <td></td>
+                    <td>
+                        <a href="#/parameters/unfinishedParameter">#/parameters/unfinishedParameter</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        _page
+                    </td>
+                    <td>
+                        Defines the page to get
+                    </td>
+                    <td>query</td>
+                    <td>
+                        number,<br />
+                        <span title="Value limits"> { x ∈ ℝ | x ≥ 1 }</span><br />
+                        default value: 1
+                    </td>
+                    <td></td>
+                    <td>
+                        <a href="#/parameters/offestParameter">#/parameters/offestParameter</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        _limit
+                    </td>
+                    <td>
+                        Defines how many resources to get
+                    </td>
+                    <td>query</td>
+                    <td>
+                        number,<br />
+                        <span title="Value limits">{ x ∈ ℝ | 1 ≤ x ≤ 1000 }</span>
+                    </td>
+                    <td></td>
+                    <td>
+                        <a href="#/parameters/limitParameter">#/parameters/limitParameter</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    
+        <h3>Responses</h3>
+    
+        <table class="table fill-bg-light1 table-chromeless">
+            <tr>
+                <td width="10%" class="verb">200</td>
+                <td><a href="#/responses/ViewList">#/responses/ViewList</a></td>
+            </tr>
+        </table>
+
+        <p>
+            Uses default content-types: <code>application/json</code>
+        </p>
+
+        <table class="table responsive">
+                <tr>
+                    <th>property</th>
+                    <th>type</th>
+                    <th>value(s)</th>
+                </tr>
+                <tr>
+                    <td>resources</td>
+                    <td>[object]</td>
+                    <td><a href="#/definitions/View">View</a></td>
+                </tr>
+                <tr>
+                    <td>pagination</td>
+                    <td>object</td>
+                    <td>
+                        <table class="table">
+                            <tr>
+                                <th>property</th>
+                                <th>type</th>
+                                <th>value(s)</th>
+                            </tr>
+                            <tr>
+                                <td>count</td>
+                                <td colspan="2">number</td>
+                            </tr>
+                            <tr>
+                                <td>self</td>
+                                <td>object</td>
+                                <td>
+                                    <table class="table ">
+                                        <tr>
+                                            <th>property</th>
+                                            <th>type</th>
+                                        </tr>
+                                        <tr>
+                                            <td>href</td>
+                                            <td>string</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>first</td>
+                                <td>object</td>
+                                <td>
+                                    <table class="table ">
+                                        <tr>
+                                            <th>property</th>
+                                            <th>type</th>
+                                        </tr>
+                                        <tr>
+                                            <td>href</td>
+                                            <td>string</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>prev</td>
+                                <td>object</td>
+                                <td>
+                                    <table class="table ">
+                                        <tr>
+                                            <th>property</th>
+                                            <th>type</th>
+                                        </tr>
+                                        <tr>
+                                            <td>href</td>
+                                            <td>string</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>next</td>
+                                <td>object</td>
+                                <td>
+                                    <table class="table ">
+                                        <tr>
+                                            <th>property</th>
+                                            <th>type</th>
+                                        </tr>
+                                        <tr>
+                                            <td>href</td>
+                                            <td>string</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>last</td>
+                                <td>object</td>
+                                <td>
+                                    <table class="table ">
+                                        <tr>
+                                            <th>property</th>
+                                            <th>type</th>
+                                        </tr>
+                                        <tr>
+                                            <td>href</td>
+                                            <td>string</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+
+        <p>Example for <code>application/json</code></p>
+        <pre><code class="json">{
+    "pagination": {
+        "count": 10,
+        "first": {
+            "href": "/views?_page=1&_limit=10"
+        },
+        "last": {
+            "href": "/views?_page=10&_limit=10"
+        },
+        "next": {
+            "href": "/views?_page=2&_limit=10"
+        },
+        "prev": null,
+        "self": {
+            "href": "/views?_page=1&_limit=10"
+        }
+    },
+    "resources": [
+        {
+            "attributes": {
+                "city": "Budapest",
+                "client_id": "13602851710424434669",
+                "content_id": "112342345",
+                "content_type": "live",
+                "country": "HU",
+                "finished_at": "2018-07-16T19:20:42+01:00",
+                "from": 0,
+                "is_mobile_view": true,
+                "started_at": "2018-07-16T19:20:30+01:00",
+                "to": 0,
+                "view_id": "4bfc69b5-1320-4a44-a8d6-1fe1f397fb94",
+                "view_session_id": "7f66d911:8b7aa82c",
+                "view_type": "offsite",
+                "viewer_identifier": "some.viewer@example.com"
+            },
+            "type": "View"
+        }
+    ]
+}</code></pre>
+
+
+    <table class="table fill-bg-light1 table-chromeless">
+        <tr>
+            <td width="10%" class="verb">400</td>
+            <td><a href="#/responses/BadRequest">#/responses/BadRequest</a></td>
+        </tr>
+    </table>
+
+    <p>
+        Uses default content-types: <code>application/json</code>
+    </p>
+
+
+    <table class="table responsive">
+            <tr>
+                <th>property</th>
+                <th>type</th>
+                <th>value(s)</th>
+            </tr>
+            <tr>
+                <td>errors</td>
+                <td>[object]</td>
+                <td>
+                    <table class="table">
+                        <tr>
+                            <th>property</th>
+                            <th>type</th>
+                            <th>value(s)</th>
+                        </tr>
+                        <tr>
+                            <td>status</td>
+                            <td colspan="2">number</td>
+                        </tr>
+                        <tr>
+                            <td>title</td>
+                            <td colspan="2">string</td>
+                        </tr>
+                        <tr>
+                            <td>detail</td>
+                            <td colspan="2">string</td>
+                        </tr>
+                        <tr>
+                            <td>source</td>
+                            <td>object</td>
+                            <td>
+                                <table class="table ">
+                                    <tr>
+                                        <th>property</th>
+                                        <th>type</th>
+                                    </tr>
+                                    <tr>
+                                        <td>pointer</td>
+                                        <td>string</td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+
+    </section>
+
+
+    <section>
+
+        <h2 id="path--views--content_type">Raw view export of a specific content type for a given time period</h2>
+
+        <table id="operation--views--content_type--get" class="table fill-bg-light1 table-chromeless">
+            <tr>
+                <td width="10%" class="verb">GET</td>
+                <td><a href="http://analytics-api.ustream.tv/v1/views/{content_type}">/views/{content_type}</a></td>
+            </tr>
+        </table>
+
+        <h3>Request Parameters</h3>
+
+        <table class="table responsive">
+            <tbody>
+                <tr>
+                    <th>name</th>
+                    <th>description</th>
+                    <th>type</th>
+                    <th>data type</th>
+                    <th>required</th>
+                    <th>annotation</th>
+                </tr>
+
+                <tr>
+                    <td>
+                        Authorization
+                    </td>
+                    <td>
+                        JWT token
+                    </td>
+                    <td>header</td>
+                    <td>
+                        string
+                    </td>
+                    <td>
+                        yes
+                    </td>
+                    <td>
+                        <a href="#/parameters/authParameter">#/parameters/authParameter</a>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        content_type
+                    </td>
+                    <td>
+                        Type of the content eg. Recorded
+                    </td>
+                    <td>path</td>
+                    <td>
+                        string, <br />
+                        x ∈ { live , recorded }
+                    </td>
+                    <td>
+                        yes
+                    </td>
+                    <td>
+                        <a href="#/parameters/contentTypeParameter">#/parameters/contentTypeParameter</a>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        content_id
+                    </td>
+                    <td>
+                        A list of comma separated IDs
+                    </td>
+                    <td>query</td>
+                    <td>
+                        integer
+                    </td>
+                    <td>
+
+                    </td>
+                    <td>
+                        <a href="#/parameters/contentTypeParameter">#/parameters/contentTypeParameter</a>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        date_time_from
+                    </td>
+                    <td>
+                        Start date and time for a period in ISO8601 format
+                    </td>
+                    <td>query</td>
+                    <td>
+                        string,
+                        default value: 3 months before the actual server date
+                    </td>
+                    <td></td>
+                    <td>
+                        <a href="#/parameters/dateTimeFromQueryParameter">#/parameters/dateTimeFromQueryParameter</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        date_time_to
+                    </td>
+                    <td>
+                        End date and time for a period in ISO8601 format
+                    </td>
+                    <td>query</td>
+                    <td>
+                        string,
+                        default value: current date
+                    </td>
+                    <td></td>
+                    <td>
+                        <a href="#/parameters/dateTimeToQueryParameter">#/parameters/dateTimeToQueryParameter</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        list_unfinished_segments
+                    </td>
+                    <td>
+                        Flag for receiving unfinished segments in the result
+                    </td>
+                    <td>query</td>
+                    <td>
+                        boolean,<br />
+                        default value: false
+                    </td>
+                    <td></td>
+                    <td>
+                        <a href="#/parameters/unfinishedParameter">#/parameters/unfinishedParameter</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        _page
+                    </td>
+                    <td>
+                        Defines the page to get
+                    </td>
+                    <td>query</td>
+                    <td>
+                        number,<br />
+                        <span title="Value limits"> { x ∈ ℝ | x ≥ 1 }</span><br />
+                        default value: 1
+                    </td>
+                    <td></td>
+                    <td>
+                        <a href="#/parameters/offestParameter">#/parameters/offestParameter</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        _limit
+                    </td>
+                    <td>
+                        Defines how many resources to get
+                    </td>
+                    <td>query</td>
+                    <td>
+                        number,<br />
+                        <span title="Value limits">{ x ∈ ℝ | 1 ≤ x ≤ 1000 }</span>
+                    </td>
+                    <td></td>
+                    <td>
+                        <a href="#/parameters/limitParameter">#/parameters/limitParameter</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h3>Responses</h3>
+
+        <table class="table fill-bg-light1 table-chromeless">
+            <tr>
+                <td width="10%" class="verb">200</td>
+                <td><a href="#/responses/ViewList">#/responses/ViewList</a></td>
+            </tr>
+        </table>
+
+        <p>
+            Uses default content-types: <code>application/json</code>
+        </p>
+
+        <table class="table responsive">
+                <tr>
+                    <th>property</th>
+                    <th>type</th>
+                    <th>value(s)</th>
+                </tr>
+                <tr>
+                    <td>resources</td>
+                    <td>[object]</td>
+                    <td><a href="#/definitions/View">View</a></td>
+                </tr>
+                <tr>
+                    <td>pagination</td>
+                    <td>object</td>
+                    <td>
+                        <table class="table">
+                            <tr>
+                                <th>property</th>
+                                <th>type</th>
+                                <th>value(s)</th>
+                            </tr>
+                            <tr>
+                                <td>count</td>
+                                <td colspan="2">number</td>
+                            </tr>
+                            <tr>
+                                <td>self</td>
+                                <td>object</td>
+                                <td>
+                                    <table class="table ">
+                                        <tr>
+                                            <th>property</th>
+                                            <th>type</th>
+                                        </tr>
+                                        <tr>
+                                            <td>href</td>
+                                            <td>string</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>first</td>
+                                <td>object</td>
+                                <td>
+                                    <table class="table ">
+                                        <tr>
+                                            <th>property</th>
+                                            <th>type</th>
+                                        </tr>
+                                        <tr>
+                                            <td>href</td>
+                                            <td>string</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>prev</td>
+                                <td>object</td>
+                                <td>
+                                    <table class="table ">
+                                        <tr>
+                                            <th>property</th>
+                                            <th>type</th>
+                                        </tr>
+                                        <tr>
+                                            <td>href</td>
+                                            <td>string</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>next</td>
+                                <td>object</td>
+                                <td>
+                                    <table class="table ">
+                                        <tr>
+                                            <th>property</th>
+                                            <th>type</th>
+                                        </tr>
+                                        <tr>
+                                            <td>href</td>
+                                            <td>string</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>last</td>
+                                <td>object</td>
+                                <td>
+                                    <table class="table ">
+                                        <tr>
+                                            <th>property</th>
+                                            <th>type</th>
+                                        </tr>
+                                        <tr>
+                                            <td>href</td>
+                                            <td>string</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+
+        <p>Example for <code>application/json</code></p>
+        <pre><code class="json">{
+    "pagination": {
+        "count": 10,
+        "first": {
+            "href": "/views?_page=1&_limit=10"
+        },
+        "last": {
+            "href": "/views?_page=10&_limit=10"
+        },
+        "next": {
+            "href": "/views?_page=2&_limit=10"
+        },
+        "prev": null,
+        "self": {
+            "href": "/views?_page=1&_limit=10"
+        }
+    },
+    "resources": [
+        {
+            "attributes": {
+                "city": "Budapest",
+                "client_id": "13602851710424434669",
+                "content_id": "112342345",
+                "content_type": "live",
+                "country": "HU",
+                "finished_at": "2018-07-16T19:20:42+01:00",
+                "from": 0,
+                "is_mobile_view": true,
+                "started_at": "2018-07-16T19:20:30+01:00",
+                "to": 0,
+                "view_id": "4bfc69b5-1320-4a44-a8d6-1fe1f397fb94",
+                "view_session_id": "7f66d911:8b7aa82c",
+                "view_type": "offsite",
+                "viewer_identifier": "some.viewer@example.com"
+            },
+            "type": "View"
+        }
+    ]
+}</code></pre>
+    
+
+    <table class="table fill-bg-light1 table-chromeless">
+        <tr>
+            <td width="10%" class="verb">400</td>
+            <td><a href="#/responses/BadRequest">#/responses/BadRequest</a></td>
+        </tr>
+    </table>
+
+    <p>
+        Uses default content-types: <code>application/json</code>
+    </p>
+
+
+    <table class="table responsive">
+            <tr>
+                <th>property</th>
+                <th>type</th>
+                <th>value(s)</th>
+            </tr>
+            <tr>
+                <td>errors</td>
+                <td>[object]</td>
+                <td>
+                    <table class="table">
+                        <tr>
+                            <th>property</th>
+                            <th>type</th>
+                            <th>value(s)</th>
+                        </tr>
+                        <tr>
+                            <td>status</td>
+                            <td colspan="2">number</td>
+                        </tr>
+                        <tr>
+                            <td>title</td>
+                            <td colspan="2">string</td>
+                        </tr>
+                        <tr>
+                            <td>detail</td>
+                            <td colspan="2">string</td>
+                        </tr>
+                        <tr>
+                            <td>source</td>
+                            <td>object</td>
+                            <td>
+                                <table class="table ">
+                                    <tr>
+                                        <th>property</th>
+                                        <th>type</th>
+                                    </tr>
+                                    <tr>
+                                        <td>pointer</td>
+                                        <td>string</td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    
+    </section>
+
+
+    <section>
+        <h2>Parameter definitions</h2>
+
+        <table class="table responsive">
+                <tr>
+                    <th>key</th>
+                    <th>name</th>
+                    <th>description</th>
+                    <th>type</th>
+                    <th>data type</th>
+                    <th>required</th>
+                </tr>
+
+                <tr>
+                    <td><a name="/parameters/granularityParameter"></a>granularityParameter</td>
+                    <td>
+                        granularity
+                    </td>
+                    <td>The granularity of the breakdown</td>
+                    <td>query</td>
+                    <td>
+                        string, <br />
+                        x &isin; {
+                            month (default),
+                            day,
+                            hour,
+                            minute
+                        }
+                    </td>
+                    <td>
+                        true
+                    </td>
+                </tr>
+                <tr>
+                    <td><a name="/parameters/dimensionParameter"></a>dimensionParameter</td>
+                    <td>
+                        dimension
+                    </td>
+                    <td>The dimension of the breakdown</td>
+                    <td>path</td>
+                    <td>
+                        string,<br />
+                        x &isin; {
+                            month,
+                            day,
+                            hour,
+                            location,
+                            device,
+                            view-source
+                        }
+                    </td>
+                    <td>
+                        true
+                    </td>
+                </tr>
+                <tr>
+                    <td><a name="/parameters/contentTypeParameter"></a>contentTypeParameter</td>
+                    <td>
+                        content_type
+                    </td>
+                    <td>Type of the content eg. Recorded</td>
+                    <td>path</td>
+                    <td>
+                        string, <br />
+                        x &isin; {
+                            live,
+                            recorded
+                        }
+                    </td>
+                    <td>
+                        true
+                    </td>
+                </tr>
+                <tr>
+                    <td><a name="/parameters/idsParameter"></a>idsParameter</td>
+                    <td>
+                        content_id
+                    </td>
+                    <td>A list of comma separated IDs</td>
+                    <td>query</td>
+                    <td>
+                        integer
+                    </td>
+                    <td>
+                    </td>
+                </tr>
+                <tr>
+                    <td><a name="/parameters/dateTimeFromQueryParameter"></a>dateTimeFromQueryParameter</td>
+                    <td>
+                        date_time_from
+                    </td>
+                    <td>Start date and time for a period in ISO8601 format</td>
+                    <td>query</td>
+                    <td>
+                        string, <br />
+                        default value: 3 months before the actual server date
+                    </td>
+                    <td>
+                    </td>
+                </tr>
+                <tr>
+                    <td><a name="/parameters/dateTimeToQueryParameter"></a>dateTimeToQueryParameter</td>
+                    <td>
+                        date_time_to
+                    </td>
+                    <td>End date and time for a period in ISO8601 format</td>
+                    <td>query</td>
+                    <td>
+                        string <br />
+                        default value: current date
+                    </td>
+                    <td>
+                    </td>
+                </tr>
+                <tr>
+                    <td><a name="/parameters/viewerIdSearchStringQueryParameter"></a>viewerIdSearchStringQueryParameter</td>
+                    <td>
+                        viewer_identifier
+                    </td>
+                    <td>Filter for viewer identifiers containing this string</td>
+                    <td>query</td>
+                    <td>
+                        string
+                    </td>
+                    <td>
+                    </td>
+                </tr>
+                <tr>
+                    <td><a name="/parameters/unfinishedParameter"></a>unfinishedParameter</td>
+                    <td>
+                        list_unfinished_segments
+                    </td>
+                    <td>Flag for receiving unfinished segments in the result</td>
+                    <td>query</td>
+                    <td>
+                        boolean, <br />
+                        default value: false
+                    </td>
+                    <td>
+                    </td>
+                </tr>
+                <tr>
+                    <td><a name="/parameters/offestParameter"></a>offestParameter</td>
+                    <td>
+                        _page
+                    </td>
+                    <td>Defines the page to get</td>
+                    <td>query</td>
+                    <td>
+                        number, <br />
+                        { x ∈ ℝ | x ≥ 1 }, <br />
+                        default value: 1
+                    </td>
+                    <td>
+                    </td>
+                </tr>
+                <tr>
+                    <td><a name="/parameters/limitParameter"></a>limitParameter</td>
+                    <td>
+                        _limit
+                    </td>
+                    <td>Defines how many resources to get</td>
+                    <td>query</td>
+                    <td>
+                        number, <br />
+                        { x ∈ ℝ | 1 ≤ x ≤ 1000 }
+                    </td>
+                    <td>
+                    </td>
+                </tr>
+                <tr>
+                    <td><a name="/parameters/authParameter"></a>authParameter</td>
+                    <td>
+                        Authorization
+                    </td>
+                    <td>JWT token</td>
+                    <td>header</td>
+                    <td>
+                        string
+                    </td>
+                    <td>
+                        true
+                    </td>
+                </tr>
+            </table>
+
+    </section>
+
+    <section>
+
+        <h2>Response definitions</h2>
+
+        <h3><a name="/responses/BadRequest"></a>BadRequest</h3>
+
+        <p>Bad request</p>
+
+
+        <table class="table responsive">
+            <tr>
+                <th>property</th>
+                <th>type</th>
+                <th>value(s)</th>
+            </tr>
+            <tr>
+                <td>errors</td>
+                <td>[object]</td>
+                <td>
+                    <table class="table">
+                        <tr>
+                            <th>property</th>
+                            <th>type</th>
+                            <th>value(s)</th>
+                        </tr>
+                        <tr>
+                            <td>status</td>
+                            <td colspan="2">number</td>
+                        </tr>
+                        <tr>
+                            <td>title</td>
+                            <td colspan="2">string</td>
+                        </tr>
+                        <tr>
+                            <td>detail</td>
+                            <td colspan="2">string</td>
+                        </tr>
+                        <tr>
+                            <td>source</td>
+                            <td>object</td>
+                            <td>
+                                <table class="table ">
+                                    <tr>
+                                        <th>property</th>
+                                        <th>type</th>
+                                    </tr>
+                                    <tr>
+                                        <td>pointer</td>
+                                        <td>string</td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+
+        <h3><a name="/responses/ViewList"></a>ViewList</h3>
+
+        <p>OK response</p>
+
+        <table class="table responsive">
+            <tr>
+                <th>property</th>
+                <th>type</th>
+                <th>value(s)</th>
+            </tr>
+            <tr>
+                <td>resources</td>
+                <td>[object]</td>
+                <td><a href="#/definitions/View">View</a></td>
+            </tr>
+            <tr>
+                <td>pagination</td>
+                <td>object</td>
+                <td>
+                    <table class="table">
+                        <tr>
+                            <th>property</th>
+                            <th>type</th>
+                            <th>value(s)</th>
+                        </tr>
+                        <tr>
+                            <td>count</td>
+                            <td colspan="2">number</td>
+                        </tr>
+                        <tr>
+                            <td>self</td>
+                            <td>object</td>
+                            <td>
+                                <table class="table ">
+                                    <tr>
+                                        <th>property</th>
+                                        <th>type</th>
+                                    </tr>
+                                    <tr>
+                                        <td>href</td>
+                                        <td>string</td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>first</td>
+                            <td>object</td>
+                            <td>
+                                <table class="table ">
+                                    <tr>
+                                        <th>property</th>
+                                        <th>type</th>
+                                    </tr>
+                                    <tr>
+                                        <td>href</td>
+                                        <td>string</td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>prev</td>
+                            <td>object</td>
+                            <td>
+                                <table class="table ">
+                                    <tr>
+                                        <th>property</th>
+                                        <th>type</th>
+                                    </tr>
+                                    <tr>
+                                        <td>href</td>
+                                        <td>string</td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>next</td>
+                            <td>object</td>
+                            <td>
+                                <table class="table ">
+                                    <tr>
+                                        <th>property</th>
+                                        <th>type</th>
+                                    </tr>
+                                    <tr>
+                                        <td>href</td>
+                                        <td>string</td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>last</td>
+                            <td>object</td>
+                            <td>
+                                <table class="table ">
+                                    <tr>
+                                        <th>property</th>
+                                        <th>type</th>
+                                    </tr>
+                                    <tr>
+                                        <td>href</td>
+                                        <td>string</td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+
+
+        <p>Example for <code>application/json</code></p>
+        <pre><code class="json">{
+    "pagination": {
+        "count": 10,
+        "first": {
+            "href": "/views?_page=1&_limit=10"
+        },
+        "last": {
+            "href": "/views?_page=10&_limit=10"
+        },
+        "next": {
+            "href": "/views?_page=2&_limit=10"
+        },
+        "prev": null,
+        "self": {
+            "href": "/views?_page=1&_limit=10"
+        }
+    },
+    "resources": [
+        {
+            "attributes": {
+                "city": "Budapest",
+                "client_id": "13602851710424434669",
+                "content_id": "112342345",
+                "content_type": "live",
+                "country": "HU",
+                "finished_at": "2018-07-16T19:20:42+01:00",
+                "from": 0,
+                "is_mobile_view": true,
+                "started_at": "2018-07-16T19:20:30+01:00",
+                "to": 0,
+                "view_id": "4bfc69b5-1320-4a44-a8d6-1fe1f397fb94",
+                "view_session_id": "7f66d911:8b7aa82c",
+                "view_type": "offsite",
+                "viewer_identifier": "some.viewer@example.com"
+            },
+            "type": "View"
+        }
+    ]
+}</code></pre>
+
+        <h3><a name="/responses/ViewerTrackingViewerList"></a>ViewerTrackingViewerList</h3>
+
+        <p>OK response</p>
+
+        <table class="table responsive">
+                <tr>
+                    <th>property</th>
+                    <th>type</th>
+                    <th>value(s)</th>
+                </tr>
+                <tr>
+                    <td>resources</td>
+                    <td>[object]</td>
+                    <td><a href="#/definitions/Viewer">Viewer</a></td>
+                </tr>
+                <tr>
+                    <td>pagination</td>
+                    <td>object</td>
+                    <td>
+                        <table class="table">
+                            <tr>
+                                <th>property</th>
+                                <th>type</th>
+                                <th>value(s)</th>
+                            </tr>
+                            <tr>
+                                <td>count</td>
+                                <td colspan="2">number</td>
+                            </tr>
+                            <tr>
+                                <td>self</td>
+                                <td>object</td>
+                                <td>
+                                    <table class="table ">
+                                        <tr>
+                                            <th>property</th>
+                                            <th>type</th>
+                                        </tr>
+                                        <tr>
+                                            <td>href</td>
+                                            <td>string</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>first</td>
+                                <td>object</td>
+                                <td>
+                                    <table class="table ">
+                                        <tr>
+                                            <th>property</th>
+                                            <th>type</th>
+                                        </tr>
+                                        <tr>
+                                            <td>href</td>
+                                            <td>string</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>prev</td>
+                                <td>object</td>
+                                <td>
+                                    <table class="table ">
+                                        <tr>
+                                            <th>property</th>
+                                            <th>type</th>
+                                        </tr>
+                                        <tr>
+                                            <td>href</td>
+                                            <td>string</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>next</td>
+                                <td>object</td>
+                                <td>
+                                    <table class="table ">
+                                        <tr>
+                                            <th>property</th>
+                                            <th>type</th>
+                                        </tr>
+                                        <tr>
+                                            <td>href</td>
+                                            <td>string</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>last</td>
+                                <td>object</td>
+                                <td>
+                                    <table class="table ">
+                                        <tr>
+                                            <th>property</th>
+                                            <th>type</th>
+                                        </tr>
+                                        <tr>
+                                            <td>href</td>
+                                            <td>string</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+
+        <p>Example for <code>application/json</code></p>
+        <pre><code class="json">{
+"pagination": {
+    "count": 10,
+    "first": {
+        "href": "/views?_page=1&_limit=1"
+    },
+    "last": {
+        "href": "/views?_page=10&_limit=1"
+    },
+    "next": {
+        "href": "/views?_page=2&_limit=1"
+    },
+    "prev": null,
+    "self": {
+        "href": "/views?_page=1&_limit=1"
+    }
+},
+"resources": [
+    {
+        "attributes": {
+            "last_activity": "2018-07-16T19:20:30+01:00",
+            "segments": [
+                {
+                    "city": "Budapest",
+                    "client_id": "8776986273576598258658",
+                    "content_id": 77569623,
+                    "content_type": "live",
+                    "country": "HU",
+                    "finished_at": "2018-07-16T19:20:40+01:00",
+                    "from": 0,
+                    "id": "4bfc69b5-1320-4a44-a8d6-1fe1f397fb94",
+                    "is_mobile_view": false,
+                    "started_at": "2018-07-16T19:20:30+01:00",
+                    "to": 0,
+                    "view_session_id": "7f66d911:8b7aa82c",
+                    "view_type": "onsite"
+                }
+            ],
+            "videos_watched": 10,
+            "viewer_identifier": "some.viewer@example.com"
+        },
+        "type": "Viewer"
+    }
+]
+}</code></pre>
+
+
+    </section>
+
+    <section>
+
+        <h2>Schema definitions</h2>
+
+        <h3><a name="/definitions/Segment"></a>Segment (object)</h3>
+
+        <p>One view segment on a content</p>
+
+        <h6>Properties</h6>
+
+        <table class="table responsive">
+            <tr>
+                <th>name</th>
+                <th>type</th>
+                <th>data type</th>
+                <th>description</th>
+            </tr>
+            <tr>
+                <td>id</td>
+                <td>string</td>
+                <td>uuid</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>content_type</td>
+                <td>string</td>
+                <td>x ∈ { live , recorded }</td>
+                <td>Watched content type</td>
+            </tr>
+            <tr>
+                <td>content_id</td>
+                <td>integer</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>started_at</td>
+                <td>string</td>
+                <td>date-time</td>
+                <td>Start date and time in ISO8601 format</td>
+            </tr>
+            <tr>
+                <td>finished_at</td>
+                <td>string</td>
+                <td>date-time</td>
+                <td>Finish date and time in ISO8601 format</td>
+            </tr>
+            <tr>
+                <td>from</td>
+                <td>integer</td>
+                <td></td>
+                <td>Start position of the view for videos</td>
+            </tr>
+            <tr>
+                <td>to</td>
+                <td>integer</td>
+                <td></td>
+                <td>End position of the view for videos</td>
+            </tr>
+            <tr>
+                <td>client_id</td>
+                <td>string</td>
+                <td></td>
+                <td>Idetifier of the player client</td>
+            </tr>
+            <tr>
+                <td>view_session_id</td>
+                <td>string</td>
+                <td></td>
+                <td>Player session identifier. Every playing session has a different identifier.</td>
+            </tr>
+            <tr>
+                <td>country</td>
+                <td>string</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>city</td>
+                <td>string</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>is_mobile_view</td>
+                <td>boolean</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>view_type</td>
+                <td>string</td>
+                <td>x ∈ { onsite , offsite }</td>
+                <td></td>
+            </tr>
+        </table>
+
+        <h6>Example</h6>
+
+        <pre><code class="json">{
+    "city": "Budapest",
+    "client_id": "13602851710424434669",
+    "content_id": "112342345",
+    "content_type": "live",
+    "country": "HU",
+    "finished_at": "2018-07-16T19:20:42+01:00",
+    "from": 0,
+    "id": "4bfc69b5-1320-4a44-a8d6-1fe1f397fb94",
+    "is_mobile_view": true,
+    "started_at": "2018-07-16T19:20:30+01:00",
+    "to": 0,
+    "view_session_id": "7f66d911:8b7aa82c",
+    "view_type": "offsite"
+    }</code></pre>
+
+
+
+    <h3><a name="/definitions/View"></a>View (object)</h3>
+
+    <p>One view segment on a content</p>
+
+    <h6>Properties</h6>
+
+    <table class="table responsive">
+        <tr>
+            <th>name</th>
+            <th>type</th>
+            <th>data type</th>
+            <th>description</th>
+        </tr>
+        <tr>
+            <td>type</td>
+            <td>string</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>attributes</td>
+            <td>object</td>
+            <td colspan="2">
+                <table class="table">
+                    <tr>
+                        <th>name</th>
+                        <th>type</th>
+                        <th>data type</th>
+                        <th>description</th>
+                    </tr>
+                    <tr>
+                        <td>view_id</td>
+                        <td>string</td>
+                        <td>uuid</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>content_type</td>
+                        <td>string</td>
+                        <td>x ∈ { live , recorded }</td>
+                        <td>Watched content type</td>
+                    </tr>
+                    <tr>
+                        <td>content_id</td>
+                        <td>integer</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>started_at</td>
+                        <td>string</td>
+                        <td>date-time</td>
+                        <td>Start date and time in ISO8601 format</td>
+                    </tr>
+                    <tr>
+                        <td>finished_at</td>
+                        <td>string</td>
+                        <td>date-time</td>
+                        <td>Finish date and time in ISO8601 format</td>
+                    </tr>
+                    <tr>
+                        <td>from</td>
+                        <td>integer</td>
+                        <td></td>
+                        <td>Start position of the view for videos</td>
+                    </tr>
+                    <tr>
+                        <td>to</td>
+                        <td>integer</td>
+                        <td></td>
+                        <td>End position of the view for videos</td>
+                    </tr>
+                    <tr>
+                        <td>viewer_identifier</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Viewer identifier string. It can be an e-mail or any string representing a viewer</td>
+                    </tr>
+                    <tr>
+                        <td>country</td>
+                        <td>string</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>city</td>
+                        <td>string</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>is_mobile_view</td>
+                        <td>boolean</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>view_type</td>
+                        <td>string</td>
+                        <td>x ∈ { onsite , offsite }</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>client_id</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Idetifier of the player client</td>
+                    </tr>
+                    <tr>
+                        <td>view_session_id</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Player session identifier. Every playing session has a different identifier.</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+
+    <h6>Example</h6>
+
+    <pre><code class="json">{
+    "attributes": {
+        "city": "Budapest",
+        "client_id": "13602851710424434669",
+        "content_id": "112342345",
+        "content_type": "live",
+        "country": "HU",
+        "finished_at": "2018-07-16T19:20:42+01:00",
+        "from": 0,
+        "is_mobile_view": true,
+        "started_at": "2018-07-16T19:20:30+01:00",
+        "to": 0,
+        "view_id": "4bfc69b5-1320-4a44-a8d6-1fe1f397fb94",
+        "view_session_id": "7f66d911:8b7aa82c",
+        "view_type": "offsite",
+        "viewer_identifier": "some.viewer@example.com"
+    },
+    "type": "View"
+}</code></pre>
+
+
+
+    <h3><a name="/definitions/Viewer"></a>Viewer (object)</h3>
+
+    <p>One view segment on a content</p>
+
+    <h6>Properties</h6>
+
+    <table class="table responsive">
+        <tr>
+            <th>name</th>
+            <th>type</th>
+            <th>data type</th>
+            <th>description</th>
+        </tr>
+        <tr>
+            <td>type</td>
+            <td>string</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>attributes</td>
+            <td>object</td>
+            <td colspan="2">
+                <table class="table">
+                    <tr>
+                        <th>name</th>
+                        <th>type</th>
+                        <th>data type</th>
+                        <th>description</th>
+                    </tr>
+                    <tr>
+                        <td>viewer_identifier</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Viewer identifier string. It can be an e-mail or any string representing a viewer</td>
+                    </tr>
+                    <tr>
+                        <td>videos_watched</td>
+                        <td>integer</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>last_activity</td>
+                        <td>string</td>
+                        <td>date-time</td>
+                        <td>Last activity recorded from the viewer</td>
+                    </tr>
+                    <tr>
+                        <td>segments</td>
+                        <td>[object]</td>
+                        <td>[<a href="#/definitions/Segment">Segment</a>]</td>
+                        <td>Collection of view segments</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+
+    <h6>Example</h6>
+
+    <pre><code class="json">{
+        "attributes": {
+            "last_activity": "2018-07-16T19:20:30+01:00",
+            "segments": [
+            ],
+            "videos_watched": 10,
+            "viewer_identifier": "some.viewer@example.com"
+        },
+        "type": "Viewer"
+}</code></pre>
+
+    </section>
+
+</article>

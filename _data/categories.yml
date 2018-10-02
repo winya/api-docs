@@ -4,3 +4,5 @@ player-api:
    name: Player API
 player-sdk:
    name: Player SDK
+analytics-api:
+   name: Analytics API
